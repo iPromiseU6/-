@@ -1,0 +1,173 @@
+<!--创建人：简佳成-->
+<!--创建时间：2018.12.4-->
+<!--描述：电话类型展示页面框架 导入数据问题未处理-->
+
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" type="text/css" href="../../Themes/material/easyui.css">
+    <link rel="stylesheet" type="text/css" href="../../Themes/icon.css">
+    <link rel="stylesheet" type="text/css" href="../../CSS/common.css">
+</head>
+<style>
+</style>
+<body style="padding: 0px;">
+<div id="div_layout" class="easyui-layout">
+    <div data-options="region:'center'">
+        <div class="easyui-panel" title="Datalist">
+            <table id="dg">
+            </table>
+        </div>
+    </div>
+</div>
+<div id="toolbar"></div>
+</body>
+<script type="text/javascript" src="../../JS/jquery.min.js"></script>
+<!--必须使用这个js而不是min.js ,因为做了封装修改-->
+<script type="text/javascript" src="../../JS/jquery.easyui.js"></script>
+<script type="text/javascript" src="../../JS/common.js"></script>
+<script type="text/javascript" src="../../Utils/ip.js"></script>
+<script type="text/javascript" src="../../Utils/ShareComponent.js"></script>
+<script type="text/javascript" src="../../JS/ToolBar.js"></script>
+<script type="text/javascript" src="../../JS/SearchComponent.js"></script>
+<script type="text/javascript" src="../../Utils/BasicList.js"></script>
+<script type="text/javascript" src="../../Utils/Request.js"></script>
+<script type="text/javascript" src="../../Utils/Enum.js"></script>
+<script>
+    var payload = JSON.parse(localStorage.getItem("Entity"))
+    var gPersonId = JSON.parse(localStorage.getItem("personId"))
+    var gBasicList = new BasicListPage();
+    var gRequest = new RequestHandle();
+    var gApiKey = "ENTITY"
+    ////主流程
+    var content = DATAGRID_TOOLBAR_EDITOR;
+    content+=DATAGRID_TOOLBAR_DELETE;
+    content+=DATAGRID_TOOLBAR_ADD;
+    gBasicList.createToolbar(content);//创建toolbar
+    ////创建表格
+    var gDatagridUrl = RequestUrl.constructURL(gApiKey, "list");
+    var gConfig = {
+        toolbar: '#toolbar',
+        fitColumns: 'false',
+        rownumbers: 'true',
+        singleSelect : false,
+        width: '100%',
+        height:"500px",
+        striped: 'true',
+        loadMsg: '正在吃力加载中.....',
+        showFooter: 'true',
+        columns : [
+            [{
+                field: 'ck',
+                checkbox: 'true',
+            },{
+                field : 'id',
+                title : 'id',
+                width : '0%',
+                align : 'center'
+            }, {
+                field : 'name',
+                title : 'Name',
+                width : '15%',
+                align : 'center',
+            }, {
+                field : 'account',
+                title : 'Acount',
+                width : '25%',
+                align : 'center',
+            }, {
+                field : 'accountName',
+                title : 'AccountName',
+                width : '25%',
+                align : 'center'
+            },]
+        ],
+        onDblClickRow : function (index, row) {
+            var _row = row;
+            var _id = _row.id;
+            var _customerId = _row.customerId
+            if(row.entityId+""){
+                localStorage.setItem("entityId",row.id)
+            }
+            var pLocation = "UI/BasicData/BasicEntityDetail.html?id="+_id+"&parentId="+_customerId;
+            AddTabIn("EntityDetail", parent.$('#tabs'), pLocation);
+        },
+    }
+    $("#dg").datagrid(gConfig);
+    gBasicList.hideColumn(['id']);//隐藏id
+
+    //函数部分
+
+    $(document).ready(function () {
+        getData()//获取datagrid数据
+    });
+
+    function fuzzySearch(value,data) {//模糊查询
+        return data.filter(function (current) {
+            return current.name.toLowerCase().indexOf(value.toLowerCase()) >= 0;
+        });
+    }
+    function getData() {//获取name数据 载入模糊查询框
+        gRequest.putRemoteData(gApiKey,"list",payload).done(function (result) {
+            if (result.code === 0) {
+                var phoneData = result.data;
+                $("#dg").datagrid("loadData",phoneData)
+            } else {
+                $.messager.alert("fail", _result.msg);
+            }
+        });
+    }
+    function doSearch() {
+        var _searchCondition = processSearchConditionObject();
+        var typeData = {type:dataType}
+        var sendData = $.extend(false,_searchCondition,typeData)
+        sendData = JSON.stringify(sendData)
+        gRequest.postRemoteData(gApiKey,"listbrif",sendData).done(function (result) {
+            if(result.code===0){
+                $("#dg").datagrid('load',result.data)
+            }
+            else{
+                $.messager.alert("fail", result.msg);
+            }
+        })
+    }
+    function doReset() {
+        $("#dg").datagrid('reload')
+    }
+    function editData() {
+        var _row = $("#dg").datagrid("getSelected");
+        if(_row.entityId+""){
+            localStorage.setItem("entityId",_row.id)
+        }
+        var _id = _row.id;
+        var _customerId = _row.customerId
+        var _row = $('#dg').datagrid('getSelected');
+        var pLocation = "UI/BasicData/BasicEntityDetail.html?id="+ _id+"&parentId="+_customerId;
+        AddTabIn("EntityDetail", parent.$('#tabs'), pLocation);
+    }
+    function newData() {
+        var pLocation = "UI/BasicData/BasicEntityDetail.html?id=-1"+"&parentId="+payload.id;
+        AddTabIn("EntityDetail", parent.$('#tabs'), pLocation);
+    }
+    function destroy(){
+        var _row = $('#dg').datagrid('getSelected');
+        if (!_row) {
+            $.messager.alert('Info', "Please select the data you need to modify!");
+            return;
+        }
+        var _param = {id:_row.id}
+        var _sendData = JSON.stringify(_param)
+        gRequest.delRemoteData(gApiKey,"del",_sendData).done(function (result) {
+            if(result.code === 0){
+                $.messager.alert("Info",result.msg)
+                getData()
+            }else{
+                $.messager.alert("Info",result.msg)
+            }
+        })
+    }
+</script>
+
+</html>

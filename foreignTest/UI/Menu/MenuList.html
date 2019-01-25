@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<link rel="stylesheet" type="text/css" href="../../Themes/material/easyui.css">
+		<link rel="stylesheet" type="text/css" href="../../Themes/icon.css">
+		<link rel="stylesheet" type="text/css" href="../../CSS/demo.css">
+		<link rel="stylesheet" type="text/css" href="../../CSS/common.css">
+
+	</head>
+	<body style="padding: 0px;">
+		<div class="easyui-layout" style="width:100%;height:500px;">
+			<div data-options="region:'center'">
+				<div>
+					<table id="dg" title="Menu List" width="100%">
+					</table>
+				</div>
+			</div>
+		</div>
+		<div id="toolbar"></div>
+		<div id="dlg" class="easyui-dialog" closed="true" style="width:600px;height:300px;padding:10px">
+			<iframe id="ifrmEdit" height="100%" width="100%" frameborder="0" scrolling="no"></iframe>
+		</div>
+	</body>
+	<script type="text/javascript" src="../../JS/jquery.min.js"></script>
+	<script type="text/javascript" src="../../JS/jquery.easyui.js"></script>
+	<script type="text/javascript" src="../../JS/common.js"></script>
+	<script type="text/javascript" src="../../JS/SHA-1.js"></script>
+	<script type="text/javascript" src='../../JS/datagrid-detailview.js'></script>
+	<script type="text/javascript" src="../../Utils/BasicList.js"></script>
+	<script type="text/javascript" src="../../JS/ToolBar.js"></script>
+	<script type="text/javascript" src="../../Utils/ip.js"></script>
+	<script type="text/javascript" src="../../Utils/Request.js"></script>
+	<script type="text/javascript" src="../../Utils/Enum.js"></script>
+	<script>
+        window.parent.$("#tabs #ifmcontent").css({
+            height:"99%"
+        })
+		var gBasicList = new BasicListPage();
+        var gRequest = new RequestHandle();
+        var gApiKey="PERMISSION";
+        var AddDialog;
+        var DialogHeight = 450;
+        var DialogWidth = 400;
+        var gCurrRow;
+      	gBasicList.createToolbar(DATAGRID_TOOLBAR_ADD);
+      	gBasicList.createToolbar(DATAGRID_TOOLBAR_EDITOR);
+        gBasicList.createToolbar(DATAGRID_TOOLBAR_DELETE);
+		$(function() {
+			$('#dg').datagrid({
+				width: 700,
+				height: 300,
+			}).datagrid('subgrid', conf);
+		});
+        var gDatagridUrl = RequestUrl.constructURL(gApiKey, "parents");
+        var gDatagridSubURL=RequestUrl.constructURL(gApiKey, "getchild");
+		var conf = {
+			options: {
+				fitColumns: true,
+				width: '100%',
+				height: 1000,
+				toolbar: '#toolbar',
+				singleSelect: true,
+				method:'get',
+				url:gDatagridUrl,
+				columns: [
+					[{
+						field: 'id',
+						title: 'Id',
+						width: '15%',
+						align: 'center'
+					}, {
+						field: 'name',
+						title: 'Menu Name',
+						width: '15%',
+						align: 'center'
+					}, {
+						field: 'parentId',
+						title: 'Parent Id',
+						width: '10%',
+						align: 'center'
+					}, {
+						field: 'route',
+						title: 'Route',
+						width: '43%',
+						align: 'center'
+					}, {
+						field: 'icon',
+						title: 'Icon',
+						width: '15%',
+						align: 'center'
+					}, ]
+				],
+				onClickRow: function(index, row) {
+                    gCurrRow = row;
+				},
+				onDblClickRow: function(index, row) {
+				    if(row.parentId == 0){
+                        $.messager.alert('Info', "Parent node cannot be 0");
+                        return;
+					}else{
+                        var pLocation = "UI/Menu/MenuAdd.html?menuid=" + row.id + "&parentid=" + row.parentId + "&menutype=" + row.sort;
+                        $("#ifrmEdit").attr("src", pLocation);
+                        constructDialog($("#dlg"), "Edit", DialogWidth, DialogHeight);
+                        AddDialog.dialog('open');
+					}
+
+				},
+			},
+			subgrid: {
+				options: {
+					fitColumns: true,
+					singleSelect: true,
+					width: '100%',
+					method:'get',
+					url:gDatagridSubURL,
+                    foreignField: 'id',
+                    columns: [
+						[{
+							field: 'id',
+							title: 'Id',
+							width: '15%',
+							align: 'center'
+						}, {
+							field: 'name',
+							title: 'Menu Name',
+							width: '15%',
+							align: 'center'
+						}, {
+							field: 'parentId',
+							title: 'Parent Id',
+							width: '30%',
+							align: 'center'
+						}, {
+							field: 'route',
+							title: 'Route',
+							width: '55%',
+							align: 'center'
+						}, ]
+					],
+                    onClickRow: function(index, row) {
+                        gCurrRow = row;
+					},
+					onDblClickRow: function(index, row) {
+						var pLocation = "UI/Menu/MenuAdd.html?menuid=" + row.id + "&parentid=" + row.parentId + "&menutype=" + row.sort;
+						$("#ifrmEdit").attr("src", pLocation);
+						constructDialog($("#dlg"), "Edit", DialogWidth, DialogHeight);
+						AddDialog.dialog('open');
+					},
+				},
+				subgrid: {
+					options: {
+						fitColumns: true,
+						singleSelect: true,
+						width: '100%',
+						method:'get',
+						url:gDatagridSubURL,
+                        foreignField: 'id',
+						columns: [
+							[{
+								field: 'id',
+								title: 'Id',
+								width: '17%',
+								align: 'center'
+							}, {
+								field: 'name',
+								title: 'Menu Name',
+								width: '17%',
+								align: 'center'
+							}, {
+								field: 'parentId',
+								title: 'Parent Id',
+								width: '17%',
+								align: 'center'
+							}, {
+								field: 'route',
+								title: 'Route',
+								width: '25%',
+								align: 'center'
+							},
+							{
+								field: 'module',
+								title: 'Module',
+								width: '25%',
+								align: 'center'
+							},]
+						],
+						onClickRow: function(index, row) {
+                            gCurrRow = row;
+						},
+						onDblClickRow: function(index, row) {
+							var pLocation = "UI/Menu/MenuAdd.html?menuid=" + row.id + "&parentid=" + row.parentId + "&menutype=" + row.sort;
+							$("#ifrmEdit").attr("src", pLocation);
+							constructDialog($("#dlg"), "Edit", DialogWidth, DialogHeight);
+							AddDialog.dialog('open');
+						},
+					},
+				}
+			}
+		};
+        function dialogClose() {
+            AddDialog.dialog('close');
+        }
+		function newData() {
+			var _row = gCurrRow;
+			if(!_row) {
+				$.messager.alert('Info', "请选择你需要新增的菜单上级");
+				return;
+			}
+			if(_row.type >= 3) {
+				$.messager.alert("警告", "不能增加4级菜单");
+				return;
+			}
+            var pLocation = "UI/Menu/MenuAdd.html?menuid=-1&parentid=" + _row.id + "&menutype=" + _row.type;
+			$("#ifrmEdit").attr("src", pLocation);
+			constructDialog($("#dlg"), "新增", DialogWidth, DialogHeight);
+			AddDialog.dialog('open');
+		}
+
+		function editData() {
+			var pLocation = '';
+			var _row = gCurrRow;
+			if(!_row) {
+				$.messager.alert('Info', "请选择你需要修改数据");
+				return;
+			}
+
+                pLocation = "UI/Menu/MenuAdd.html?menuid=" + _row.id + "&parentid=" + _row.parentId + "&menutype=" + _row.sort;
+                $("#ifrmEdit").attr("src", pLocation);
+                constructDialog($("#dlg"), "修改", DialogWidth, DialogHeight);
+                AddDialog.dialog('open');
+
+
+		}
+
+		//删除
+		function destroy() {
+			var _row = gCurrRow;
+            if(!_row) {
+                $.messager.alert("警告", "没有选中需要删除的菜单");
+                return;
+            }
+			if(_row.parentId == 0) {
+				$.messager.alert("警告", "不能删除一级菜单节点");
+				return;
+			}
+            var _sendData = {
+                id:_row.id
+            };
+            var _this = this;
+            $.messager.confirm('Confirm', '是否删除', function (r) {
+                if (r) {
+                    _this.gRequest.delRemoteData(gApiKey, "del", JSON.stringify(_sendData)).done(function (result) {
+                        destroySuccess(result);
+                    });
+                }
+            });
+		}
+
+		//删除的回调函数
+        function destroySuccess(result){
+            $('#dg').datagrid('reload');
+            if(result.code ===0){
+                $.messager.alert({
+                    title: '删除成功',
+                    msg: result.msg
+                });
+                return;
+            }else{
+                $.messager.alert({
+                    title: 'Info',
+                    msg: result.msg
+                });
+                return;
+            }
+        }
+	</script>
+
+</html>

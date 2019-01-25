@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" type="text/css" href="../../Themes/material/easyui.css">
+    <link rel="stylesheet" type="text/css" href="../../Themes/icon.css">
+    <link rel="stylesheet" type="text/css" href="../../CSS/demo.css">
+    <link rel="stylesheet" type="text/css" href="../../CSS/common.css">
+    <link rel="stylesheet" type="text/css" href="../../CSS/Dashboard.css">
+</head>
+<body>
+<div id="Dashboard">
+    <form onclick="ToExchangeRate()" id="Dashboard_form" class="easyui-tooltip">
+        <h1>Current Exchange Rate</h1>
+        <table id="Table"></table>
+    </form>
+</div>
+</body>
+<script type="text/javascript" src="../../JS/jquery.min.js"></script>
+<script type="text/javascript" src="../../JS/jquery.easyui.js"></script>
+<script type="text/javascript" src="../../JS/common.js"></script>
+<script type="text/javascript" src="../../Utils/ip.js"></script>
+<script type="text/javascript" src="../../Utils/Request.js"></script>
+<script type="text/javascript" src="../../Utils/Enum.js"></script>
+<script type="text/javascript">
+    var gRequestHandle = new RequestHandle();
+    var gApiKey = "RATE";
+    var ModelArr = ["currencyCodeFrom", "currencyCodeTo", "buyingBankRate1", "buyingRate1", "sellingBankRate1", "sellingRate1", "exchange1", "updateTime1"];
+
+    $(document).ready(function () {
+        CreatTable();
+        gRequestHandle.putRemoteData(gApiKey, "list").complete(function (result) {
+            var _result = result.responseJSON;
+            var _data = _result.data;
+            var TablePoint = document.getElementById("Table");
+            _data.data.forEach(function (item, index) {
+                CreatRow(item, _data, TablePoint);
+            });
+        });
+    });
+
+    function CreatTable() {
+        var _content = "";
+        _content += "<tr><th>Currency Code</th><th>Buy T/T</th><th>Buy Cash</th>";
+        _content += "<th>Sell T/T</th><th>Sell Cash</th><th>Exchange Rate</th>";
+        _content += "<th>Update time</th></tr>";
+        // _content += "<tr><td></td></tr>"
+        $("#Table").append(_content);
+    }
+
+    function CreatRow(item, data, s) {
+        item["updateTime1"] = formattDate(item["updateTime1"]);
+        var _newTr = s.insertRow();
+        var _newTd = [];
+        for (var i = 1; i < ModelArr.length; i++) {
+            _newTd[i] = _newTr.insertCell();
+            if (i == 1) {
+                _newTd[i].innerHTML = "<div class="+ModelArr[i]+">"+item[ModelArr[i - 1]] + "->" + item[ModelArr[i]]+"</div>";
+            } else {
+                _newTd[i].innerHTML = "<div class="+ModelArr[i]+">"+item[ModelArr[i]]+"</div>";
+            }
+        }
+    }
+
+    function formattDate(date) {
+        var YearMonthDay = date.split(" ")[0];
+        var Time = date.split(" ")[1];
+        var DayMonth = YearMonthDay.split("-");
+        return DayMonth[2] + "/" + DayMonth[1] + " " + Time;
+    }
+
+    function ToExchangeRate() {
+        var pLocation = "UI/BasicInfo/ExchangeRateList.html";
+        AddTabIn("ExchangeRate", parent.$('#tabs'), pLocation);
+    }
+
+    $("#Dashboard_form").tooltip({
+        position:'top',
+        content: '<span style="color:#fff">Click jump to Settings page.</span>',
+        showEvent:'mouseenter',
+        hideEvent:'mouseleave',
+        showDelay:'100',
+        hideDelay:'0',
+        onShow:function () {
+            $(this).tooltip('tip').css({
+                backgroundColor: '#666',
+                borderColor: '#fff'
+            });
+        }
+    })
+</script>
+</html>

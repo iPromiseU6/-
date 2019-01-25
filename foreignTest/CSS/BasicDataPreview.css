@@ -1,0 +1,62 @@
+body{
+    width: 100%;
+    height: 100%;
+}
+table.preview {
+    font-size: 12px;
+    border-width: 1px;
+    border-color: #ebebeb;
+    border-collapse: collapse;
+    margin: 0;
+    width: 1351px;
+    max-height: 200px;
+}
+
+
+table.preview th {
+    border-width: 1px;
+    font-weight: 700;
+    padding: 8px;
+    border-style: solid;
+    border-color: #d4c9c9;
+    color: #5b4c4c;
+    font-family: "微软雅黑";
+    background: #ede8e8;
+}
+
+table.preview td {
+    border-width: 1px;
+    padding: 8px;
+    color: #616161;
+    font-family: "微软雅黑";
+    border-style: solid;
+    border-color: #d4c9c9;
+    white-space:normal;
+    word-break:break-all;
+    overflow: hidden;
+}
+.preview_left{
+    width: 64.4px;
+    height: 80px;
+    float: left;
+    border: 1px solid #d4c9c9;
+    font-weight: bold;
+    color: #5b4c4c;
+    text-align: center;
+    line-height: 80px;
+    background: #ede8e8;
+    margin: 0;
+    padding: 8px;
+}
+.preview_right{
+    width: 442px;
+    height: 80px;
+    float: left;
+    border: 1px solid #d4c9c9;
+    color: #616161;
+    white-space:normal;
+    word-break:break-all;
+    overflow: hidden;
+    margin: 0;
+    padding: 8px;
+}

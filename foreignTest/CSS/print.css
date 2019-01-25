@@ -1,0 +1,72 @@
+/*打印表格处理*/
+
+table .noborder {
+	line-height: 4px;
+	margin-left: 0px;
+	width: 700px;
+	margin-top: 0px;
+}
+
+table .noborder th {
+	padding: 0px;
+	margin: 0px;
+}
+
+table .noborder td {
+	padding: 0px;
+	margin: 0px;
+}
+
+table.altrowstable {
+	font-size: 12px;
+	font-weight: 700;
+	color: black;
+	border-width: 1px;
+	border-color: black;
+	border-collapse: collapse;
+}
+
+table.altrowstable th {
+	border-width: 1px;
+	padding: 8px;
+	border-style: solid;
+	border-color: black;
+}
+
+table.altrowstable td {
+	border-width: 1px;
+	padding: 8px;
+	border-style: solid;
+	border-color: black;
+}
+
+@media print {
+	.Noprint {
+		display: none;
+	}
+	/*下一页*/
+	.PageNext {
+		page-break-after: always;
+	}
+}
+
+
+/*纵向CSS*/
+
+.div_print_info_portait {
+	width: 700px;
+	height: 100%;
+}
+
+.div_print_info_crosswise {}
+
+.printtable {
+	margin-top: 5px;
+	margin-left: 5px;
+	margin-right: 5px;
+	width: 96%;
+}
+
+.print_text_style {
+	border: none;
+}

@@ -1,0 +1,10 @@
+# ide
+.idea
+.project
+
+# Mac General
+.DS_Store
+.AppleDouble
+.LSOverride
+Utils/ip.js
+

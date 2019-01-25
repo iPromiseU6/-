@@ -1,0 +1,375 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8"/>
+    <link rel="stylesheet" type="text/css" href="../../Themes/material/easyui.css">
+    <link rel="stylesheet" type="text/css" href="../../Themes/icon.css">
+    <link rel="stylesheet" type="text/css" href="../../CSS/common.css">
+    <style>
+        .row {
+            display: flex;
+        }
+
+        .col {
+            width: 50%;
+            margin-bottom: 15px;
+            display: flex;
+            justify-content: flex-end;
+        }
+    </style>
+</head>
+<body style="padding: 0px;">
+<div id="TransactionInfo" class="easyui-panel" title="TransactionInfo"
+     style="width:100%;height:150px;padding:10px;background:#fafafa;overflow: hidden"
+     data-options="iconCls:'icon-save',closable:false,minimizable:false,maximizable:false,collapsible:true">
+    <form id="ff_transaction">
+        <div class="row">
+            <div class="col">
+                <span style='margin-right: 5px'><span class="required">*</span>Transaction:</span>
+                <input type="text" class="easyui-combobox" id="input_transactionId"
+                       style="width: 65%"/>
+            </div>
+            <div class="col">
+                <span style='margin-right: 5px'>Name:</span>
+                <input type="text" class="easyui-textbox" id="input_name"
+                       style="width: 65%"/>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col">
+                <span style='margin-right: 5px'>AmountLocal:</span>
+                <input type="text" class="easyui-textbox" id="input_amountLocal"
+                       style="width: 65%"/>
+            </div>
+            <div class="col">
+                <span style='margin-right: 5px'>TransactionNumber:</span>
+                <input type="text" class="easyui-textbox" id="input_transactionNumber"
+                       style="width: 65%"/>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col">
+                <span style='margin-right: 5px'>TransactionDate:</span>
+                <input type="text" class="easyui-textbox" id="input_dateTransaction"
+                       style="width: 65%"/>
+            </div>
+        </div>
+    </form>
+</div>
+<div id="Arrives" class="easyui-panel" title="Arrives"
+     style="width:100%;height:190px;padding:10px;background:#fafafa;overflow: hidden"
+     data-options="iconCls:'icon-save',closable:false,minimizable:false,maximizable:false,collapsible:true">
+    <form id="ff_arrives">
+        <div>
+            <div class="row">
+                <div class="col">
+                    <span style='margin-right: 5px'><span class="required">*</span>Type:</span>
+                    <input type="text" class="easyui-textbox" id="input_arrive_type"
+                           style="width: 65%"/>
+                </div>
+                <div style=" width: 50%">
+                    <div id="div_arrive_account">
+                        <div style=" margin-bottom: 15px;display: flex;justify-content:flex-end">
+                            <span style='margin-right: 5px'>Account:</span>
+                            <input type="text" class="easyui-textbox" id="input_arrive_accountId"
+                                   style="width: 65%"/>
+                        </div>
+                    </div>
+                    <div id="div_arrive_entity">
+                        <div style=" margin-bottom: 15px;display: flex;justify-content:flex-end">
+                            <span style='margin-right: 5px'><span class="required">*</span>Entity:</span>
+                            <input type="text" class="easyui-textbox" id="input_arrive_entityId"
+                                   style="width: 65%"/>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div style="display: flex">
+                <div class="col">
+                    <span style='margin-right: 5px'><span class="required">*</span>Payment:</span>
+                    <input type="text" class="easyui-textbox" id="input_arrive_payment"
+                           style="width: 65%"/>
+                </div>
+                <div class="col">
+                    <span style='margin-right: 5px'><span class="required">*</span>CompanyAccount:</span>
+                    <input type="text" class="easyui-textbox" id="input_arrive_companyAccountId"
+                           style="width: 65%"/>
+                </div>
+            </div>
+            <div style="display: flex">
+                <div class="col">
+                    <span style='margin-right: 5px'><span class="required">*</span>Amount:</span>
+                    <input type="text" class="easyui-numberbox" id="input_arrive_foreignAmount"
+                           style="width: 65%"/>
+                </div>
+                <div class="col">
+                    <span style='margin-right: 5px'><span class="required">*</span>fundsCode:</span>
+                    <input type="text" class="easyui-textbox" id="input_arrive_fundsCode"
+                           style="width: 65%"/>
+                </div>
+            </div>
+            <div style="display: flex">
+                <div class="col">
+                    <span style='margin-right: 5px'>Comments:</span>
+                    <input type="text" class="easyui-textbox" id="input_arrive_fundsComment"
+                           style="width: 65%"/>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+<div id="Pays" class="easyui-panel" title="Pays"
+     style="width:100%;height:190px;padding:10px;background:#fafafa;overflow: hidden"
+     data-options="iconCls:'icon-save',closable:false,minimizable:false,maximizable:false,collapsible:true">
+    <form id="ff_pays">
+        <div>
+            <div class="row">
+                <div class="col">
+                    <span style='margin-right: 5px'><span class="required">*</span>Type:</span>
+                    <input type="text" class="easyui-textbox" id="input_pay_type"
+                           style="width: 65%"/>
+                </div>
+                <div style=" width: 50%">
+                    <div id="div_pay_account">
+                        <div style=" margin-bottom: 15px;display: flex;justify-content:flex-end">
+                            <span style='margin-right: 5px'>Account:</span>
+                            <input type="text" class="easyui-textbox" id="input_pay_accountId"
+                                   style="width: 65%"/>
+                        </div>
+                    </div>
+                    <div id="div_pay_entity">
+                        <div style=" margin-bottom: 15px;display: flex;justify-content:flex-end">
+                            <span style='margin-right: 5px'><span class="required">*</span>Entity:</span>
+                            <input type="text" class="easyui-textbox" id="input_pay_entityId"
+                                   style="width: 65%"/>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div style="display: flex">
+                <div class="col">
+                    <span style='margin-right: 5px'><span class="required">*</span>Payment:</span>
+                    <input type="text" class="easyui-textbox" id="input_pay_payment"
+                           style="width: 65%"/>
+                </div>
+                <div class="col">
+                    <span style='margin-right: 5px'><span class="required">*</span>CompanyAccount:</span>
+                    <input type="text" class="easyui-textbox" id="input_pay_companyAccountId"
+                           style="width: 65%"/>
+                </div>
+            </div>
+            <div style="display: flex">
+                <div class="col">
+                    <span style='margin-right: 5px'><span class="required">*</span>Amount:</span>
+                    <input type="text" class="easyui-numberbox" id="input_pay_foreignAmount"
+                           style="width: 65%"/>
+                </div>
+                <div class="col">
+                    <span style='margin-right: 5px'><span class="required">*</span>fundsCode:</span>
+                    <input type="text" class="easyui-textbox" id="input_pay_fundsCode"
+                           style="width: 65%"/>
+                </div>
+            </div>
+            <div style="display: flex">
+                <div class="col">
+                    <span style='margin-right: 5px'>Comments:</span>
+                    <input type="text" class="easyui-textbox" id="input_pay_fundsComment"
+                           style="width: 65%"/>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+
+<div class="submit_button">
+    <a class="easyui-linkbutton" iconCls="icon-save" onclick="SaveThirdTransaction()" style="width: 100px;">Save</a>
+    <a class="easyui-linkbutton" iconCls="icon-reload" onclick="cancel()" style="width: 100px;">Cancel</a>
+</div>
+
+</body>
+<script type="text/javascript" src="../../JS/jquery.min.js"></script>
+<script type="text/javascript" src="../../JS/jquery.easyui.js"></script>
+<script type="text/javascript" src="../../JS/common.js"></script>
+<script type="text/javascript" src="../../Utils/ip.js"></script>
+<script type="text/javascript" src="../../Utils/ShareComponent.js"></script>
+<script type="text/javascript" src="../../JS/ToolBar.js"></script>
+<script type="text/javascript" src="../../Utils/BasicList.js"></script>
+<script type="text/javascript" src="../../Utils/BasicPreview.js"></script>
+<script type="text/javascript" src="../../Utils/Request.js"></script>
+<script type="text/javascript" src="../../Utils/Enum.js"></script>
+<script type="text/javascript" src="../../JS/Header.js"></script>
+<script type="text/javascript" src="../../Utils/BasicDetail.js"></script>
+<script type="text/javascript" src="../../JS/jquery.edatagrid.js"></script>
+<script type="text/javascript" src="./ReceiptDetailCommon.js"></script>
+<script type="text/javascript">
+    var gAPiKey = "DEAL";
+    var gId1 = parseInt(getMultiID().transactionId);//当前 Transation 的 Id ,
+    var gCurrencyCode=getMultiID().CurrencyCode;
+    var gId2 = "";// 支付 Transation 的 Id ,
+    var gCustomerId = getMultiID().customerId;
+    var gRequestHandle = new RequestHandle();
+
+
+    init();
+
+    $(function () {
+        setAccountType({});
+        constructTransactionPart();
+        forbidFormData("#ff_transaction", true, ["input_transactionId"]);
+    });
+
+    function init() {
+        var myComboboxConfig = deepCopy(gComboboxConfig);
+        myComboboxConfig.valueField = 'value';
+        var fundsCodeCombobox = deepCopy(gComboboxConfig);
+        fundsCodeCombobox.valueField = 'code';
+        var accountCombobox = deepCopy(gComboboxConfig);
+        accountCombobox.valueField = 'id';
+        createComponentFactory("TRANSACTION_TYPE", '#input_arrive_type', myComboboxConfig);
+        createComponentFactory("TRANSACTION_PAYMENTTYPE", '#input_arrive_payment', myComboboxConfig);
+        createComponentFactory("FUNDSCODE", "#input_arrive_fundsCode", fundsCodeCombobox);
+        createComponentFactory("ACCOUNT_COMPANY", "#input_arrive_companyAccountId", gComponyAccountConfig);
+        createComponentFactory("TRANSACTION_ENTITY", "#input_arrive_entityId", accountCombobox);
+        createComponentFactory("TRANSACTION_ACCOUNT", "#input_arrive_accountId", accountCombobox);
+
+        createComponentFactory("TRANSACTION_TYPE", '#input_pay_type', myComboboxConfig);
+        createComponentFactory("TRANSACTION_PAYMENTTYPE", '#input_pay_payment', myComboboxConfig);
+        createComponentFactory("FUNDSCODE", "#input_pay_fundsCode", fundsCodeCombobox);
+        createComponentFactory("ACCOUNT_COMPANY", "#input_pay_companyAccountId", gComponyAccountConfig);
+        createComponentFactory("TRANSACTION_ENTITY", "#input_pay_entityId", accountCombobox);
+        createComponentFactory("TRANSACTION_ACCOUNT", "#input_pay_accountId", accountCombobox);
+        bundleEvent();
+    }
+
+    function cancel() {
+        clearFormData();
+        var parentLocation;
+        parentLocation = searchParent("AdminReceiptDetail.html");
+        parentLocation.closeDlg();
+    }
+
+    function SaveThirdTransaction() {
+        var _sendData = {};
+        var PayFormData = submitFormData("#ff_pays");
+        var ArriveFormData = submitFormData("#ff_arrives");
+        var parentLocation = searchParent("AdminReceiptDetail.html");
+        ArriveFormData = deleteAheadField(ArriveFormData);//去除前缀区分字段
+        PayFormData = deleteAheadField(PayFormData);
+        ArriveFormData.customerId = gCustomerId;
+        ArriveFormData.transactionId = gId1;
+        ArriveFormData.foreignCurrencyCode = parentLocation.gUpdateData.fromCurrencyCode;
+        ArriveFormData.toFrom = TO_FROM_CODE.TOFROM;
+        PayFormData.customerId = gCustomerId;
+        PayFormData.transactionId = gId1;
+        PayFormData.foreignCurrencyCode = parentLocation.gUpdateData.toCurrencyCode;
+        PayFormData.toFrom = TO_FROM_CODE.TOCLIENT;
+        _sendData.id1 = gId1;
+        _sendData.id2 = gId2;
+        _sendData.arrive = ArriveFormData;
+        _sendData.pay = PayFormData;
+        return addArriveThree(_sendData);
+    }
+
+    function constructTransactionPart() {
+        var _sendData = {status : TRANSACTION_STATUS.PLACE_AN_ORDER,toCurrencyCode:gCurrencyCode};
+        gRequestHandle.putRemoteData(gAPiKey, "list", _sendData).done(function (_result) {
+            var _config = {
+                valueField : 'id',
+                textField : 'transactionNumber',
+                panelWidth : 265,
+                panelHeight : 'auto',
+                data : _result.data.data,
+                onSelect : function (v) {
+                    v.name = v.lastName + v.firstName;
+                    v = convertDateData(v, '/');
+                    getFormData(v, true, ["#ff_transaction"]);
+                    gId2 = v.id;
+                },
+            };
+            $("#input_transactionId").combobox(_config);
+        });
+    }
+
+    function bundleEvent() {
+        $("#input_arrive_type").combobox({
+            onSelect : function (e) {
+                return setAccountType(e, "arrive");
+            }
+        });
+        $("#input_arrive_accountId").combobox({
+            onShowPanel : function () {
+                var _data = JSON.parse(localStorage.getItem('currentAccount'));
+                $(this).combobox("loadData", _data || []);
+            }
+        });
+        $("#input_arrive_entityId").combobox({
+            onShowPanel : function () {
+                var _data = JSON.parse(localStorage.getItem('currentEntity'));
+                $(this).combobox("loadData", _data || []);
+            }
+        });
+        $("#input_pay_type").combobox({
+            onSelect : function (e) {
+                return setAccountType(e, "pay");
+            }
+        });
+        $("#input_pay_accountId").combobox({
+            onShowPanel : function () {
+                var _data = JSON.parse(localStorage.getItem('currentAccount'));
+                $(this).combobox("loadData", _data || []);
+            }
+        });
+        $("#input_pay_entityId").combobox({
+            onShowPanel : function () {
+                var _data = JSON.parse(localStorage.getItem('currentEntity'));
+                $(this).combobox("loadData", _data || []);
+            }
+        });
+    }
+
+    function setAccountType(e, type) {
+        switch (e.text) {
+            case "Account":
+                $("#div_" + type + "_account").css("display", "block");
+                $("#div_" + type + "_entity").css("display", "none");
+                break;
+            case "Entity":
+                $("#div_" + type + "_account").css("display", "none");
+                $("#div_" + type + "_entity").css("display", "block");
+                break;
+            case "Person":
+                $("#div_" + type + "_account").css("display", "none");
+                $("#div_" + type + "_entity").css("display", "none");
+                break;
+            default:
+                $("#div_arrive_account").css("display", "none");
+                $("#div_arrive_entity").css("display", "none");
+                $("#div_pay_account").css("display", "none");
+                $("#div_pay_entity").css("display", "none");
+                break;
+        }
+    }
+
+    function addArriveThree(sendData) {
+        gRequestHandle.putRemoteData(gAPiKey, "addArriveThree", sendData).done(function (_result) {
+            if (_result.code === 0) {
+                $.messager.alert('Info', 'add data success!');
+                cancel();
+            } else {
+                $.messager.alert('Alert', 'add data failed!' + _result.msg);
+            }
+        });
+    }
+
+    function deleteAheadField(formData) {
+        var _formData = {};
+        Object.keys(formData).forEach(function (current) {
+            if (formData.current !== "") {
+                _formData[current.split('_')[1]] = formData[current];
+            }
+        });
+        return _formData;
+    }
+
+</script>
+</html>

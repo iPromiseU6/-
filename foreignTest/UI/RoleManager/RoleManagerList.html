@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" type="text/css" href="../../Themes/material/easyui.css">
+    <link rel="stylesheet" type="text/css" href="../../Themes/icon.css">
+    <link rel="stylesheet" type="text/css" href="../../CSS/common.css">
+</head>
+
+<body style="padding: 0px;">
+<div class="easyui-layout" style="width:100%;height:600px;">
+    <div data-options="region:'center'">
+        <div>
+            <table id="dg" style="width: 100%;" class="table_style">
+            </table>
+        </div>
+    </div>
+</div>
+<div id="toolbar"></div>
+<div id="dlg" class="hiddenDialog">
+    <iframe id="ifrmEdit" style="width: 100%;height: 100%;" frameborder="0" scrolling="yes"></iframe>
+</div>
+</body>
+<script type="text/javascript" src="../../JS/jquery.min.js"></script>
+<script type="text/javascript" src="../../JS/jquery.easyui.js"></script>
+<script type="text/javascript" src="../../JS/common.js"></script>
+<script type="text/javascript" src="../../JS/ToolBar.js"></script>
+<script type="text/javascript" src="../../Utils/ip.js"></script>
+<script type="text/javascript" src="../../Utils/ShareComponent.js"></script>
+<script type="text/javascript" src="../../JS/SearchComponent.js"></script>
+<script type="text/javascript" src="../../Utils/BasicList.js"></script>
+<script type="text/javascript" src="../../Utils/Request.js"></script>
+<script type="text/javascript" src="../../Utils/Enum.js"></script>
+<script type="text/javascript">
+    var globalApiKey = "ROLE";
+    var toolbarType = TOOLBAR_ADD + TOOLBAR_EDITOR;
+    var toolbarData = [{
+        "icon": "icon-startBoost",
+        "func": "enableUser()",
+        "functionname": "Enable"
+    }, {
+        "icon": "icon-stopBoost",
+        "func": "disableUser()",
+        "functionname": "Disable"
+    }];
+    var content = "";
+    /*定义一个空的content*/
+    var gBasicList = new BasicListPage();
+    var gRequestHandle = new RequestHandle();
+    var gDatagridUrl = RequestUrl.constructURL(globalApiKey, "list");
+
+    /*添加信息*/
+    function newData() {
+        $.messager.prompt({
+            title: 'New Role',
+            msg: 'Please enter a role name',
+            fn: function (r) {
+                if (r) {
+                    var _url = "";
+                    var data = new Object();
+                    data.name = r;
+                    data.visible = 1;
+                    var res = gRequestHandle.postRemoteData(globalApiKey, 'add', JSON.stringify(data));
+                    res.done(function (result) {
+                        if (result.code == 0) {
+                            $('#dg').datagrid('reload');
+                            $.messager.alert("Info", "Successfully saved");
+                        } else {
+                            $.messager.alert({ // show error message
+                                title: 'error',
+                                msg: result.msg
+                            });
+                        }
+                    });
+                }
+            }
+        });
+    }
+
+    var gConfig = {
+        url: gDatagridUrl,
+        method:'post',
+        columns: [
+            [{
+                field: 'ck',
+                checkbox: true,
+            }, {
+                field: 'name',
+                title: 'Name',
+                width: '30%',
+                align: 'center'
+            }, {
+                field: 'activation',
+                title: 'Activation',
+                width: '10%',
+                align: 'center',
+                formatter: function (value, row, index) {
+                    if (value !== undefined) {
+                        return getValueByKey(USER_STATE, value);
+                    }
+                }
+            }, {
+                field: 'CHA',
+                title: 'Permission',
+                width: '10%',
+                align: 'center',
+                formatter: function (value, row, index) {
+                    return '<a href="#" onclick="openDialog(\'' + row.id + '\')">Edit</a>';
+                }
+            }]
+        ],
+        onDblClickRow: function (index, row) {
+            return editUserName(index, row);
+        }
+    };
+    gBasicList.createDataGrid(gConfig);
+    gBasicList.createToolbar(toolbarType, toolbarData);
+
+    function editData() {
+        var checkArray = $("#dg").datagrid("getChecked");
+        if (checkArray.length === 1) {
+            return editUserName(0, $("#dg").datagrid("getChecked")[0]);
+        }
+        else {
+            $.messager.alert("Info", "Please select a role");
+        }
+    }
+
+    function destroy() {
+        var rowdata = $('#dg').datagrid('getSelected');
+        if (!rowdata) {
+            $.messager.alert('Info', "Please select the data you need to modify");
+            /*判断是否有行被选中，如果没有，则弹出警告框，提示用户修改数据*/
+            return;
+        }
+        if (rowdata) {
+            $.messager.confirm('Confirm', 'delete or not?', function (r) {
+                if (r) {
+                    $.post(RemoteLinkAddress + "/role/delete.do", {
+                            ID: rowdata.ID,
+                        },
+                        function (result) {
+                            if (result.msg == "success") {
+                                $('#dg').datagrid('reload');
+                                $.messager.alert({
+                                    title: 'Success',
+                                    msg: 'Successfully Deleted',
+                                });
+                            } else {
+                                $.messager.alert({ // show error message
+                                    title: 'Error',
+                                    msg: result.msg
+                                });
+                            }
+                        },
+                        'json');
+                }
+            });
+        }
+
+    }
+
+    function openDialog(ID) {
+        DialogWidth = 300;
+        DialogHeight = 400;
+        var pLocation = "UI/RoleManager/RoleManager.html?id=" + ID;
+        $("#ifrmEdit").attr("src", pLocation);
+        constructDialog($("#dlg"), 'Modify Permissions', DialogWidth, DialogHeight);
+        AddDialog.dialog('open');
+    }
+
+    function dialogClose() {
+        AddDialog.dialog('close');
+    }
+
+    function editUserName(index, row) {
+        $.messager.prompt({
+            title: 'Modify Role',
+            msg: 'Please enter a role name',
+            fn: function (r) {
+                if (r) {
+                    row.name = r;
+                    var res = gRequestHandle.putRemoteData(globalApiKey, 'edit',row);
+                    res.done(function (result) {
+                        if (result.code == 0) {
+                            $('#dg').datagrid('reload');
+                            $.messager.alert("Info", "Successfully saved");
+                        } else {
+                            $.messager.alert({ // show error message
+                                title: 'Error',
+                                msg: result.msg
+                            });
+                        }
+                    });
+                }
+            }
+        });
+        $(".messager-input").val(row.name);
+    }
+
+    function enableUser() {
+        return editUserStatus("enable");
+    }
+
+    function disableUser() {
+        return editUserStatus("disable");
+    }
+
+    function editUserStatus(type) {
+        var checkData = {
+            idsArray: [],
+            datasArray: [],
+        };
+        $("#dg").datagrid('getChecked').forEach(function (_current, _index) {
+            checkData.idsArray.push(_current.id);
+            checkData.datasArray.push({index: _index, data: _current});
+        });
+        var _sendData = [];
+        checkData.idsArray.forEach(function (_current) {
+            var _data = {
+                id: _current,
+                activation: type === "enable" ? USER_STATE_CODE.ENABLE : USER_STATE_CODE.DISABLE,
+            };
+            _sendData.push(_data);
+        });
+        _sendData = JSON.stringify(_sendData);
+        if (checkData.datasArray.length === 0) {
+            $.messager.alert('Info', 'Please select at least one piece of data!');
+            return;
+        }
+
+        gRequestHandle.postRemoteData(globalApiKey, "allactivation", _sendData).complete(function (result) {
+            var _result = result.responseJSON;
+            if (_result.code === 0) {
+                $.messager.alert('Success', checkData.datasArray.length + " Role" + (type === "enable" ? " enabled" : " disabled") + ",success！");
+                $('#dg').datagrid('reload');
+            }
+            else {
+                $.messager.alert('Failed', _result.msg);
+            }
+        });
+    }
+
+</script>
+
+</html>

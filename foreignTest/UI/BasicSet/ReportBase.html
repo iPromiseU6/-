@@ -1,0 +1,347 @@
+<!--创建人：李海峰-->
+<!--创建时间：2018-1-3-->
+<!--描述：reportBase  未完成-->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link rel="stylesheet" type="text/css" href="../../Themes/material/easyui.css">
+    <link rel="stylesheet" type="text/css" href="../../Themes/icon.css">
+    <link rel="stylesheet" type="text/css" href="../../CSS/common.css">
+</head>
+<body>
+<div id="header" style="margin-bottom: 10px"></div>
+<div id="toolbar" style="margin-bottom: 10px"></div>
+<div id="reportEntity" class="easyui-panel" title="ReportEntity"
+     style="width:100%;height:300px;padding:10px;background:#fafafa;overflow: hidden"
+     data-options="iconCls:'icon-save',closable:false,
+    collapsible:true,minimizable:false,maximizable:false">
+    <form id="ff" style="width: 100%">
+        <table id="tableEntity" class="displayable" style="text-align:right;width: 100%">
+            <tr style="height: 60px;width: 100%">
+                <td style="width: 8%;"><span style="color:red;">*</span>FiuRefNo</td>
+                <td style="width: 25%;text-align: left;">
+                    <input type="text" class="easyui-textbox" data-options="required:true" style="width: 80%;"
+                           id="input_fiuRefNo" />
+                </td>
+                <td style="width: 8%;">Reference</td>
+                <td style="width: 25%;text-align: left;">
+                    <input type="text" class="easyui-textbox" data-options="" style="width: 80%;"
+                           id="input_reference" />
+                </td>
+                <td style="width: 8%;"><span style="color:red;">*</span>RentityBranch</td>
+                <td style="width: 25%;text-align: left;">
+                    <input type="text" class="easyui-textbox" data-options="required:true" style="width: 80%;"
+                           id="input_rentityBranch" />
+                </td>
+            </tr>
+            <tr style="height: 60px;width: 100%">
+                <td style="width: 8%;"><span style="color:red;">*</span>RentityId</td>
+                <td style="width: 25%;text-align: left;">
+                    <input type="text" class="easyui-textbox" data-options="required:true" style="width: 80%;"
+                           id="input_rentityId" />
+                </td>
+                <td style="width: 8%;"><span style="color:red;">*</span>ReportCode</td>
+                <td style="width: 25%;text-align: left;">
+                    <input type="text" class="easyui-combobox" data-options="required:true" style="width: 80%;"
+                           id="input_reportCode" />
+                </td>
+                <td style="width: 8%;"><span style="color:red;">*</span>SubmissionCode</td>
+                <td style="width: 25%;text-align: left;">
+                    <input type="text" class="easyui-textbox" data-options="required:true" style="width: 80%;"
+                           id="input_submissionCode" />
+                </td>
+            </tr>
+            <tr style="height: 60px;width: 100%">
+                <td style="width: 8%;"><span style="color:red;">*</span>Action</td>
+                <td style="width: 25%;text-align: left;">
+                    <input type="text" class="easyui-textbox" data-options="required:true" style="width: 80%;"
+                           id="input_action" />
+                </td>
+                <td style="width: 8%;">MEMO</td>
+                <td style="width: 25%;text-align: left;">
+                    <input type="text" class="easyui-textbox" data-options="multiline:true" style="width: 80%;height: 100%"
+                           id="input_memo"/>
+                </td>
+            </tr>
+        </table>
+    </form>
+</div>
+<div id="basicInfo" class="easyui-panel" title="BasicInfo"
+     style="width:100%;height:300px;padding:10px;background:#fafafa;overflow: hidden"
+     data-options="iconCls:'icon-save',closable:false,
+    collapsible:true,minimizable:false,maximizable:false">
+    <form id="ff" style="width: 100%">
+        <table id="tableBasic" class="displayable" style="text-align:right;width: 100%">
+            <tr style="height: 60px;width: 100%">
+                <td style="width: 8%;"><span style="color:red;">*</span>FirstName</td>
+                <td style="width: 25%;text-align: left;">
+                    <input type="text" class="easyui-textbox" data-options="required:true" style="width: 80%;"
+                           id="input_firstName" />
+                </td>
+                <td style="width: 8%;">MiddleName</td>
+                <td style="width: 25%;text-align: left;">
+                    <input type="text" class="easyui-textbox" data-options="" style="width: 80%;"
+                           id="input_middleName" />
+                </td>
+                <td style="width: 8%;"><span style="color:red;">*</span>LastName</td>
+                <td style="width: 25%;text-align: left;">
+                    <input type="text" class="easyui-textbox" data-options="required:true" style="width: 80%;"
+                           id="input_lastName" />
+                </td>
+            </tr>
+            <tr style="height: 60px;width: 100%">
+                <td style="width: 8%;"><span style="color:red;">*</span>Title</td>
+                <td style="width: 25%;text-align: left;">
+                    <input type="text" class="easyui-textbox" data-options="required:true" style="width: 80%;"
+                           id="input_title" />
+                </td>
+                <td style="width: 8%;">Alias</td>
+                <td style="width: 25%;text-align: left;">
+                    <input type="text" class="easyui-textbox" data-options="" style="width: 80%;"
+                           id="input_alias" />
+                </td>
+                <td style="width: 8%;"><span style="color:red;">*</span>Birthdate</td>
+                <td style="width: 25%;text-align: left;">
+                    <input type="text" class="easyui-datebox" data-options="required:true" style="width: 80%;"
+                           id="input_birthdate" />
+                </td>
+            </tr>
+            <tr style="height: 60px;width: 100%">
+                <td style="width: 8%;"><span style="color:red;">*</span>Gender</td>
+                <td style="width: 25%;text-align: left;">
+                    <input type="text" class="easyui-combobox" data-options="required:true" style="width: 80%;"
+                           id="input_gender" />
+                </td>
+                <td style="width: 8%;">BirthPlace</td>
+                <td style="width: 25%;text-align: left;">
+                    <input type="text" class="easyui-textbox" data-options="" style="width: 80%;"
+                           id="input_birthPlace" />
+                </td>
+            </tr>
+        </table>
+    </form>
+</div>
+<div id="identifyInfo" class="easyui-panel" title="IdentifyInfo" collapsed="true"
+     style="width:100%;height:150px;padding:10px;background:#fafafa;overflow: hidden"
+     data-options="iconCls:'icon-save',closable:false,
+    collapsible:true,minimizable:false,maximizable:false">
+    <form id="ff" style="width: 100%">
+        <table id="tableIdent" class="displayable" style="text-align:right;width: 100%">
+            <tr style="height: 60px;width: 100%">
+                <td style="width: 8%;">Nationlity1</td>
+                <td style="width: 25%;text-align: left;">
+                    <input type="text" class="easyui-textbox" data-options="" style="width: 80%;"
+                           id="input_nationality1" />
+                </td>
+                <td style="width: 8%;">Nationlity2</td>
+                <td style="width: 25%;text-align: left;">
+                    <input type="text" class="easyui-textbox" data-options="" style="width: 80%;"
+                           id="input_nationality2" />
+                </td>
+            </tr>
+        </table>
+    </form>
+</div>
+<div id="otherInfo" class="easyui-panel" title="OtherInfo" collapsed="true"
+     style="width:100%;height:200px;padding:10px;background:#fafafa;overflow: hidden"
+     data-options="iconCls:'icon-save',closable:false,
+    collapsible:true,minimizable:false,maximizable:false">
+    <form id="ff" style="width: 100%">
+        <table id="tableOther" class="displayable" style="text-align:right;width: 100%">
+            <tr style="height: 60px;width: 100%">
+                <td style="width: 8%;">Residence</td>
+                <td style="width: 25%;text-align: left;">
+                    <input type="text" class="easyui-textbox" data-options="" style="width: 80%;"
+                           id="input_residence" />
+                </td>
+                <td style="width: 8%;">Occupation</td>
+                <td style="width: 25%;text-align: left;">
+                    <input type="text" class="easyui-textbox" data-options="" style="width: 80%;"
+                           id="input_occupation" />
+                </td>
+                <td style="width: 8%;">Source of Wealth</td>
+                <td style="width: 25%;text-align: left;">
+                    <input type="text" class="easyui-textbox" data-options="" style="width: 80%;"
+                           id="input_sourceOfWealth" />
+                </td>
+            </tr>
+            <tr style="height: 60px;width: 100%">
+                <td style="width: 8%;">SSN</td>
+                <td style="width: 25%;text-align: left;">
+                    <input type="text" class="easyui-textbox" data-options="" style="width: 80%;"
+                           id="input_ssn" />
+                </td>
+                <td style="width: 8%;">Comments</td>
+                <td style="width: 25%;text-align: left;">
+                    <input type="text" class="easyui-textbox" data-options="" style="width: 80%;"
+                           id="input_comments" />
+                </td>
+            </tr>
+        </table>
+    </form>
+</div>
+</body>
+<script type="text/javascript" src="../../JS/jquery.min.js"></script>
+<!--必须使用这个js而不是min.js ,因为做了封装修改-->
+<script type="text/javascript" src="../../JS/jquery.easyui.js"></script>
+<script type="text/javascript" src="../../JS/common.js"></script>
+<script type="text/javascript" src="../../Utils/ip.js"></script>
+<script type="text/javascript" src="../../Utils/ShareComponent.js"></script>
+<script type="text/javascript" src="../../JS/ToolBar.js"></script>
+<script type="text/javascript" src="../../Utils/BasicList.js"></script>
+<script type="text/javascript" src="../../Utils/Request.js"></script>
+<script type="text/javascript" src="../../Utils/Enum.js"></script>
+<script type="text/javascript" src="../../JS/HeaderBasicSet.js"></script>
+<script type="text/javascript">
+    var gCreatHeader = new creatHeader();
+    var gBasicList = new BasicListPage();
+    var gRequest = new RequestHandle();
+    var gPostAddData = new peopleDataObj();
+    var gPostAddDataDemo = new peopleDataObj();
+    var gHeadData = ["Phone","Address"];
+    var buttons = [{//配置toolbar
+        'functionname': 'Save',
+        'func': 'save()',
+        'icon': 'icon-save',
+    }];
+    var gApiKey1 = "BASECODE";
+    var gApiKey2 = "REPORTBASE"
+    var gCurrid = getID();
+    gCreatHeader.creatContent("#header",gHeadData);
+    gBasicList.createToolbar("",buttons);
+    $("#toolbar a").each(function (index,value) {
+        $(value).removeAttr("plain")
+    })
+    gBasicList.hideColumn(['id']);
+
+    var gComboboxConfig = {//配置combobox
+        panelWidth:285,
+        onHidePanel: checkCombobox
+    }
+
+    //构造combobox
+    createComponentFactory("REPORT_CODE", '#input_reportCode',gComboboxConfig);
+    createComponentFactory("SYSUSER_SEX", '#input_gender',gComboboxConfig);
+    createComponentFactory("BASICDATA_COUNTRYCODES", '#input_nationality1',gComboboxConfig);
+    createComponentFactory("BASICDATA_COUNTRYCODES", '#input_nationality2',gComboboxConfig);
+    createComponentFactory("BASICDATA_COUNTRYCODES", '#input_residence',gComboboxConfig);
+    var _res;
+    var gConvertData = {src:'CountryCodes',key:"code",value:"name"}
+    _res = gRequest.putRemoteData(gApiKey2, "get",{});
+    _res.done(function (result) {
+        result.data.person.nationality1 = convertDictData(result.data.person.nationality1,gConvertData);
+        result.data.person.nationality2 = convertDictData(result.data.person.nationality2,gConvertData);
+        result.data.person.residence = convertDictData(result.data.person.residence,gConvertData);
+        getFormData(result.data.person);
+        getFormData(result.data);
+    });
+    function checkCombobox() {//输入与下拉不一致返回空
+        var _options = $(this).combobox('options');
+        var _data = $(this).combobox('getData');
+        var _value = $(this).combobox('getValue');
+        var _flag = false;
+        for (var i = 0; i < _data.length; i++) {
+            if (_data[i][_options.valueField] === _value) {
+                _flag=true;
+                break;
+            }
+        }
+        if(!_flag){
+            $(this).combobox('setValue', '');
+        }
+    }
+    function save() {
+        var flag = checkInput();
+        if(flag){
+            saveData();
+        }
+    }
+    var _data;
+    function saveData() {
+        _data = submitFormData();
+        _data.id =1;
+        _data.entityId = 1;
+        f(gPostAddDataDemo,gPostAddData);
+        var postData = gPostAddData;
+        var nation1  = reConvertDictData(postData.person.nationality1,gConvertData);
+        var nation2  = reConvertDictData(postData.person.nationality2,gConvertData);
+        var residence  = reConvertDictData(postData.person.residence,gConvertData);
+        if(nation1){
+            postData.person.nationality1 = nation1;
+        }
+        if(nation2){
+            postData.person.nationality2 = nation2;
+        }
+        if(residence){
+            postData.person.residence = residence;
+        }
+        gRequest.putRemoteData(gApiKey2,'edit',postData).done(function (result) {
+            if (result.code === 0) {
+                $.messager.alert("Info", result.msg);
+            } else {
+                $.messager.alert("Info", result.msg);
+            }
+        });
+    }
+    function peopleDataObj() {
+        this.action= "";
+        this.entityId= "";
+        this.fiuRefNo= "";
+        this.id= 1;
+        this.memo= "";
+        this.person= {
+            alias: "",
+            birthPlace: "",
+            birthdate: "",
+            comments: "",
+            firstName: "",
+            gender: "",
+            lastName: "",
+            middleName: "",
+            nationality1: "",
+            nationality2: "",
+            occupation: "",
+            residence: "",
+            sourceOfWealth: "",
+            ssn: "",
+            title: "",
+        };
+        this.reference= "";
+        this.rentityBranch= "";
+        this.rentityId= "";
+        this.reportCode= "";
+        this.submissionCode= "";
+    }
+    function   f(obj,data) {//递归遍历嵌套的obj，arr
+        if(typeof obj === 'object' && isNaN(obj.length))
+        {
+            for( var i  in  obj ) {
+                if  ( typeof obj[i] === 'object' && isNaN(obj[i].length)) {
+                    f ( obj[i],data[i] );
+                }
+                else if(typeof obj[i] === 'object'){
+                    for(var j=0;j<obj[i].length;j++){
+                        f(obj[i][j],data[i][j])
+                    }
+                }
+                else{
+                    if(_data[i]&&_data[i]!==''){
+                        data[i]=_data[i];
+                    }
+                    else {
+                        delete data[i];
+                    }
+                }
+            }
+        }
+        else if(typeof obj === 'object'){
+            for(var j=0;j<obj.length;j++){
+                f(obj[j])
+            }
+        }
+    }
+</script>
+</html>

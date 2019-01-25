@@ -1,0 +1,375 @@
+#wizard {
+	margin-left: 25%;
+	margin-top: 2%;
+	width: 47.5%;
+	height: 450px;
+}
+
+
+/*//step框架*/
+
+#requisite_style {
+	margin-top: 5%;
+	margin-left: 24%;
+}
+
+.code {
+	font-family: Arial;
+	font-style: italic;
+	color: orange;
+	font-size: 145%;
+	letter-spacing: 3px;
+	font-weight: bolder;
+	cursor: pointer;
+	height: 0px;
+	line-height: 0px;
+	margin-left: 42%;
+	vertical-align: middle;
+}
+
+._code {
+	font-family: Arial;
+	font-style: italic;
+	color: orange;
+	font-size: 200%;
+	letter-spacing: 3px;
+	font-weight: bolder;
+	cursor: pointer;
+	height: 0px;
+	line-height: 10px;
+	margin-left: 42%;
+	vertical-align: middle;
+}
+
+
+/*验证码*/
+
+
+/*密码强度条*/
+
+.pwd {
+	width: 23%;
+	height: 18px;
+	line-height: 15px;
+	padding-top: 1%;
+	text-align: center;
+}
+
+.pwd_f {
+	color: #BBBBBB;
+}
+
+.pwd_c {
+	background-color: #FFFFFF;
+	border-top: 1px solid #D0D0D0;
+	border-bottom: 1px solid #D0D0D0;
+	border-left: 1px solid #D0D0D0;
+}
+
+.pwd_Weak_c {
+	background-color: #FF4545;
+	border-top: 1px solid #BB2B2B;
+	border-bottom: 1px solid #BB2B2B;
+	border-left: 1px solid #BB2B2B;
+}
+
+.pwd_Medium_c {
+	background-color: #FFD35E;
+	border-top: 1px solid #E9AE10;
+	border-bottom: 1px solid #E9AE10;
+	border-left: 1px solid #E9AE10;
+}
+
+.pwd_Strong_c {
+	background-color: #3ABB1C;
+	border-top: 1px solid #267A12;
+	border-bottom: 1px solid #267A12;
+	border-left: 1px solid #267A12;
+}
+
+.pwd_c_r {
+	border-right: 1px solid #D0D0D0;
+}
+
+.pwd_Weak_c_r {
+	border-right: 1px solid #BB2B2B;
+}
+
+.pwd_Medium_c_r {
+	border-right: 1px solid #E9AE10;
+}
+
+.pwd_Strong_c_r {
+	border-right: 1px solid #267A12;
+}
+
+
+/*密码强度条*/
+
+#status {
+	width: 87%;
+}
+
+.page {
+	width: 2.8%;
+}
+
+#pwd_Weak {
+	width: 58px;
+	border-radius: 5px 0px 0px 5px;
+}
+
+#pwd_Medium {
+	width: 58px;
+}
+
+#pwd_Strong {
+	width: 58px;
+	border-radius: 0px 5px 5px 0px;
+}
+
+#next_button {
+	margin-left: 35%;
+	margin-top: 5%;
+}
+
+#previous_button {
+	margin-left: 5%;
+	margin-top: 8.5%;
+}
+
+#sub {
+	margin-left: 33%;
+	margin-top: 9.5%;
+}
+
+
+/*#password1 {
+	border-radius: 5px 5px 5px 5px;
+	border: 1px solid #B0C4DE;
+	background-color: #FFFFFF;
+	font-size: 11px;
+	padding: 0px;
+	white-space: normal;
+	vertical-align: top;
+	outline-style: none;
+	resize: none;
+}*/
+
+
+/*第一个密码框*/
+
+
+/*登陆界面*/
+
+/*body {
+	background-image: url(../../images/1.jpg);
+	background-repeat: no-repeat;
+	background-size: cover;
+}*/
+
+#login_background {
+	position: relative;
+	background-color: azure;
+	width: 30%;
+	height: 300px;
+	margin: 100px auto;
+	margin-right: 34%;
+	opacity: 0.5;
+	border-radius: 15px;
+}
+
+#login {
+	position: relative;
+	margin: auto;
+	padding: 25px;
+	margin-left: 15.6%;
+	padding-bottom: 10px;
+	padding-top: 30px;
+}
+
+#btnLogin {
+	width: 20%;
+	margin-left: 26.5%;
+	height: 28px;
+	position: relative;
+	margin-top: 6%;
+	border: none;
+	background-color: #d28247;
+	border-radius: 6%;
+	cursor: pointer;
+}
+
+#btn2 {
+	width: 20%;
+	margin-left: 5%;
+	height: 28px;
+	position: relative;
+	border: none;
+	background-color: #d28247;
+	border-radius: 6%;
+	cursor: pointer;
+}
+
+#forget_pwd {
+	float: none;
+	margin-left: 32.2%;
+	margin-top: 7%;
+}
+
+#forget {
+	font-size: 13px;
+	text-decoration: underline;
+	color: dodgerblue;
+}
+
+#resign {
+	font-size: 13px;
+	text-decoration: underline;
+	color: dodgerblue;
+}
+
+#txtPassword,
+#identifying_code,
+#txtUserName {
+	border: none;
+	border-bottom: 1px solid #333;
+}
+
+#btn:hover {
+	background-color: cornflowerblue;
+}
+
+#title {
+	margin-left: 39.5%;
+	font-size: 40px;
+	color: white;
+	margin-left: 39%;
+}
+
+header {
+	margin-top: 30px;
+}
+
+#all_td_style {
+	height: 50px;
+}
+
+h2 {
+	background: #fff;
+	margin-top: 2%;
+}
+
+table {
+	margin-left: 25%;
+}
+
+#newpassword {
+	margin-left: 0px;
+	margin-right: 0px;
+	font-size: 12px;
+	padding: 4px;
+	vertical-align: top;
+	outline-style: none;
+	resize: none;
+	border-radius: 5px 5px 5px 5px;
+	border: 1px solid #95B8E7;
+	white-space: nowrap;
+}
+#password1{
+	margin-left: 0px;
+	margin-right: 0px;
+	font-size: 12px;
+	padding: 4px;
+	vertical-align: top;
+	outline-style: none;
+	resize: none;
+	border-radius: 5px 5px 5px 5px;
+	border: 1px solid #95B8E7;
+	white-space: nowrap;
+}
+#oldpassword {
+	margin-left: 0px;
+	margin-right: 0px;
+	font-size: 12px;
+	padding: 4px;
+	vertical-align: top;
+	outline-style: none;
+	resize: none;
+	border-radius: 5px 5px 5px 5px;
+	border: 1px solid #95B8E7;
+	white-space: nowrap;
+}
+
+
+/*登陆界面*/
+
+#login_background {
+	position: relative;
+	background-color: azure;
+	width: 30%;
+	height: 300px;
+	margin: 100px auto;
+	margin-right: 34%;
+	opacity: 0.5;
+	border-radius: 15px;
+}
+
+#login {
+	position: relative;
+	margin: auto;
+	padding: 25px;
+	margin-left: 15.6%;
+	padding-bottom: 10px;
+	padding-top: 30px;
+}
+
+#btnLogin {
+	width: 20%;
+	height: 28px;
+	position: relative;
+	margin-top: 6%;
+	border: none;
+	background-color: #A0E7ED;
+	border-radius: 6%;
+	cursor: pointer;
+}
+
+#btn2 {
+	width: 20%;
+	height: 28px;
+	position: relative;
+	border: none;
+	background-color: #A0E7ED;
+	border-radius: 6%;
+	cursor: pointer;
+}
+
+#forget_pwd {
+	float: none;
+	margin-left: 9.5%;
+	margin-top: 7%;
+}
+
+#forget {
+	font-size: 13px;
+	text-decoration: underline;
+	color: dodgerblue;
+}
+
+#resign {
+	font-size: 13px;
+	text-decoration: underline;
+	color: dodgerblue;
+}
+
+#txtPassword,
+#identifying_code,
+#txtUserName {
+	border: none;
+	border-bottom: 1px solid #333;
+}
+
+#btn:hover {
+	background-color: cornflowerblue;
+}

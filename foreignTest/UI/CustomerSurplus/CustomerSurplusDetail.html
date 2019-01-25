@@ -1,0 +1,193 @@
+<!--创建人：吴永佳-->
+<!--创建时间：2018.12.2-->
+<!--描述：CustomerSurplusDetail的展示-->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" type="text/css" href="../../Themes/material/easyui.css">
+    <link rel="stylesheet" type="text/css" href="../../Themes/icon.css">
+    <link rel="stylesheet" type="text/css" href="../../CSS/common.css">
+</head>
+<body style="padding: 0">
+<div id="div_layout" class="easyui-layout">
+    <div id="div_search" data-options="region:'north'" >
+    </div>
+    <div data-options="region:'center'">
+        <div class="easyui-panel" title="DataList">
+            <table id="dg"></table>
+        </div>
+    </div>
+</div>
+<div id="toolbar"></div>
+<div id="dlg" class="easyui-dialog" closed="true">
+    <iframe id="ifrmEdit" height="100%" width="100%" frameborder="0" scrolling="no"></iframe>
+</div>
+</body>
+<script type="text/javascript" src="../../JS/jquery.min.js"></script>
+<script type="text/javascript" src="../../JS/jquery.easyui.js"></script>
+<script type="text/javascript" src="../../JS/common.js"></script>
+<script type="text/javascript" src="../../Utils/ip.js"></script>
+<script type="text/javascript" src="../../Utils/ShareComponent.js"></script>
+<script type="text/javascript" src="../../JS/ToolBar.js"></script>
+<script type="text/javascript" src="../../JS/SearchComponent.js"></script>
+<script type="text/javascript" src="../../Utils/BasicList.js"></script>
+<script type="text/javascript" src="../../Utils/Request.js"></script>
+<script type="text/javascript" src="../../Utils/Enum.js"></script>
+<script type="text/javascript">
+    //创建页面对象
+    var gBasicList = new BasicListPage();
+    //创建接口
+    var gApiKey = "CUSTOMERS_ACCOUNT_DETAIL";
+    //创建请求对象
+    var gRequest = new RequestHandle();
+    //创建工具栏
+    gBasicList.createToolbar(DATAGRID_TOOLBAR_EDITOR + DATAGRID_TOOLBAR_DELETE );
+    //创建搜索栏
+    gBasicList.createSearch(SEARCH_CURRENCY_CODE + SEARCH_ACCOUNT_DETAIL_STARTTIME + SEARCH_ACCOUNT_DETAIL_ENDTIME);
+    //创建Url
+    var gDatagridUrl = RequestUrl.constructURL(gApiKey, "list");
+    //弹出框高宽大小
+    var gDialogWidth = 600;
+    var gDialogHeight = 450;
+    //拿到页面id参数
+    var gid = getID();
+    //表格配置（创建表格时传入）
+    var gConfig = {
+        url: gDatagridUrl,
+        method: 'put',
+        queryParams:{id: gid},
+        singleSelect : true,
+        columns: [
+            [ {
+                field: 'customerNumber',
+                title: 'CustomerNumber',
+                width: '15%',
+                align: 'center'
+            }, {
+                field: 'name',
+                title: 'Name',
+                width: '15%',
+                align: 'center',
+                formatter: function (value, row) {
+                    return row.firstName + row.middleName + row.lastName;
+                }
+            }, {
+                field: 'currencyCode',
+                title: 'CurrencyCode',
+                width: '20%',
+                align: 'center'
+            }, {
+                field: 'type',
+                title: 'Type',
+                width: '20%',
+                align: 'center',
+                formatter: function (value, row) {
+                    return getValueByKey(CUSTOMER_TYPE, value);
+                }
+            }, {
+                field: 'amount',
+                title: 'Amount',
+                width: '20%',
+                align: 'center'
+            }
+            ]
+        ],
+        onDblClickRow: function (index, row) {
+            var pLocation = "UI/CustomerSurplus/CustomerSurplusDetailPreview.html?id=" + row.id+'_'+gid;
+            $("#ifrmEdit").attr("src", pLocation);
+            constructDialog($('#dlg'), 'Update', gDialogWidth, gDialogHeight);
+            AddDialog.dialog('open');
+        },
+    };
+    //创建表格
+    gBasicList.createDataGrid(gConfig);
+
+    /**
+     * 函数
+     */
+    //搜索
+    function doSearch() {
+        //获取搜索框的内容
+        var _searchCondition = processSearchConditionObject();
+        if(_searchCondition.createTimeStart){
+            _searchCondition.createTimeStart += ' 00:00:00'
+        }
+        if(_searchCondition.createTimeEnd){
+            _searchCondition.createTimeEnd += ' 00:00:00'
+        }
+        //发送请求，并更新列表
+        gRequest.putRemoteData(gApiKey,"list",_searchCondition).complete(function (result) {
+            var _data = result.responseJSON.data.data
+            $('#dg').datagrid('loadData',_data);
+        });
+    }
+    //重置
+    function doReset() {
+        $("#dg").datagrid('reload')
+        $(".easyui-combobox").each(function (index) {
+            $(this).combobox('clear');
+        });
+    }
+    //重置
+    function doReset() {
+        gBasicList.resetHandle(gApiKey);
+    }
+
+    //详情框关闭
+    function dialogClose() {
+        AddDialog.dialog('close');
+    }
+
+    //编辑(Updata)
+    function editData() {
+        var _rowdata = $('#dg').datagrid('getSelected');
+        if (!_rowdata) {
+            $.messager.alert('Info', "Please select the information you want to modify!");
+            return;
+        }
+        var _id = _rowdata.id
+
+        var pLocation = "UI/CustomerSurplus/CustomerSurplusDetailPreview.html?id=" + _id;
+        $("#ifrmEdit").attr("src", pLocation);
+        constructDialog($('#dlg'), 'Updata', gDialogWidth, gDialogHeight);
+        AddDialog.dialog('open');
+    }
+
+    function destroy() {
+        var _rowdata = $('#dg').datagrid('getSelected');
+        if (!_rowdata) {
+            $.messager.alert('Info', "Please select the information you want to modify!");
+            return;
+        }
+        var _sendData = {
+            id: _rowdata.id
+        };
+        $.messager.confirm('Confirm', 'Are you sure delete this record?', function (r) {
+            if (r) {
+                gRequest.delRemoteData(gApiKey, "del", JSON.stringify(_sendData)).done(function (result) {
+                    destroySuccess(result);
+                })
+            }
+        })
+    }
+
+    function destroySuccess(result) {
+        $('#dg').datagrid('reload');
+        if (result.code === -1) {
+            $.messager.alert({
+                title: 'Delete success!',
+                msg: 'Ok'
+            });
+            return;
+        } else {
+            $.messager.alert({
+                title: 'Info',
+                msg: result.msg
+            });
+            return;
+        }
+
+    }
+</script>
+</html>

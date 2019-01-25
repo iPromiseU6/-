@@ -1,0 +1,434 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <link href="CSS/default.css" rel="stylesheet" type="text/css"/>
+    <link rel="stylesheet" type="text/css" href="Themes/material/easyui.css"/>
+    <link rel="stylesheet" type="text/css" href="CSS/Menus.css"/>
+    <link rel="stylesheet" type="text/css" href="Themes/icon.css"/>
+    <style>
+        #foreign {
+            font-size: 16px;
+            font-weight: 300;
+        }
+    </style>
+</head>
+<body style="padding:0px;margin: 0px;" onresize="resizeHeight()">
+<table width="100%">
+    <tr>
+        <td width="3%"><img src="images/login/logo.png" width="100%" height="40px">
+        <td id="foreign">FOREIGNEXCHANGE</td>
+        </td>
+        <td id="td_menu" style="padding-left: 20px;">
+        </td>
+        <td id="td_time">
+            <div class="menu-btn" style="margin-left:30px">
+                <p id="p_time"></p></div>
+        </td>
+        <td id="td_notice">
+            <div style="height: 45px;margin-left:50px;width: 40px;float:right;">
+                <a class='menu_icon icon-bell' href="#" name="UserNotices" rel="UI/BasicSet/UserNotices.html"
+                   onclick="addnav(this.rel,this.name)" id="a_notice"></a>
+            </div>
+        </td>
+        <td id="td_user">
+            <a id="user_name" class="easyui-menubutton" data-options="menu:'#mm_user',iconCls:'icon-man'"></a>
+            <div id="mm_user">
+                <div data-options="iconCls:'icon-help'" onclick="updateLog()">Update log</div>
+                <div id="changePasswd" data-options="iconCls:'icon-edit'">Change password</div>
+                <div id="logout" data-options="iconCls:'icon-cancel'" onclick="logout()">Log out</div>
+                <!--<div id="help" onclick="help()">帮助文档</div>-->
+            </div>
+        </td>
+    </tr>
+</table>
+<iframe id="ifrmList" src="content.html" frameborder="0" width="100%"></iframe>
+<div id="div_menu"></div>
+<div id="dlg" class="easyui-dialog" closed="true" style="width:600px;height:300px;padding:10px">
+    <iframe id="ifrmEdit" height="100%" width="100%" frameborder="0" scrolling="no"></iframe>
+</div>
+</body>
+<script type="text/javascript" src="JS/jquery.min.js"></script>
+<script type="text/javascript" src="JS/jquery.easyui.min.js"></script>
+<script type="text/javascript" src='JS/common.js'></script>
+<script type="text/javascript" src="Utils/ip.js"></script>
+<script type="text/javascript" src="Utils/Request.js"></script>
+<script type="text/javascript" src="JS/CreateMenu.js"></script>
+<script type="text/javascript" src="JS/GetUserLimit.js"></script>
+<script type="text/javascript" src='JS/SHA-1.js'></script>
+<script type="text/javascript" src="JS/CreatePWDDialog.js"></script>
+<script type="text/javascript" src="Utils/Enum.js"></script>
+<script type="text/javascript">
+    if (!window.localStorage) {
+        $.messager.confirm('Info', 'Your browser does not support this page', function () {
+            window.close();
+        });
+    } else {
+        var _gRequest = new RequestHandle();
+        $(document).ready(function () {
+            createPwdDialog();//创建登陆弹窗
+            //getAllBasicData();
+            checkLocalStorage();
+        });
+
+        var _gMenus = {
+            basic: [
+                {
+                    "menuid": "1",
+                    "menuname": "Business",
+                    "icon": "icon-logistic",
+                    "menus": [{
+                        "menuid": "015",
+                        "menuname": "Dashboard",
+                        "menus": [{
+                            "menuid": "0151",
+                            "menuname": "Dashboard",
+                            "url": "UI/Dashboard/Dashboard.html"
+                        },
+                        ]
+                    }, {
+                        "menuid": "016",
+                        "menuname": "Customer",
+                        "menus": [{
+                            "menuid": "0161",
+                            "menuname": "Customer",
+                            "url": "UI/BasicData/CustomerList.html"
+                        }]
+                    }, {
+                        "menuid": "017",
+                        "menuname": "CompanyAccount",
+                        "menus": [{
+                            "menuid": "0171",
+                            "menuname": "CompanyAccount",
+                            "url": "UI/CompanyAccount/CompanyAccountList.html"
+                        }]
+                    }, {
+                        "menuid": "018",
+                        "menuname": "CustomerSurplus",
+                        "menus": [{
+                            "menuid": "0181",
+                            "menuname": "CustomerSurplus",
+                            "url": "UI/CustomerSurplus/CustomerSurplusList.html"
+                        }]
+                    }, {
+                        "menuid": "019",
+                        "menuname": "Transaction",
+                        "menus": [{
+                            "menuid": "0191",
+                            "menuname": "Receipt",
+                            "url": "UI/Transaction/Receipt.html"
+                        }, {
+                            "menuid": "0192",
+                            "menuname": "AdminReacipt",
+                            "url": "UI/Transaction/AdminReacipt.html"
+                        }, {
+                            "menuid": "0193",
+                            "menuname": "Report",
+                            "url": "UI/Transaction/Report.html"
+                        }]
+                    }, {
+                        "menuid": "014",
+                        "menuname": "Report",
+                        "menus": [{
+                            "menuid": "0141",
+                            "menuname": "Report",
+                            "url": "UI/BasicSet/Report.html"
+                        }]
+                    }, {
+                        "menuid": "015",
+                        "menuname": "Statistics",
+                        "menus": [{
+                            "menuid": "0151",
+                            "menuname": "Transaction",
+                            "url": "UI/Statistics/Transaction.html"
+                        }, {
+                            "menuid": "0152",
+                            "menuname": "CompanyAccounts",
+                            "url": "UI/Statistics/CompanyAccounts.html"
+                        }]
+                    },{
+                        "menuid": "016",
+                        "menuname": "Report",
+                        "menus": [{
+                            "menuid": "0161",
+                            "menuname": "Report",
+                            "url": "UI/Report/ReportList.html"
+                        }, ]
+                    }]
+                }, {
+                    "menuid": "4",
+                    "menuname": "BasicInfo",
+                    "icon": "icon-information",
+                    "menus": [{
+                        "menuid": "042",
+                        "menuname": "BasicData",
+                        "menus": [{
+                            "menuid": "0421",
+                            "menuname": "FundsType",
+                            "url": "UI/BasicData/BasicData.html"
+                        }, {
+                            "menuid": "0422",
+                            "menuname": "AccountType",
+                            "url": "UI/BasicData/BasicData.html"
+                        }, {
+                            "menuid": "0423",
+                            "menuname": "IdentifierType",
+                            "url": "UI/BasicData/BasicData.html"
+                        }, {
+                            "menuid": "0424",
+                            "menuname": "TransmodeType",
+                            "url": "UI/BasicData/BasicData.html"
+                        }, {
+                            "menuid": "0425",
+                            "menuname": "ContactType",
+                            "url": "UI/BasicData/BasicData.html"
+                        }, {
+                            "menuid": "0426",
+                            "menuname": "CommunicationType",
+                            "url": "UI/BasicData/BasicData.html"
+                        }, {
+                            "menuid": "0427",
+                            "menuname": "Currencies",
+                            "url": "UI/BasicData/BasicData.html"
+                        }, {
+                            "menuid": "0428",
+                            "menuname": "CountryCodes",
+                            "url": "UI/BasicData/BasicData.html"
+                        }, {
+                            "menuid": "0429",
+                            "menuname": "AccountPersonRoleType",
+                            "url": "UI/BasicData/BasicData.html"
+                        }, {
+                            "menuid": "0430",
+                            "menuname": "EntityLegalForm",
+                            "url": "UI/BasicData/BasicData.html"
+                        }, {
+                            "menuid": "0431",
+                            "menuname": "BankType",
+                            "url": "UI/BasicData/BasicData.html"
+                        }, {
+                            "menuid": "0432",
+                            "menuname": "EntityPersonRoleType",
+                            "url": "UI/BasicData/BasicData.html"
+                        },]
+
+                    }, {
+                        "menuid": "043",
+                        "menuname": "BasicInfo",
+                        "menus": [{
+                            "menuid": "0431",
+                            "menuname": "ChargeTypeList",
+                            "url": "UI/BasicInfo/ChargeTypeList.html"
+                        }, {
+                            "menuid": "0432",
+                            "menuname": "ServiceFee",
+                            "url": "UI/BasicInfo/ServiceFeeList.html"
+                        }, {
+                            "menuid": "0433",
+                            "menuname": "ExchangeRate",
+                            "url": "UI/BasicInfo/ExchangeRateList.html"
+                        }]
+                    }]
+                }, {
+                    "menuid": "5",
+                    "menuname": "BasicSet",
+                    "icon": "icon-usermanagement",
+                    "menus": [{
+                        "menuid": "051",
+                        "menuname": "SystemSetting",
+                        "menus": [{
+                            "menuid": "0510",
+                            "menuname": "SysUser",
+                            "url": "UI/BasicData/SysUserList.html"
+                        }, {
+                            "menuid": "0511",
+                            "menuname": "ReportBase",
+                            "url": "UI/BasicSet/ReportBase.html"
+                        }, {
+                            "menuid": "0512",
+                            "menuname": "Notices",
+                            "url": "UI/BasicSet/Notices.html"
+                        }, {
+                            "menuid": "0513",
+                            "menuname": "UserNotices",
+                            "url": "UI/BasicSet/UserNotices.html"
+                        }]
+                    }, {
+                        "menuid": "052",
+                        "menuname": "BaseSetting",
+                        "menus": [{
+                            "menuid": "0521",
+                            "menuname": "Menu",
+                            "url": "UI/Menu/MenuList.html"
+                        },
+                            {
+                                "menuid": "0522",
+                                "menuname": "Role",
+                                "url": "UI/RoleManager/RoleManagerList.html"
+                            },
+                        ]
+                    }]
+                },
+            ]
+        };
+
+        function checkLocalStorage() {
+            var size = 0;
+            for (item in window.localStorage) {
+                if (window.localStorage.hasOwnProperty(item)) {
+                    size += window.localStorage.getItem(item).length;
+                }
+            }
+            console.log('当前localStorage容量为' + (size / 1024 / 1024).toFixed(2) + "M");
+            if ((size / 1024 / 1024) >= 5) {
+                localStorage.clear();
+                location.reload();
+            }
+        }
+
+        function getAllBasicData() {
+            var _RequesArr = [];
+            gAllBasicTypeData.forEach(function (value, index) {
+                _RequesArr[index] = _gRequest.postRemoteData("BASECODE", "allbrif", JSON.stringify(value));
+            });
+            $.when(
+                _RequesArr[0], _RequesArr[1], _RequesArr[2], _RequesArr[3], _RequesArr[4],
+                _RequesArr[5], _RequesArr[6], _RequesArr[7], _RequesArr[8], _RequesArr[9],
+                _RequesArr[10], _RequesArr[11]
+            ).done(function (r0, r1, r2, r3, r4, r5, r6, r7, r8, r9, r10, r11) {
+                for (var i = 0; i < arguments.length; i++) {
+                    localStorage.setItem(arguments[i][0].data[0].type, JSON.stringify(arguments[i][0].data));
+                }
+            });
+            _gRequest.putRemoteData("ACCOUNT_COMPANY", "allbrif", {}).done(function (_result) {
+                localStorage.setItem('companyAccount', JSON.stringify(_result.data.map(function (current) {
+                    current.value = current.type;
+                    current.text = current.name;
+                    return current;
+                })));
+            });
+        }
+
+        function checkToken() {
+            var token = sessionStorage.getItem("token");
+            //alert(token + "        分隔符       " + current.token);
+            if (!token) {
+                window.location = './UI/Login/Login.html';////token不一致则跳出到登陆界面
+            } else {
+                // createCurrentMenu(current.permissions);//token一致则生成用户菜单
+                CreateMenu(_menus); //本地生成;
+            }
+        }
+
+        function createCurrentMenu(permissions) {
+            var _menu = {};
+            _menu.basic = constructMenuTreeData2(permissions, 0);
+            CreateMenu(_menu);
+            getTime();
+            setInterval(getTime, 1000);
+            var requestTemp = new RequestHandle();
+            requestTemp.getRemoteData("NOTICES", "unreads",).done(function (result) {
+                if (result.data !== 0) {
+                    $("#a_notice").addClass("icon-bellUnRead");
+                }
+            });
+        }
+
+        function getTime() {
+            var _date = new Date();
+            var month = _date.getMonth() + 1 >= 10 ? _date.getMonth() + 1 : "0" + (_date.getMonth() + 1);
+            var day = _date.getDate() >= 10 ? _date.getDate() : "0" + _date.getDate();
+            $('#p_time').html(_date.toLocaleTimeString("zn", {hour12: false}).slice(0, 5)
+                + " " + month + '/' + day + '/' + _date.getFullYear());
+        }
+
+        function createPwdDialog() {
+            var height = document.documentElement.clientHeight - 65;
+            document.getElementById("ifrmList").height = height + "px";
+            $(".panel-body").css("background-color", "#D2E0F2");
+            $("#changePasswd").click(function () {
+                var pLocation = "UI/Login/modiPassword.html";
+                $("#ifrmEdit").attr("src", pLocation);
+                createPWDDialog();
+                PWDDialog.dialog('open');
+            });
+        }
+
+        function resizeHeight() {
+            var height = document.documentElement.clientHeight + 65;
+            document.getElementById("ifrmList").height = height + "px";
+        }
+
+        function updateLog() {
+            window.open("UpdateLog.html");
+        }
+
+        function help() {
+            var pLocation = "UI/Help/HelpList.html";
+            AddTabIn("帮助文档", $("#ifrmList")[0].contentWindow.$('#tabs'), pLocation);
+        }
+
+        function getCurrentUser() {
+            _gRequest.getRemoteData("USER", "current").complete(function (result) {
+                var _result = result.responseJSON;
+                if (_result.code === 0) {
+                    var _data = JSON.stringify(_result.data);
+                    // alert(JSON.stringify(_result.data.token));//current返回的token
+                    sessionStorage.setItem("userData", _data);
+                    checkToken();//检查Token是否一致
+                } else {
+                    window.location = 'UI/Login/Login.html';
+                }
+            });
+        }
+
+        function getAllGoodsData() {
+            _gRequest.getRemoteData("GOODS", "all").complete(function (result) {
+                var _result = result.responseJSON;
+                if (_result.code === 0) {
+                    localStorage.setItem('GoodsData', JSON.stringify(_result.data));
+                } else {
+                    $.messager.alert("失败", _result.msg);
+                }
+            });
+        }
+
+        function constructMenuTreeData2(data, parentId) {
+            var tree = [];
+            for (var i = 0; i < data.length; i++) {
+                if (data[i].parentId == parentId) {
+                    var obj = data[i];
+                    var temp = constructMenuTreeData2(data, data[i].id);
+                    if (temp.length > 0) {
+                        obj.menus = temp;
+                        if (obj.parentId == 0) {
+                            tree.push({
+                                menuid: obj.id,
+                                menuname: obj.name,
+                                icon: obj.icon,
+                                menus: obj.menus,
+                            });
+                        } else {
+                            tree.push({
+                                menuid: obj.id,
+                                menuname: obj.name,
+                                menus: obj.menus,
+                            });
+                        }
+                    } else {
+                        tree.push({
+                            menuid: obj.id,
+                            menuname: obj.name,
+                            url: obj.route,
+                        });
+                    }
+                }
+            }
+            return tree;
+        }
+
+        checkToken();//获取当前用户信息
+    }
+</script>
+
+</html>

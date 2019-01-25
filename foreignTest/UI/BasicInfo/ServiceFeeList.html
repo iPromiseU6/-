@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" type="text/css" href="../../Themes/material/easyui.css">
+    <link rel="stylesheet" type="text/css" href="../../Themes/icon.css">
+    <link rel="stylesheet" type="text/css" href="../../CSS/common.css">
+</head>
+<body style="padding: 0">
+<div id="div_layout" class="easyui-layout">
+    <div data-options="region:'center'">
+        <div class="easyui-panel" title="DateList">
+            <table id="dg"></table>
+        </div>
+    </div>
+</div>
+<div id="toolbar"></div>
+<div id="dlg" class="easyui-dialog" closed="true">
+    <iframe id="ifrmEdit" height="100%" width="100%" frameborder="0" scrolling="no"></iframe>
+</div>
+</body>
+<script type="text/javascript" src="../../JS/jquery.min.js"></script>
+<script type="text/javascript" src="../../JS/jquery.easyui.js"></script>
+<script type="text/javascript" src="../../JS/common.js"></script>
+<script type="text/javascript" src="../../Utils/ip.js"></script>
+<script type="text/javascript" src="../../Utils/ShareComponent.js"></script>
+<script type="text/javascript" src="../../JS/ToolBar.js"></script>
+<script type="text/javascript" src="../../JS/SearchComponent.js"></script>
+<script type="text/javascript" src="../../Utils/BasicList.js"></script>
+<script type="text/javascript" src="../../Utils/Request.js"></script>
+<script type="text/javascript" src="../../Utils/Enum.js"></script>
+<script type="text/javascript">
+    var gBasicList = new BasicListPage();
+    var gApiKey = "SFEE";
+    var gRequest = new RequestHandle();
+    gBasicList.createToolbar(DATAGRID_TOOLBAR_EDITOR + DATAGRID_TOOLBAR_DELETE + DATAGRID_TOOLBAR_ADD);
+    var gDatagridUrl = RequestUrl.constructURL(gApiKey, "list");
+    var gDialogWidth = 400;
+    var gDialogHeight = 300;
+    var gConfig = {
+        url: gDatagridUrl,
+        method: 'put',
+        columns: [
+            [{
+                field: 'ck',
+                checkbox: true,
+            },
+                {
+                    field: 'serviceFee',
+                    title: 'Service Fee',
+                    width: '45%',
+                    align: 'center'
+                },
+                {
+                    field: 'memo',
+                    title: 'Memo',
+                    width: '50%',
+                    align: 'center',
+                },
+            ]
+        ],
+        onDblClickRow: function (index, row) {
+            var pLocation = "UI/BasicInfo/ServiceFeePreview.html?id=" + row.id;
+            $("#ifrmEdit").attr("src", pLocation);
+            constructDialog($('#dlg'), 'Updata', gDialogWidth, gDialogHeight);
+            AddDialog.dialog('open');
+        },
+    };
+    gBasicList.createDataGrid(gConfig);
+
+    function doReset() {
+        gBasicList.resetHandle(gApiKey);
+    }
+
+    function dialogClose() {
+        AddDialog.dialog('close');
+    }
+
+    function editData() {
+        var _rowdata = $('#dg').datagrid('getSelected');
+        if (!_rowdata) {
+            $.messager.alert('Info', "Please choose one data!");
+            return;
+        }
+        var _id = _rowdata.id
+        var pLocation = "UI/BasicInfo/ServiceFeePreview.html?id=" + _id;
+        $("#ifrmEdit").attr("src", pLocation);
+        constructDialog($('#dlg'), 'Update', gDialogWidth, gDialogHeight);
+        AddDialog.dialog('open');
+    }
+
+    function newData() {
+        var pLocation = "UI/BasicInfo/ServiceFeePreview.html";
+        $("#ifrmEdit").attr("src", pLocation);
+        constructDialog($('#dlg'), 'Create', gDialogWidth, gDialogHeight);
+        AddDialog.dialog('open');
+    }
+
+    function destroy() {
+        var row = $('#dg').datagrid('getSelected');
+        if (!row) {
+            $.messager.alert('Info', "please choose one data!");
+            return;
+        }
+        var _sendData = {id:row.id};
+        $.messager.confirm('Confirm', 'Are you sure delete this record?', function (r) {
+            if (r) {
+                gRequest.delRemoteData(gApiKey, "del", JSON.stringify(_sendData)).done(function (result) {
+                    destroySuccess(result);
+                })
+            }
+        })
+    }
+
+    function destroySuccess(result) {
+        $('#dg').datagrid('reload');
+        if (result.code === -1) {
+            $.messager.alert({
+                title: 'Delete success!',
+                msg: 'Ok'
+            });
+            return;
+        } else {
+            $.messager.alert({
+                title: 'Info',
+                msg: result.msg
+            });
+            return;
+        }
+
+    }
+</script>
+</html>

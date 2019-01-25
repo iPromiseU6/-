@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<link rel="stylesheet" type="text/css" href="../../Themes/material/easyui.css">
+		<link rel="stylesheet" type="text/css" href="../../Themes/icon.css">
+		<link rel="stylesheet" type="text/css" href="../../CSS/common.css">
+		<link rel="stylesheet" type="text/css" href="../../CSS/demo.css">
+	</head>
+	<body style="padding: 0px;">
+		<form id="ff" method="post">
+			<table cellpadding="3" class="displaytable" style="padding: 20px;">
+				<tr>
+					<td>
+						<h id="star">* </h>Parent Id</td>
+					<td>
+						<input style="width:90%;height:25px" class="easyui-textbox" id="input_parentId" name="PARENT_ID" data-options="readonly:true"></input>
+					</td>
+				</tr>
+				<tr>
+					<td width="30%">
+						<h id="star">* </h>Menu Name
+					</td>
+					<td width="65%">
+						<input id="input_name" class="easyui-textbox" name="MENU_NAME" style="width:90%;height:25px" data-options="required:true"></input>
+					</td>
+				</tr>
+				<tr>
+					<td>
+						Route</td>
+					<td>
+						<input id="input_route" class="easyui-textbox" name="MENU_URL" style="width:90%;height:50px" multiline="true" ></input>
+					</td>
+				</tr>
+				<tr>
+					<td>
+						Icon</td>
+					<td>
+						<input id="input_icon" class="easyui-textbox" name="MENU_ICON" style="width:90%;height:25px"></input>
+					</td>
+				</tr>
+				<tr>
+					<td>
+						<h id="star">* </h>Menu Level</td>
+					<td>
+						<input id="input_type" class="easyui-textbox" name="MENU_TYPE" style="width:90%;height:25px" data-options="required:true"></input>
+					</td>
+				</tr>
+				<tr>
+					<td>
+						Menu Module</td>
+					<td>
+						<input id="input_module" class="easyui-textbox" name="MENU_ORDER" style="width:90%;height:25px"></input>
+					</td>
+				</tr>
+				<tr>
+					<td>
+						Menu Order</td>
+					<td>
+						<input id="input_sort" class="easyui-textbox" name="MENU_ORDER" style="width:90%;height:25px"></input>
+					</td>
+				</tr>
+				<tr class="hiddentr">
+					<td width="30%">
+						<h id="star">* </h>Menu ID
+					</td>
+					<td width="65%">
+						<input id="input_menu" class="easyui-textbox" name="ID" style="width:90%;height:25px" data-options="readonly:true"></input>
+					</td>
+				</tr>
+			</table>
+			<table>
+				<div class="submit_button">
+					<a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-save" onclick="save()" style="width:100px;margin-left: -16px;"> Save</a>
+					<a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-reload" onclick="cls()" style="width:100px;margin-left: 80px;">Reset</a>
+				</div>
+			</table>
+		</form>
+		<div id="dlg" class="easyui-dialog" closed="true" style="width:560px;height:400px;padding:10px">
+			<iframe id="ifrmEdit" height="100%" width="100%" frameborder="0" scrolling="no"></iframe>
+		</div>
+	</body>
+	<script type="text/javascript" src="../../JS/common.js"></script>
+	<script type="text/javascript" src="../../JS/jquery.min.js"></script>
+	<script type="text/javascript" src="../../JS/jquery.easyui.js"></script>
+	<script type="text/javascript" src="../../Utils/ip.js"></script>
+	<script type="text/javascript" src="../../Utils/Request.js"></script>
+	<script type="text/javascript" src="../../Utils/BasicList.js"></script>
+	<script type="text/javascript" src="../../Utils/ShareComponent.js"></script>
+	<script type="text/javascript" src="../../Utils/Enum.js"></script>
+	<script type="text/javascript">
+        var gRequest =new RequestHandle();
+        var gApiKey="PERMISSION";
+		var ids = getMultiID();
+        var getData;
+		$(document).ready(function(){
+            var _param={id:ids.menuid};
+            var _res
+			if(ids.menuid != AddFlag) {
+                _res=gRequest.putRemoteData(gApiKey,"get",_param);
+                _res.done(function (data) {
+                    getData = data.data;
+                    getFormData(data.data);
+                });
+			}
+		});
+		$(document).ready(function() {
+			$("#input_parentId").textbox('setValue', ids.parentid);
+		});
+		function save() {
+			var _isValid = $("#ff").form('validate');
+			if(!_isValid) {
+				$.messager.alert("Warning", "Required fields are not filled out");
+				return;
+			}
+			SaveData();
+		}
+		function cls() {
+			$('#ff').form('reset');
+		}
+		function SaveData() {
+            var _data = submitFormData();
+            var _postData = $.extend(false,getData,_data);
+            var _Id = _postData.id;
+            if(_postData.type <= 3){
+            	if(_Id == undefined){
+					gRequest.postRemoteData(gApiKey,"add",JSON.stringify(_postData)).done(function(result){
+						if(result.code == 0) {
+							var parentLocation;
+							parentLocation = searchParent("MenuList.html");
+							parentLocation.dialogClose();
+						} else {
+							$.messager.alert("Info", result.msg);
+						}
+					})
+				}
+                else{
+					gRequest.putRemoteData(gApiKey,"edit",_postData).done(function(result){
+						if(result.code == 0) {
+							var parentLocation;
+							parentLocation = searchParent("MenuList.html");
+							parentLocation.dialogClose();
+						} else {
+							$.messager.alert("Info", result.msg);
+						}
+					})
+				}
+            }else{
+                $.messager.alert('Info', "Menu level is less than or equal to 3");
+                return;
+            }
+		}
+	</script>

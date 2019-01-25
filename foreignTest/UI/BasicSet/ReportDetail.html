@@ -1,0 +1,431 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" type="text/css" href="../../Themes/material/easyui.css">
+    <link rel="stylesheet" type="text/css" href="../../Themes/icon.css">
+    <link rel="stylesheet" type="text/css" href="../../CSS/demo.css">
+    <link rel="stylesheet" type="text/css" href="../../CSS/common.css">
+    <link rel="stylesheet" type="text/css" href="../../CSS/AccountTable.css">
+    <style>
+        *{
+            font-size: 13px;
+        }
+
+        .table {
+            width: 100%;
+            table-layout:fixed;
+            border-collapse: collapse;
+            font-weight: bold;
+            color: #666666;
+        }
+
+        .table tr {
+            text-align: center;
+            height: 30px;
+        }
+
+        .table td {
+            border: 1px solid #d5d5d5;
+        }
+    </style>
+</head>
+<body>
+<div>
+    <div id="toolbar"></div>
+    <div id="report" class="easyui-panel" title="Report"
+         style="width:100%;height:300px;padding:10px;background:#fafafa;overflow: hidden"
+         data-options="iconCls:'icon-save',closable:false,
+             collapsible:true,minimizable:false,maximizable:false">
+        <table id="tableReport1" class="table"></table>
+        <table id="tableReport2" class="table" style="border-top-style: none;"></table>
+    </div>
+    <div id="reportTransaction" class="easyui-panel" title="Transaction"
+         style="width:100%;height:450px;padding:10px;background:#fafafa;overflow: hidden"
+         data-options="iconCls:'icon-save',closable:false,
+             collapsible:true,minimizable:false,maximizable:false">
+        <table id="table_transaction"></table>
+    </div>
+    <div id="reportPerson" class="easyui-panel" title="Reporting Person"
+         style="width:100%;height:350px;padding:10px;background:#fafafa;overflow: hidden"
+         data-options="iconCls:'icon-save',closable:false,
+             collapsible:true,minimizable:false,maximizable:false">
+        <table id="tablePerson" class="table"></table>
+    </div>
+    <div id="reportPhones" class="easyui-panel" title="Reporting Person Phones"
+         style="width:100%;height:450px;padding:10px;background:#fafafa;overflow: hidden"
+         data-options="iconCls:'icon-save',closable:false,
+             collapsible:true,minimizable:false,maximizable:false">
+        <table id="table_phones" class="table"></table>
+    </div>
+    <div id="reportAddress" class="easyui-panel" title="Reporting Person Adress"
+         style="width:100%;height:450px;padding:10px;background:#fafafa;overflow: hidden"
+         data-options="iconCls:'icon-save',closable:false,
+             collapsible:true,minimizable:false,maximizable:false">
+        <table id="table_address" class="table"></table>
+    </div>
+    <div id="reportPhonesE" class="easyui-panel" title="Reporting Employer Phones"
+         style="width:100%;height:120px;padding:10px;background:#fafafa;overflow: hidden"
+         data-options="iconCls:'icon-save',closable:false,
+             collapsible:true,minimizable:false,maximizable:false">
+        <table id="table_phonesE" class="table"></table>
+    </div>
+    <div id="reportAddressE" class="easyui-panel" title="Reporting Employer Address"
+         style="width:100%;height:120px;padding:10px;background:#fafafa;overflow: hidden"
+         data-options="iconCls:'icon-save',closable:false,
+             collapsible:true,minimizable:false,maximizable:false">
+        <table id="table_addressE" class="table"></table>
+    </div>
+    <div id="reportIndentification" class="easyui-panel" title="Reporting Indentification"
+         style="width:100%;height:450px;padding:10px;background:#fafafa;overflow: hidden"
+         data-options="iconCls:'icon-save',closable:false,
+             collapsible:true,minimizable:false,maximizable:false">
+        <table id="table_indentification" class="table"></table>
+    </div>
+</div>
+</body>
+<script type="text/javascript" src="../../JS/jquery.min.js"></script>
+<script type="text/javascript" src="../../JS/jquery.easyui.js"></script>
+<script type="text/javascript" src="../../JS/common.js"></script>
+<script type="text/javascript" src="../../Utils/ip.js"></script>
+<script type="text/javascript" src="../../Utils/Request.js"></script>
+<script type="text/javascript" src="../../Utils/Enum.js"></script>
+<script type="text/javascript" src="../../JS/ToolBar.js"></script>
+<script type="text/javascript" src="../../Utils/BasicList.js"></script>
+<script type="text/javascript" src="../../UI/BasicSet/CreateTable.js"></script>
+<script type="text/javascript">
+    var gApiKey = 'REPORT';
+    var gBasicList = new BasicListPage();
+    var gRequest = new RequestHandle();
+    var _Send_ID = {};
+    var getdata;
+    var gId = getID();
+    var content;
+    if(gId === '-1') {
+        content = DATAGRID_TOOLBAR_ADD
+    }else{
+        content = DATAGRID_TOOLBAR_DELETE
+    }
+    gBasicList.createToolbar(content);//创建toolbar
+    $("#toolbar a").each(function (index,value) {
+        $(value).removeAttr("plain")
+    })
+    var tableReport1 = document.getElementById('tableReport1');
+    var tableReport2 = document.getElementById('tableReport2');
+    var reportPerson = document.getElementById('tablePerson');
+    var reportBaseArr1 = [
+        {field: 'reference', value: 'Entity Reference'},
+        {field: '', value: 'FIU Rel No.'},
+        {field: 'rentityBranch', value: 'Rep Entity Branch'},
+        {field: 'submissionCode', value: 'Submission Code'},
+        {field: 'submissionDate', value: 'Submission Date'},
+        {field: 'reportCode', value: 'Report Code'}
+    ];
+    var reportBaseArr2 = [
+        {field: 'action', value: 'Action'},
+        {field: 'reason', value: 'Reason'}
+    ];
+    var reportPersonArr = [
+        {field: 'alias', value: 'Alias'},
+        {field: 'gender', value: 'Gender'},
+        {field: 'mothersName', value: 'Mothers Name'},
+        {field: 'birthPlace', value: 'Birth Place'},
+        {field: 'firstName', value: 'First Name'},
+        {field: 'nationality1', value: 'Nationnalty 1'},
+        {field: 'birthdate', value: 'Birth Date'},
+        {field: 'middleName', value: 'Middle Name'},
+        {field: 'nationality2', value: 'Nationnalty 2'},
+        {field: 'deceased', value: 'Deceased'},
+        {field: 'lastName', value: 'Last Name'},
+        {field: 'nationality3', value: 'Nationnalty 3'},
+        {field: 'deceasedDate', value: 'Date Deceased'},
+        {field: 'employerName', value: 'Employer Name'},
+        {field: 'occupation', value: 'Occupation'},
+        {field: 'email', value: 'Email'},
+        {field: 'idNumber', value: 'Id Number'},
+        {field: 'passportCountry', value: 'Passport Country'},
+        {field: 'passportNumber', value: 'Passport No.'},
+        {field: 'prefix', value: 'Prefix'},
+        {field: 'residence', value: 'Residence'},
+        {field: 'sourceOfWealth', value: 'Source of Wealth'},
+        {field: 'ssn', value: 'SSN'},
+        {field: 'taxNumber', value: 'Tax no.'},
+        {field: 'taxRegNumber', value: 'Tax Reg.No.'},
+        {field: 'title', value: 'Title'},
+        {field: 'comments', value: 'Comments'},
+    ];
+    var gConfigTransaction = {
+        pagination: 'true',
+        fitColumns: 'false',
+        rownumbers: 'true',
+        pageSize: 10,
+        height: 450,//显示20条数据已经调整好的高度
+        width: '100%',
+        striped: 'true',
+        loadMsg: 'Is struggling to load.....',
+        showFooter: 'true',
+        singleSelect: false,
+        columns: [
+            [{
+                field: 'transactionNumber',
+                title: 'Tran No.',
+                width: '6%',
+                align: 'center',
+            }, {
+                field: 'transmodeCode',
+                title: 'Tarns Mode Code',
+                width: '12%',
+                align: 'center',
+            },{
+                field: 'dateTransaction',
+                title: 'Tran Date',
+                width: '8%',
+                align: 'center',
+            }, {
+                field: 'teller',
+                title: 'Teller',
+                width: '4%',
+                align: 'center',
+            },{
+                field: 'amountLocal',
+                title: 'AmountLocal',
+                width: '10%',
+                align: 'center',
+            }, {
+                field: 'fromAmount',
+                title: 'Real from Amount',
+                width: '12%',
+                align: 'center',
+            },{
+                field: 'fromAmountReport',
+                title: 'Report from Amount',
+                width: '12%',
+                align: 'center',
+            }, {
+                field: 'toAmount',
+                title: 'Real to Amount',
+                width: '10%',
+                align: 'center',
+            },{
+                field: 'toAmountReport',
+                title: 'Real to Amount',
+                width: '10%',
+                align: 'center',
+            }]
+        ]
+    };
+    var gConfigPhone = {
+        pagination: 'true',
+        fitColumns: 'false',
+        rownumbers: 'true',
+        pageSize: 10,
+        height: 450,//显示20条数据已经调整好的高度
+        width: '100%',
+        striped: 'true',
+        loadMsg: 'Is struggling to load.....',
+        showFooter: 'true',
+        singleSelect: false,
+        columns: [
+            [{
+                field: 'contactType',
+                title: 'Type',
+                width: '10%',
+                align: 'center',
+            }, {
+                field: 'communicationType',
+                title: 'Communication Type',
+                width: '20%',
+                align: 'center',
+            },{
+                field: 'countryPrefix',
+                title: 'Country Prefix',
+                width: '15%',
+                align: 'center',
+            }, {
+                field: 'number',
+                title: 'Number',
+                width: '15%',
+                align: 'center',
+            },{
+                field: 'extension',
+                title: 'Extension',
+                width: '15%',
+                align: 'center',
+            }, {
+                field: 'comments',
+                title: 'Comments',
+                width: '15%',
+                align: 'center',
+            }]
+        ]
+    };
+    var gConfigAddress = {
+        pagination: 'true',
+        fitColumns: 'false',
+        rownumbers: 'true',
+        pageSize: 10,
+        height: 450,//显示20条数据已经调整好的高度
+        width: '100%',
+        striped: 'true',
+        loadMsg: 'Is struggling to load.....',
+        showFooter: 'true',
+        singleSelect: false,
+        columns: [
+            [{
+                field: 'addressType',
+                title: 'Type',
+                width: '8%',
+                align: 'center',
+            }, {
+                field: 'address',
+                title: 'Adress',
+                width: '10%',
+                align: 'center',
+            },{
+                field: 'town',
+                title: 'Town',
+                width: '8%',
+                align: 'center',
+            }, {
+                field: 'city',
+                title: 'City',
+                width: '12%',
+                align: 'center',
+            },{
+                field: 'state',
+                title: 'State',
+                width: '12%',
+                align: 'center',
+            }, {
+                field: 'countryCode',
+                title: 'Country',
+                width: '12%',
+                align: 'center',
+            },{
+                field: 'zip',
+                title: 'Zip',
+                width: '12%',
+                align: 'center',
+            }, {
+                field: 'comments',
+                title: 'Comments',
+                width: '12%',
+                align: 'center',
+            }]
+        ]
+    };
+    var gConfigIndentification = {
+        pagination: 'true',
+        fitColumns: 'false',
+        rownumbers: 'true',
+        pageSize: 10,
+        height: 450,//显示20条数据已经调整好的高度
+        width: '100%',
+        striped: 'true',
+        loadMsg: 'Is struggling to load.....',
+        showFooter: 'true',
+        singleSelect: false,
+        columns: [
+            [{
+                field: 'type',
+                title: 'Type',
+                width: '8%',
+                align: 'center',
+            }, {
+                field: 'expiryDate',
+                title: 'Expiry Date',
+                width: '10%',
+                align: 'center',
+            },{
+                field: 'issueCountry',
+                title: 'Issue Country',
+                width: '8%',
+                align: 'center',
+            }, {
+                field: 'issueDate',
+                title: 'Issue Date',
+                width: '12%',
+                align: 'center',
+            },{
+                field: 'issuedBy',
+                title: 'Issue By',
+                width: '12%',
+                align: 'center',
+            }, {
+                field: 'number',
+                title: 'Number',
+                width: '12%',
+                align: 'center',
+            },{
+                field: 'comments',
+                title: 'Comments',
+                width: '12%',
+                align: 'center',
+            }]
+        ]
+    };
+
+    $('#table_transaction').datagrid(gConfigTransaction);
+    $('#table_phones').datagrid(gConfigPhone);
+    $('#table_address').datagrid(gConfigAddress);
+    $('#table_phonesE').datagrid(gConfigPhone);
+    $('#table_addressE').datagrid(gConfigAddress);
+    $('#table_indentification').datagrid(gConfigIndentification);
+    $(document).ready(function () {
+        _Send_ID.id = gId;
+        if(_Send_ID.id !== '-1'){
+            gRequest.putRemoteData(gApiKey, 'get', _Send_ID).done(function (result) {
+                getdata = deepCopy(result.data);
+                CreatTable(getdata, reportBaseArr1, tableReport1, "tableReport1",2,3);
+                CreatTable(getdata, reportBaseArr2, tableReport2, "tableReport2",2,1);
+                CreatTable(getdata.reportingPerson, reportPersonArr,reportPerson, "reportPerson",9,3);
+                $("#table_transaction").datagrid("loadData",getdata.transactions);
+                $("#table_phones").datagrid("loadData",getdata.reportingPerson.phones);
+                $("#table_address").datagrid("loadData",getdata.reportingPerson.addresses);
+                $("#table_phonesE").datagrid("loadData",[getdata.reportingPerson.employerPhone]);
+                $("#table_addressE").datagrid("loadData",[getdata.reportingPerson.employerAddress]);
+                $("#table_indentification").datagrid("loadData",getdata.reportingPerson.identifications);
+            });
+        }
+        else{
+            gRequest.putRemoteData(gApiKey, 'getbrief', {id:1}).done(function (result) {
+                getdata = deepCopy(result.data);
+                CreatTable(getdata, reportBaseArr1, tableReport1, "tableReport1",2,3);
+                CreatTable(getdata, reportBaseArr2, tableReport2, "tableReport2",2,1);
+                CreatTable(getdata.reportingPerson, reportPersonArr,reportPerson, "reportPerson",9,3);
+                $("#table_transaction").datagrid("loadData",getdata.transactions);
+                $("#table_phones").datagrid("loadData",getdata.reportingPerson.phones);
+                $("#table_address").datagrid("loadData",getdata.reportingPerson.addresses);
+                $("#table_phonesE").datagrid("loadData",[getdata.reportingPerson.employerPhone]);
+                $("#table_addressE").datagrid("loadData",[getdata.reportingPerson.employerAddress]);
+                $("#table_indentification").datagrid("loadData",getdata.reportingPerson.identifications);
+            });
+        }
+
+        gRequest.putRemoteData("DEAL", 'list', {})
+    });
+    function save() {
+        var _SendData = getdata;
+        _SendData.memo = $("#memo").textbox("getValue");
+        gRequest.putRemoteData(gApiKey, 'edit', _SendData).done(function (result) {
+            $.messager.alert('Succeed', 'modify successfully!');
+            cancel();
+        })
+    }
+    function cancel() {
+        var parentLocation;
+        parentLocation = searchParent("CompanyAccountList.html");
+        parentLocation.dialogClose();
+    }
+    function destroy(){
+        gRequest.delRemoteData(gApiKey,"del",JSON.stringify(_Send_ID)).done(function (result) {
+            if(result.code === 0){
+                $.messager.alert("Info",result.msg)
+                getData()
+            }else{
+                $.messager.alert("Info",result.msg)
+            }
+        })
+    }
+</script>
+</html>

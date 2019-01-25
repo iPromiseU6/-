@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8"/>
+    <link rel="stylesheet" type="text/css" href="../../Themes/material/easyui.css">
+    <link rel="stylesheet" type="text/css" href="../../Themes/icon.css">
+    <link rel="stylesheet" type="text/css" href="../../CSS/demo.css">
+    <link rel="stylesheet" type="text/css" href="../../CSS/common.css">
+    <style>
+        .required{
+            color: red;
+        }
+    </style>
+</head>
+<body style="padding: 0px;">
+<div id="toolbar" class="receipts_toolbar_style"></div>
+<form id="ff">
+    <table id="basicData" class="displaytable" style="text-align: left;padding:20px;">
+        <tr>
+            <td width="15%"><span class="required">*</span>UserName</td>
+            <td width="35%">
+                <input type="text" style="width: 80%" class="easyui-textbox" data-options="required:true"
+                       id="input_username"/>
+            </td>
+            <td width="15%"><span class="required">*</span>NickName</td>
+            <td width="35%">
+                <input type="text" style="width: 80%" class="easyui-textbox" id="input_nickname"  data-options="required:true"/>
+            </td>
+        </tr>
+        <tr>
+            <td width="15%"><span class="required">*</span>FirstName</td>
+            <td width="35%">
+                <input type="text" style="width: 80%" class="easyui-textbox" id="input_firstName"
+                       data-options='required:true'/>
+            </td>
+            <td width="15%">MiddleName</td>
+            <td width="35%">
+                <input type="text" style="width: 80%" class="easyui-textbox" id="input_middleName"/>
+            </td>
+        </tr>
+        <tr>
+            <td width="15%"><span class="required">*</span>LastName</td>
+            <td width="35%">
+                <input type="text" style="width: 80%" class="easyui-textbox" id="input_lastName"  data-options="required:true"/>
+            </td>
+            <td width="15%"><span class="required">*</span>Phone</td>
+            <td width="35%">
+                <input type="text" style="width: 80%" class="easyui-numberbox" id="input_phone" data-options="required:true,precision:0"/>
+            </td>
+        </tr>
+        <tr>
+            <td width="15%"><span class="required">*</span>Sex</td>
+            <td width="35%">
+                <input type="text" style="width: 80%" class="easyui-combobox" id="input_sex"
+                       data-options='required:true'/>
+            </td>
+            <td width="15%"><span class="required">*</span>Telephone</td>
+            <td width="35%">
+                <input type="text" style="width: 80%" class="easyui-numberbox" id="input_telephone"
+                       data-options="required:true,precision:0"/>
+            </td>
+        </tr>
+        <tr>
+            <td width="15%"><span class="required">*</span>Birthday</td>
+            <td width="35%">
+                <input type="text" style="width: 80%" class="easyui-datebox" id="input_birthday"
+                       data-options='required:true'/>
+            </td>
+            <td width="15%"><span class="required">*</span>Email</td>
+            <td width="35%">
+                <input type="text" style="width: 80%" class="easyui-textbox" id="input_email"
+                       data-options="validType:'gPattern[gEamilRegular]',required:true"/>
+            </td>
+        </tr>
+        <tr>
+            <td width="15%"><span class="required">*</span>Status</td>
+            <td width="35%">
+                <input type="radio" id="input_valid" name="isvalid" value="1">valid</input>
+                <input type="radio" id="input_unvalid" name="isvalid" value="2">unvalid</input>
+            </td>
+            <td width="15%"><span class="required">*</span>Role</td>
+            <td width="35%">
+                <input type="text" style="width: 80%" class="easyui-combobox" id="input_roleId"
+                       data-options='required:true'/>
+            </td>
+        </tr>
+
+    </table>
+    <div class="submit_button">
+        <a class="easyui-linkbutton" iconCls="icon-save" onclick="save()" style="width: 100px;"> Save</a>
+        <a class="easyui-linkbutton" iconCls="icon-reload" onclick="cls()"
+           style="width: 100px;margin-left: 10px;">Cancel</a>
+    </div>
+</form>
+<script type="text/javascript" src="../../JS/jquery.min.js"></script>
+<script type="text/javascript" src="../../JS/jquery.easyui.js"></script>
+<script type="text/javascript" src="../../Utils/ip.js"></script>
+<script type="text/javascript" src="../../JS/common.js"></script>
+<script type="text/javascript" src="../../Utils/Request.js"></script>
+<script type="text/javascript" src="../../Utils/ShareComponent.js"></script>
+<script type="text/javascript" src="../../JS/ToolBar.js"></script>
+<script type="text/javascript" src="../../Utils/BasicList.js"></script>
+<script type="text/javascript" src="../../Utils/Enum.js"></script>
+</body>
+<script type="text/javascript">
+    var gApiKey = "USERS";
+    var gRoleApiKey = "ROLE";
+    var gCurrid = getID();
+    var gEamilRegular = /^\w+@[a-zA-Z0-9]{2,10}(?:\.[a-z]{2,4}){1,3}$/;
+    var gRequest = new RequestHandle();
+    var gComboboxConfig = {
+        panelWidth: 150,
+        panelHeight: 'auto',
+    }
+    var gAllRoles;
+    createComponentFactory("SYSUSER_SEX", '#input_sex', gComboboxConfig);
+
+
+    $(document).ready(function () {
+        gCurrid = parseInt(gCurrid);
+        var _sendData = {id:gCurrid};
+        var _res;
+        if (gCurrid != AddFlag) {
+            _res = gRequest.putRemoteData(gApiKey, "get", _sendData);
+            _res.done(function (data) {
+                if(data.data.status ==1)
+                {
+                    $("input:radio[value='1']").attr('checked','true');
+                }
+                else
+                {
+                    $("#input_unvalid").attr("checked","checked");
+                }
+                var _pays =[{field:'roleId',menu:JSON.parse(localStorage.getItem("Role")).map(function(current){
+                    return {value:current.id,text:current.name}
+                    })}];
+                var shuju  =data.data;
+                 shuju = changeValueToText([shuju],_pays);
+                getFormData(shuju[0]);
+            });
+        }
+        gRequest.postRemoteData(gRoleApiKey,"list",JSON.stringify({})).complete(function(_result){
+            _result = _result.responseJSON;
+           if(_result.code === 0)
+           {
+               localStorage.setItem("Role",JSON.stringify(_result.data.data));
+               createComponentFactory("SYSUSER_ROLE", '#input_roleId', gComboboxConfig);
+           }
+        })
+    });
+
+    //检验格式
+    $.extend($.fn.validatebox.defaults.rules, {
+        gPattern: {
+            validator: function (value, param) {
+                return param[0].test(value);
+            },
+            message: 'Format error!'
+        }
+    });
+
+    //重置
+    function cls() {
+        var parentLocation;
+        parentLocation = searchParent("SysUserList.html");
+        parentLocation.dialogClose();
+    }
+
+    function save() {
+        var _method;
+        if (!$("#input_email").textbox('isValid')) {
+            $.messager.alert("Alert", "Mailbox format error!");
+            return
+        }
+        _method = (gCurrid == AddFlag)?"add":"edit";
+        saveData(_method);
+    }
+
+    function saveData(_method) {
+        var _data = submitFormData();
+        var _id = {id:gCurrid};
+        var _radio = $("input:radio[name='isvalid']:checked").val();
+        var _status = {status: parseInt(_radio)};
+        var _sendData = $.extend(false, _data, _status);
+        var _pays =[{field:'roleId',menu:JSON.parse(localStorage.getItem("Role")).map(function(current){
+                return {value:current.id,text:current.name}
+            })}];
+        _sendData = changeTextToValue([_sendData],_pays)[0];
+        if(_method == "add")
+        {
+            _sendData = JSON.stringify(_sendData);
+            gRequest.postRemoteData(gApiKey, _method, _sendData).complete(function (_result) {
+                _result = _result.responseJSON;
+                if (_result.code == 0) {
+                    var parentLocation;
+                    parentLocation = searchParent("SysUserList.html");
+                    parentLocation.dialogClose();
+                } else {
+                    $.messager.alert("Fail", _result.msg);
+
+                }
+            });
+        }
+        else{
+            _data.roleId  = parseInt(_data.roleId);
+            _sendData = $.extend(false, _data, _status,_id);
+            gRequest.putRemoteData(gApiKey,_method,_sendData).complete(function(_result){
+                _result = _result.responseJSON;
+                if (_result.code == 0) {
+                    var parentLocation;
+                    parentLocation = searchParent("SysUserList.html");
+                    parentLocation.dialogClose();
+                } else {
+                    $.messager.alert("Fail", "The format does not meet the requirements!");
+
+                }
+            })
+        }
+
+
+    }
+</script>
+</html>

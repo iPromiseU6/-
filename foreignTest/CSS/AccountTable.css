@@ -1,0 +1,21 @@
+*{
+    font-size: 13px;
+}
+
+#Table {
+    margin-bottom: 20px;
+    width: 650px;
+    table-layout:fixed;
+    border-collapse: collapse;
+    font-weight: bold;
+    color: #666666;
+}
+
+#Table tr {
+    text-align: center;
+    height: 30px;
+}
+
+#Table td {
+    border: 1px solid #d5d5d5;
+}

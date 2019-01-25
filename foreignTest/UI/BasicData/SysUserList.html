@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" type="text/css" href="../../Themes/material/easyui.css">
+    <link rel="stylesheet" type="text/css" href="../../Themes/icon.css">
+    <link rel="stylesheet" type="text/css" href="../../CSS/common.css">
+</head>
+<body style="padding: 0px;">
+<div id="div_layout" class="easyui-layout">
+    <div id="div_search" data-options="region:'north'">
+    </div>
+    <div data-options="region:'center'">
+        <div class="easyui-panel" title="DataList">
+            <table id="dg">
+            </table>
+        </div>
+    </div>
+</div>
+<div id="toolbar"></div>
+<div id="dlg" class="easyui-dialog" closed="true">
+    <iframe id="ifrmEdit" height="100%" width="100%" frameborder="0" scrolling="no"></iframe>
+</div>
+<script type="text/javascript" src="../../JS/jquery.min.js"></script>
+<!--必须使用这个js而不是min.js ,因为做了封装修改-->
+<script type="text/javascript" src="../../JS/jquery.easyui.js"></script>
+<script type="text/javascript" src="../../JS/common.js"></script>
+<script type="text/javascript" src="../../Utils/ip.js"></script>
+<script type="text/javascript" src="../../Utils/ShareComponent.js"></script>
+<script type="text/javascript" src="../../JS/ToolBar.js"></script>
+<script type="text/javascript" src="../../JS/SearchComponent.js"></script>
+<script type="text/javascript" src="../../Utils/BasicList.js"></script>
+<script type="text/javascript" src="../../Utils/Request.js"></script>
+<script type="text/javascript" src="../../Utils/Enum.js"></script>
+<script>
+    var dataType = localStorage.getItem("dataType");
+    var gRequest = new RequestHandle();
+    var gBasicList = new BasicListPage();
+    var gApiKey = "USERS";
+    var gAddOpenUrl = "UI/BasicData/SysUserDetail.html?id=-1";
+    var gEditOpenUrl = "UI/BasicData/SysUserDetail.html?id=";
+    var config = {dialogWidth: 580, dialogHeight: 480};
+    var gSearchOptions = SEARCH_SYSUSER_NAME;
+    gSearchOptions += SEARCH_SYSUSER_CREATETIME_START;
+    gSearchOptions += SEARCH_SYSUSER_CREATETIME_END;
+    var gToolbarOptions =DATAGRID_TOOLBAR_EDITOR;
+    gToolbarOptions += DATAGRID_TOOLBAR_ADD;
+    gToolbarOptions += DATAGRID_TOOLBAR_RESETPASS;
+    gToolbarOptions +=DATAGRID_TOOLBAR_STOPACCOUNT;
+
+    gBasicList.createToolbar(gToolbarOptions);
+    gBasicList.createSearch(gSearchOptions);
+    var gDatagridUrl = RequestUrl.constructURL(gApiKey, "listbrif");
+    var gConfig = {
+        url : gDatagridUrl,
+        method:"post",
+        columns : [
+            [{
+                field: 'ck',
+                checkbox: 'true',
+            },{
+                field : 'id',
+                title : 'id',
+                width : '0%',
+                align : 'center'
+            }, {
+                field : 'username',
+                title : 'UserName',
+                width : '12%',
+                align : 'center',
+            }, {
+                field : 'nickname',
+                title : 'NickName',
+                width : '12%',
+                align : 'center',
+            }, {
+                field : 'sex',
+                title : 'Sex',
+                width : '11%',
+                align : 'center',
+                formatter : function(value,row,index){
+                    var _v = value + '';
+                    if(_v){
+                        return getValueByKey(SEX_CODE,_v);
+                    }
+                }
+            },{
+                field : 'telephone',
+                title : 'Telephone',
+                width : '15%',
+                align : 'center'
+            },{
+                field : 'birthday',
+                title : 'Birthday',
+                width : '12%',
+                align : 'center',
+            },{
+                field : 'email',
+                title : 'Email',
+                width : '20%',
+                align : 'center',
+            },{
+                field : 'status',
+                title : 'Status',
+                width : '11%',
+                align : 'center',
+                formatter : function(value,row,index){
+                    var _v = value + '';
+                    if(_v){
+                        return getValueByKey(SYSUSER_STATUS_CODE,_v);
+                    }
+                }
+            }]
+        ],
+        onDblClickRow:function(index,row){
+            var pLocation = "UI/BasicData/SysUserDetail.html?id="+ row.id;
+            $("#ifrmEdit").attr("src", pLocation);
+            constructDialog($('#dlg'), 'update', config.dialogWidth, config.dialogHeight);
+            AddDialog.dialog('open');
+        }
+    }
+
+    gBasicList.createDataGrid(gConfig);
+    gBasicList.hideColumn(['id']);
+
+    $(document).ready(function(){
+        getNameData();
+    })
+
+    function getNameData(){
+        var _sendData = JSON.stringify({type:dataType});
+        gRequest.postRemoteData(gApiKey,"allbrif",_sendData).done(function(_result){
+            if(_result.code === 0){
+                nameData = _result.data;
+                $("#search_sysuser_name").combobox({
+                    data:nameData,
+                })
+            }
+        })
+    }
+
+    function doSearch(){
+        var _searchCondition = processSearchConditionObject();
+        var _createTime = [];
+        _createTime.push(_searchCondition.startTime);
+        _createTime.push(_searchCondition.endTime);
+        var _sendData = {
+            username:_searchCondition.username,
+            createTime:_createTime
+        }
+        _sendData = JSON.stringify(_sendData)
+        gRequest.postRemoteData(gApiKey,"listbrif",_sendData).done(function (result) {
+            if(result.code===0){
+                $("#dg").datagrid('loadData',result.data.data)
+            }
+            else{
+                $.messager.alert("Fail", result.msg);
+            }
+        })
+    }
+
+    function newData() {
+        gBasicList.newHandle(gAddOpenUrl, config);
+    }
+
+    function editData(){
+        gBasicList.editHandle(gEditOpenUrl, config);
+    }
+
+    function  resetPass(){
+        var row = $('#dg').datagrid('getSelected');
+        if (!row) {
+            $.messager.alert('Info', "please choose one data!");
+            return;
+        }
+        var _sendData = {id:row.id};
+        gRequest.putRemoteData(gApiKey,"reset",_sendData).done(function (result) {
+            if(result.code===0){
+                $.messager.alert("Success","Reset Password Success!");
+            }
+            else{
+                $.messager.alert("Fail", result.msg);
+            }
+        })
+    }
+
+
+    function  stopAccount(){
+        var row = $('#dg').datagrid('getSelected');
+        if (!row) {
+            $.messager.alert('Info', "Please select the data you want to operation!");
+            return;
+        }
+        var _sendData = {id:row.id};
+        gRequest.putRemoteData(gApiKey,"state",_sendData).done(function (result) {
+            if(result.code==0){
+                $.messager.alert("Success","Stop Account Success!");
+            }
+            else{
+                $.messager.alert("Fail", result.msg);
+            }
+        })
+    }
+
+    function dialogClose() {
+        AddDialog.dialog('close');
+    }
+
+
+</script>
+</body>
+</html>

@@ -1,0 +1,237 @@
+body {
+    background-color: #f8f8f8;
+    margin: 0;
+    padding: 0;
+}
+
+#login_contral_layout {
+    height: 670px;
+    display: flex;
+    align-items: center;
+    -webkit-align-items: center;
+}
+
+/*#login_across {*/
+/*position: absolute;*/
+/*z-index: -1;*/
+/*height: 235px;*/
+/*background-color: #f5faf4;*/
+/*width: 100%;*/
+/*}*/
+
+#logo_login_PNG {
+    position: relative;
+    margin-left: auto;
+    height: 533px;
+    width: 360px;
+}
+
+#logo_login_PNG img:first-child {
+    display:block;
+    height: 536px;
+    width: 369px;
+}
+
+
+
+#logo_login_PNG img:last-child {
+    display:block;
+    position: absolute;
+    top: 44%;
+    left: 9%;
+    height: 51px;
+    width: 295px;
+}
+
+#login {
+    background-color: #ffffff;
+    align-items: center;
+    -webkit-align-items: center;
+    border: 1px solid #eeeeee;
+    border-left: none;
+    height: 520px;
+    width: 450px;
+    margin-left: auto;
+    margin-right: auto;
+    box-shadow: 0 2px 8px #eeeeee;
+    -webkit-box-shadow: 0 2px 8px #eeeeee;
+    -moz-box-shadow: 0 2px 8px #eeeeee;
+}
+
+#icon_GNS {
+    display: table;
+    margin: 10px auto 10px 80px;
+    height: 120px;
+}
+
+#login_login {
+    display: table-cell;
+    vertical-align: middle;
+    font-size: 20px;
+    font-family: sans-serif, serif;
+    font-weight: 400;
+}
+
+.login_input {
+    display: table;
+    margin: 18px auto 25px auto;
+}
+
+.login_message {
+    margin-bottom: 8px;
+    font-size: 15px;
+    font-weight: 500;
+}
+
+.login_input_new {
+    border: 1px solid #dedede;
+    width: 296px;
+    box-shadow: 0px 0px 10px #dedede;
+    -webkit-box-shadow: 0px 0px 10px #dedede;
+    -moz-box-shadow: 0px 0px 10px #dedede;
+}
+
+/*.login_input_new:focus{*/
+/*box-shadow: inset 0 0px 20px rgba(0, 0, 0, .075), 0 0 20px rgba(102, 175, 233, .6);*/
+/*}*/
+
+.login_input_new > input {
+    height: 34px;
+    width: 250px;
+    padding: 0;
+    border: none;
+    font-size: 12px;
+}
+
+#password:focus,
+#userName:focus,
+#validate:focus {
+    outline: none;
+    /*border-color: #0092DC;*/
+    /*box-shadow: 2px 2px 80px rgba(0, 0, 0, .075), 0 0 20px rgba(102, 175, 233, .6);*/
+}
+
+.login_logo {
+    background-color: #ffffff;
+    float: right;
+    display: inline-block;
+    width: 30px;
+    height: 34px;
+    padding: 0 2px 0 2px;
+    border-left: 1px solid #e4e4e4;
+}
+
+.login_logo_png {
+    width: 23px;
+    height: 25px;
+    padding: 2px;
+    margin: 2px;
+}
+
+#login_png{
+    display: table-cell;
+    vertical-align: middle;
+    height: 58px;
+    padding-top: 30px;
+    padding-right: 15px;
+    font-size: 29px;
+    font-family: sans-serif, serif;
+    font-weight: 500;
+}
+
+#validate {
+    width: 203px;
+    padding: 0;
+}
+
+#checkCode {
+    background-color: #ffffff;
+    border-left: 1px solid #eeeeee;
+    width: 92px;
+    height: 34px;
+    display: inline-block;
+    font-size: 21px;
+    vertical-align: middle;
+    text-align: center;
+    font-family: Arial, serif;
+    letter-spacing: 3px;
+    color: #108ee9;
+    float: right;
+    /*font-weight: bold;*/
+    /*font-style: oblique;*/
+    /*text-shadow: 1px 1px 3px;*/
+}
+
+#cheakcode {
+
+}
+
+#reset_button {
+    margin-right: 10px;
+    margin-top: 5px;
+    width: 140px;
+    height: 36px;
+    background-color: #ffffff;
+    border: 1px solid #108ee9;
+    border-radius: 2px;
+    -webkit-border-radius: 2px;
+    -moz-border-radius: 2px;
+    /*letter-spacing: 20px;*/
+    /*text-indent: 20px;*/
+    text-align: center;
+    color: #108ee9;
+    font-size: 17px;
+    font-weight: 400;
+    padding: 5px 0 5px 0;
+}
+
+#login_button {
+    margin-left: 10px;
+    margin-top: 5px;
+    width: 140px;
+    height: 36px;
+    background-color: #108ee9;
+    border-radius: 2px;
+    -webkit-border-radius: 2px;
+    -moz-border-radius: 2px;
+    border: none;
+    text-align: center;
+    color: #fff;
+    font-size: 17px;
+    font-weight: 400;
+    padding: 5px 0 5px 0;
+}
+
+#reset_button:hover,
+#login_button:hover {
+    cursor: pointer;
+}
+
+#version {
+    height: 44px;
+    width: 100%;
+    bottom: 0;
+    display: table;
+    vertical-align: middle;
+    text-align: center;
+    color: #999999;
+}
+
+#txtversion {
+    margin-top: 10px;
+    margin-bottom: 3px;
+    vertical-align: middle;
+}
+
+#txtversion > a {
+    font-size: 13px;
+}
+
+.login_check_div{
+    float: right;
+    height: 28px;
+    width: 34px;
+    display: inline-block;
+    text-align: center;
+    padding-top: 6px;
+}

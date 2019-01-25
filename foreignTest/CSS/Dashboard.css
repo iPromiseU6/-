@@ -1,0 +1,96 @@
+body {
+    background-color: #f8f8f8;
+}
+
+* {
+    text-align: center;
+    color: #666679;
+}
+
+#Dashboard {
+    width: 70%;
+    margin: 30px auto 0 auto;
+}
+
+#Dashboard form:hover {
+    box-shadow: 1px 1px 40px #e8e8e8;
+}
+
+#Dashboard form {
+    margin: 20px auto 0 auto;
+    padding-bottom: 30px;
+    background-color: #ffffff;
+}
+
+#Dashboard h1 {
+    width: 400px;
+    margin: auto auto 5px;
+    padding-top: 10px;
+    font-size: 32px;
+    color: rgb(102, 102, 102);
+    line-height: 48px;
+    font-weight: 400;
+}
+
+#Table {
+    margin-right: 4%;
+    margin-left: 4%;
+    padding-bottom: 20px;
+    width: 92%;
+    font-family: "微软雅黑";
+    font-weight: 600;
+    border-collapse: collapse;
+}
+
+#Table tr {
+    height: 40px;
+    border: 0 solid #d5d5d5;
+    border-bottom-width: 1px;
+}
+
+#Table th {
+    font-weight: bold;
+    line-height: 21px;
+    font-size: 14px;
+    color: #474747;
+}
+
+#Table td {
+    margin-left: 3%;
+    margin-right: 3%;
+    /*height: 10px;*/
+    /*line-height: 18px;*/
+    font-size: 12px;
+    width: 6%;
+    font-weight: 500;
+}
+
+.currencyCodeTo {
+    width: 70%;
+    padding: 2px;
+    margin-left: 25%;
+    height: 16px;
+    background: #f8c82e;
+    border-radius: 5px;
+    color: #f8f8f8;
+}
+
+.buyingRate1 {
+    width: 40%;
+    padding: 2px;
+    margin-left: 30%;
+    height: 16px;
+    background: #8fc9fb;
+    border-radius: 5px;
+    color: #f8f8f8;
+}
+
+.sellingRate1 {
+    width: 40%;
+    padding: 2px;
+    margin-left: 30%;
+    height: 16px;
+    background: #f69899;
+    border-radius: 5px;
+    color: #f8f8f8;
+}

@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8"/>
+    <link rel="stylesheet" type="text/css" href="../../Themes/material/easyui.css">
+    <link rel="stylesheet" type="text/css" href="../../Themes/icon.css">
+    <link rel="stylesheet" type="text/css" href="../../CSS/common.css">
+</head>
+<body style="padding: 0px;">
+<form id="ff">
+    <div>
+        <div style="margin-top: 20px;margin-right: 20px;display: flex;justify-content:flex-end">
+            <span style='margin-right: 5px'><span class="required">*</span>Type:</span>
+            <input type="text" class="easyui-textbox" id="input_type"
+                   style="width: 65%;" disabled="disabled"/>
+        </div>
+        <div id="div_account">
+            <div style="margin-top: 20px;margin-right: 20px;display: flex;justify-content:flex-end">
+                <span style='margin-right: 5px'>account:</span>
+                <input type="text" class="easyui-textbox" id="input_accountId"
+                       style="width: 65%"/>
+            </div>
+        </div>
+        <div id="div_entity">
+            <div style="margin-top: 20px;margin-right: 20px;display: flex;justify-content:flex-end">
+                <span style='margin-right: 5px'><span class="required">*</span>Entity:</span>
+                <input type="text" class="easyui-textbox" id="input_entityId"
+                       style="width: 65%"/>
+            </div>
+        </div>
+        <div style="margin-top: 20px;margin-right: 20px;display: flex;justify-content:flex-end">
+            <span style='margin-right: 5px'><span class="required">*</span>Payment:</span>
+            <input type="text" class="easyui-combobox" id="input_payment"
+                   style="width: 65%"/>
+        </div>
+        <div style="margin-top: 20px;margin-right: 20px;display: flex;justify-content:flex-end">
+            <span style='margin-right: 5px'><span class="required">*</span>CompanyAccount:</span>
+            <input type="text" class="easyui-textbox" id="input_companyAccountId"
+                   style="width: 65%"/>
+        </div>
+        <div style="margin-top: 20px;margin-right: 20px;display: flex;justify-content:flex-end">
+            <span style='margin-right: 5px'><span class="required">*</span>Amount:</span>
+            <input type="text" class="easyui-numberbox" id="input_foreignAmount"
+                   style="width: 65%"/>
+        </div>
+        <div style="margin-top: 20px;margin-right: 20px;display: flex;justify-content:flex-end">
+            <span style='margin-right: 5px'><span class="required">*</span>fundsCode:</span>
+            <input type="text" class="easyui-textbox" id="input_fundsCode"
+                   style="width: 65%"/>
+        </div>
+        <div style="margin-top: 20px;margin-right: 20px;display: flex;justify-content:flex-end">
+            <span style='margin-right: 5px'>Comments:</span>
+            <input type="text" class="easyui-textbox" id="input_fundsComment"
+                   style="width: 65%"/>
+        </div>
+
+    </div>
+    <div class="submit_button">
+        <a class="easyui-linkbutton" iconCls="icon-save" onclick="SaveArrivesOrPays()" style="width: 100px;">Save</a>
+        <a class="easyui-linkbutton" iconCls="icon-reload" onclick="cancel()" style="width: 100px;">Cancel</a>
+    </div>
+</form>
+</body>
+<script type="text/javascript" src="../../JS/jquery.min.js"></script>
+<script type="text/javascript" src="../../JS/jquery.easyui.js"></script>
+<script type="text/javascript" src="../../JS/common.js"></script>
+<script type="text/javascript" src="../../Utils/ip.js"></script>
+<script type="text/javascript" src="../../Utils/ShareComponent.js"></script>
+<script type="text/javascript" src="../../JS/ToolBar.js"></script>
+<script type="text/javascript" src="../../Utils/BasicList.js"></script>
+<script type="text/javascript" src="../../Utils/BasicPreview.js"></script>
+<script type="text/javascript" src="../../Utils/Request.js"></script>
+<script type="text/javascript" src="../../Utils/Enum.js"></script>
+<script type="text/javascript" src="../../JS/Header.js"></script>
+<script type="text/javascript" src="../../JS/SearchComponent.js"></script>
+<script type="text/javascript" src="../../Utils/BasicDetail.js"></script>
+<script type="text/javascript" src="../../JS/jquery.edatagrid.js"></script>
+<script type="text/javascript" src="./ReceiptDetailCommon.js"></script>
+<script type="text/javascript">
+
+    var gAPiKey = "DEAL";
+    var gArrivesId = getMultiID().id;
+    var gTransactionId = getMultiID().transactionId;
+    var gCustomerId = getMultiID().customerId;
+    var gCustomerAccountType = getMultiID().customerAccountType;
+    var gRequestHandle = new RequestHandle();
+    var myConvertData = deepCopy(gConvertData);
+    var gOriginData = {};
+
+    init();
+
+    $(function () {
+        myConvertData.type = {src: transactionTypeData, key: 'value', value: 'text'};//type字段冲突，复写掉
+        myConvertData.accountId = {src: 'currentAccount', key: 'id', value: 'accountName'};
+        myConvertData.entityId = {src: 'currentEntity', key: 'id', value: 'accountName'};
+        myConvertData.companyAccountId = {src: "companyAccount", key: "id", value: "text"};
+        if (gArrivesId == -1) {
+            setAccountType({text: gCustomerAccountType === CUSTOMER_ACCOUNT_TYPE_CODE.CompanyAccount ? "Entity" : "Person"});
+            clearFormData();
+        } else {
+            var arrives = JSON.parse(sessionStorage.getItem('currentReceipt')).arrives;
+            var currentArrives = arrives.filter(function (current) {
+                return current.id == gArrivesId;
+            })[0];
+            currentArrives.type = gCustomerAccountType;
+            gOriginData = currentArrives;
+            setAccountType({text: gCustomerAccountType === CUSTOMER_ACCOUNT_TYPE_CODE.CompanyAccount ? "Entity" : "Person"});
+            currentArrives = convertFormData(currentArrives, myConvertData);
+            getFormData(currentArrives);
+        }
+    });
+
+    function init() {
+        createComponentFactory("TRANSACTION_TYPE", '#input_type', gComboboxConfig);
+        createComponentFactory("TRANSACTION_PAYMENTTYPE", '#input_payment', gComboboxConfig);
+        createComponentFactory("FUNDSCODE", "#input_fundsCode", gComboboxConfig);
+        createComponentFactory("REPORT_ACCOUNT_COMPANY", "#input_companyAccountId",gComponyAccountConfig);
+        createComponentFactory("TRANSACTION_ENTITY", "#input_entityId", gComboboxConfig);
+        createComponentFactory("TRANSACTION_ACCOUNT", "#input_accountId", gComboboxConfig);
+        bundleEvent();
+    }
+
+    function cancel() {
+        clearFormData();
+        var parentLocation;
+        parentLocation = searchParent("AdminReceiptDetail.html");
+        parentLocation.closeDlg();
+    }
+
+    function SaveArrivesOrPays() {
+        var formData = submitFormData();
+        Object.keys(formData).forEach(function (filed) {
+            if (gConvertFieldData[filed]) {
+                formData[filed] = typeof formData[filed] === 'number' ? formData[filed] : window['parse' + gConvertFieldData[filed]](formData[filed]);
+            }
+        });
+        var _sendData = convertFormData(formData, myConvertData, true);
+        _sendData.id = gArrivesId;
+        _sendData.transactionId = gTransactionId;
+        _sendData.customerId = gCustomerId;
+        return gArrivesId == -1 ? addArrives(_sendData) : editArrives(_sendData);
+    }
+
+    function addArrives(sendData) {
+        delete sendData.id;
+        sendData = {
+            id: gTransactionId,
+            arrive: sendData,
+        };
+        gRequestHandle.putRemoteData(gAPiKey, "addArrive", sendData).done(function (_result) {
+            if (_result.code === 0) {
+                $.messager.alert('Info', 'add data success!');
+                cancel();
+            } else {
+                $.messager.alert('Alert', 'add data failed!' + _result.msg);
+            }
+        });
+    }
+
+    function editArrives(sendData) {
+        sendData = {
+            id: gTransactionId,
+            arrive: sendData,
+        };
+        gRequestHandle.putRemoteData(gAPiKey, "editArrive", sendData).done(function (_result) {
+            if (_result.code === 0) {
+                $.messager.alert('Info', 'edit data success!');
+                cancel();
+            } else {
+                $.messager.alert('Alert', 'edit data failed!', _result.msg);
+            }
+        });
+    }
+
+    function bundleEvent() {
+        $("#input_type").combobox({
+            onSelect: function (e) {
+                return setAccountType(e);
+            }
+        });
+        $("#input_accountId").combobox({
+            onShowPanel: function () {
+                var _data = JSON.parse(localStorage.getItem('currentAccount'));
+                $(this).combobox("loadData", _data || []);
+            }
+        });
+        $("#input_entityId").combobox({
+            onShowPanel: function () {
+                var _data = JSON.parse(localStorage.getItem('currentEntity'));
+                $(this).combobox("loadData", _data || []);
+            }
+        });
+    }
+
+    function setAccountType(e) {
+        switch (e.text) {
+            case "Entity":
+                $("#div_entity").css("display", "block");
+                break;
+            default:
+                $("#div_account").css("display", "none");
+                $("#div_entity").css("display", "none");
+                break;
+        }
+    }
+
+</script>
+</html>

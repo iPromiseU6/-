@@ -1,0 +1,228 @@
+<!--创建人：简佳成-->
+<!--创建时间：2018.11.30-->
+<!--描述：基础数据类型展示页面框架-->
+
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" type="text/css" href="../../Themes/material/easyui.css">
+    <link rel="stylesheet" type="text/css" href="../../Themes/icon.css">
+    <link rel="stylesheet" type="text/css" href="../../CSS/common.css">
+</head>
+<style>
+</style>
+<body style="padding: 0px;">
+<div id="div_layout" class="easyui-layout">
+    <div id="div_search" data-options="region:'north'">
+    </div>
+    <div data-options="region:'center'">
+        <div class="easyui-panel" title="Datalist">
+            <table id="dg">
+            </table>
+        </div>
+    </div>
+</div>
+<div id="toolbar"></div>
+<div id="dlg" class="hiddenDialog">
+    <iframe id="ifrmEdit" height="100%" width="100%" frameborder="0" scrolling="no"></iframe>
+</div>
+</body>
+<script type="text/javascript" src="../../JS/jquery.min.js"></script>
+<!--必须使用这个js而不是min.js ,因为做了封装修改-->
+<script type="text/javascript" src="../../JS/jquery.easyui.js"></script>
+<script type="text/javascript" src="../../JS/common.js"></script>
+<script type="text/javascript" src="../../Utils/ip.js"></script>
+<script type="text/javascript" src="../../Utils/ShareComponent.js"></script>
+<script type="text/javascript" src="../../JS/ToolBar.js"></script>
+<script type="text/javascript" src="../../JS/SearchComponent.js"></script>
+<script type="text/javascript" src="../../Utils/BasicList.js"></script>
+<script type="text/javascript" src="../../Utils/Request.js"></script>
+<script type="text/javascript" src="../../Utils/Enum.js"></script>
+<script>
+    var dataType = localStorage.getItem("dataType")
+    var AddDialog
+    var nameData//保存从服务器拿到的数据
+    //声明
+    var gBasicList = new BasicListPage();
+    var gRequest = new RequestHandle();
+    var gApiKey = "BASECODE"
+    var gEditOpenUrl = "UI/BasicData/BasicDataDetail.html?id="
+    var gAddOpenUrl = "UI/BasicData/BasicDataDetail.html?id=-1"
+    var config = {dialogWidth: 530, dialogHeight: 400};
+    ////主流程
+    gBasicList.createSearch(SEARCH_BASICDATA_NAME);//创建搜索界面
+    var content = DATAGRID_TOOLBAR_EDITOR;
+        content+=DATAGRID_TOOLBAR_DELETE;
+        content+=DATAGRID_TOOLBAR_ADD;
+        content+=DATAGRID_TOOLBAR_UPDATEDATA;
+    gBasicList.createToolbar(content);//创建toolbar
+    ////创建表格
+    var gDatagridUrl = RequestUrl.constructURL(gApiKey, "listbrif");
+    var gConfig = {
+        url : gDatagridUrl,
+        method:"post",
+        queryParams:{type: dataType,used:"1"},
+        columns : [
+            [{
+                field: 'ck',
+                checkbox: 'true',
+            },{
+                field : 'id',
+                title : 'id',
+                width : '0%',
+                align : 'center'
+            }, {
+                field : 'code',
+                title : 'Code',
+                width : '15%',
+                align : 'center',
+            }, {
+                field : 'name',
+                title : 'Name',
+                width : '25%',
+                align : 'center',
+            }, {
+                field : 'type',
+                title : 'Type',
+                width : '25%',
+                align : 'center'
+            },{
+                field : 'used',
+                title : 'Available',
+                width : '25%',
+                align : 'center',
+                formatter:function (value) {
+                    value = value+'';
+                    if(value){
+                        return getValueByKey(BASICDATA_STATE, value);
+                    }
+                }
+            }]
+        ],
+        onDblClickRow : function (index, row) {
+            var _DialogWidth=530;
+            var _DialogHeight=400;
+            var pLocation = "UI/BasicData/BasicDataDetail.html?id="+ row.id;
+            $("#ifrmEdit").attr("src", pLocation);
+            constructDialog($('#dlg'), 'Info', _DialogWidth, _DialogHeight);
+            AddDialog.dialog('open');
+        },
+    }
+    gBasicList.createDataGrid(gConfig);
+    gBasicList.hideColumn(['id']);//隐藏id
+
+    //函数部分
+
+    $(document).ready(function () {
+        getNameData()//获取name数据并且加载模糊查询
+    });
+
+    function fuzzySearch(value,data) {//模糊查询
+        return data.filter(function (current) {
+            return current.code.toLowerCase().indexOf(value.toLowerCase()) >= 0;
+        });
+    }
+    function getNameData() {//获取name数据 载入模糊查询框
+        var sendData = JSON.stringify({type:dataType,used:"1"})
+        gRequest.postRemoteData(gApiKey,"allbrif",sendData).complete(function (result) {
+            var _result = result.responseJSON;
+            if (_result.code === 0) {
+                nameData = _result.data;
+                /*localStorage.setItem("dataType", JSON.stringify(nameData[0].type));
+                localStorage.setItem(nameData[0].type, JSON.stringify(_result.data));*/
+                $("#search_basic_name").combobox({
+                    data:nameData,
+                    onChange: function (newValue) {
+                        if (isEnglish(newValue)||newValue==="") {
+                            var _searchData = fuzzySearch(newValue.trim(),nameData);
+                            $(this).combobox("loadData", _searchData ? _searchData : nameData);
+                        }
+                    },
+                })
+            } else {
+                $.messager.alert("failed", _result.msg);
+            }
+        });
+    }
+    function doSearch() {
+        var _searchCondition = processSearchConditionObject();
+        var typeData = {type:dataType}
+        var sendData = $.extend(false,_searchCondition,typeData)
+        sendData = JSON.stringify(sendData)
+        gRequest.postRemoteData(gApiKey,"listbrif",sendData).done(function (result) {
+            if(result.code===0){
+                $("#dg").datagrid('loadData',result.data.data)
+            }
+            else{
+                $.messager.alert("failed", result.msg);
+            }
+        })
+    }
+    function doReset() {
+        $("#dg").datagrid('reload')
+        $(".easyui-combobox").each(function (index) {
+            $(this).combobox('clear');
+        });
+    }
+    function  editData() {
+        gBasicList.editHandle(gEditOpenUrl, config);
+    }
+
+    function newData() {
+        gBasicList.newHandle(gAddOpenUrl, config);
+    }
+    function closeDlg() {
+        AddDialog.dialog('close')
+    }
+    function destroy(){
+        var _row = $('#dg').datagrid('getSelected');
+        if (!_row) {
+            $.messager.alert('Info', "Please select the data you need to modify！");
+            return;
+        }
+        var _param = {id:_row.id}
+        var _typeData = {type:dataType}
+        var _sendData = $.extend(false,_param,_typeData)
+        _sendData = JSON.stringify(_sendData)
+        $.messager.confirm("Info", "confirm to Delete Data", function (r) {
+            if (r) {
+                gRequest.delRemoteData(gApiKey,"delall",_sendData).done(function (result) {
+                    if(result.code === 0){
+                        $.messager.alert("Info",result.msg)
+                        $("#dg").datagrid('reload',gDatagridUrl);
+                    }else{
+                        $.messager.alert("Info",result.msg)
+                    }
+                });
+            }
+        });
+    }
+    function updateBasicData() {
+        var _row = $('#dg').datagrid('getSelected');
+        if (!_row){
+            $.messager.alert('Info', "please choose Data");
+            return;
+        }
+        var postUsed;
+        if(_row.used ==0){
+            postUsed =1
+        }else{
+            postUsed =0
+        }
+        var _param = {id: _row.id,used:postUsed}
+        var _typeData = {type: dataType}
+        var _sendData = $.extend(false, _param, _typeData)
+        gRequest.putRemoteData(gApiKey, "used", _sendData).done(function (result) {
+            if (result.code === 0) {
+                $("#dg").datagrid('reload', gDatagridUrl)
+            }
+            else {
+                $.messager.alert("failed", result.msg);
+            }
+        })
+    }
+</script>
+
+</html>

@@ -1,0 +1,510 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" type="text/css" href="../../Themes/material/easyui.css">
+    <link rel="stylesheet" type="text/css" href="../../Themes/icon.css">
+    <link rel="stylesheet" type="text/css" href="../../CSS/common.css">
+</head>
+<body>
+<div id="toolbar1" style="margin-bottom: 10px;padding:10px;width:100px">
+    <a href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-save'" onclick="saveReport()">TransactionReport</a>
+</div>
+<div id="CustomerInfo" class="easyui-panel" title="CustomerInfo"
+     style="width:100%;height:150px;padding:10px;background:#fafafa;overflow: hidden"
+     data-options="iconCls:'icon-save',closable:false,
+    collapsible:true,minimizable:false,maximizable:false,selected:true">
+    <div id="toolbar" style="margin-bottom: 10px"></div>
+    <form id="ff_customer" style="width:100%">
+        <table style="width: 100%">
+            <tr style="width:100%;height: 60px">
+                <td style="width:8%">FirstName:</td>
+                <td style="width: 25%;text-align: left;">
+                    <input type="text" class="easyui-textbox" style="width: 80%" disabled="disabled"
+                           id="input_firstName"/>
+                </td>
+                <td style="width:8%">LirstName:</td>
+                <td style="width: 25%;text-align: left;">
+                    <input type="text" class="easyui-textbox" style="width: 80%" disabled="disabled"
+                           id="input_lastName"/>
+                </td>
+                <td style="width:8%">PhoneNumber:</td>
+                <td style="width: 25%;text-align: left;">
+                    <input type="text" class="easyui-numberbox" style="width: 80%" id="input_phoneNumber"/>
+                </td>
+            </tr>
+        </table>
+    </form>
+</div>
+<div id="transactionInfo" class="easyui-panel" title="TransactionInfo"
+     style="width:100%;height:350px;padding:10px;background:#fafafa;overflow: hidden"
+     data-options="iconCls:'icon-save',closable:false,
+    collapsible:true,minimizable:false,maximizable:false,selected:true">
+    <form id="ff_transactionInfo" style="width:100%">
+        <table style="width: 100%">
+            <tr style="width:100%;height: 60px">
+                <td style="width:8%"><span class='required'>*</span>TransactionNumber:</td>
+                <td style="width: 25%;text-align: left;padding: 5px">
+                    <input type="text" class="easyui-textbox" style="width: 80%" disabled="disabled"
+                           id="input_transactionNumber"/>
+                </td>
+                <td style="width:8%"><span class='required'>*</span>TransactionDate:</td>
+                <td style="width: 25%;text-align: left;padding: 5px">
+                    <input type="text" class="easyui-datebox" style="width: 80%" disabled="disabled"
+                           id="input_dateTransaction"/>
+                </td>
+                <td style="width:8%"><span class='required'>*</span>visible:</td>
+                <td style="width: 25%;text-align: left;padding: 5px">
+                    <input type="text" class="easyui-combobox" style="width: 80%" disabled="disabled"
+                           id="input_visible"/>
+                </td>
+            </tr>
+            <tr style="width:100%;height:60px">
+                <td style="width:8%"><span class='required'>*</span>FromCurrencyCode:</td>
+                <td style="width: 25%;text-align: left;padding: 5px">
+                    <input type="text" class="easyui-textbox" style="width: 80%" disabled="disabled"
+                           id="input_fromCurrencyCode"/>
+                </td>
+                <td style="width:8%"><span class='required'>*</span>FromAmount:</td>
+                <td style="width: 25%;text-align: left;padding: 5px">
+                    <input type="text" class="easyui-numberbox" style="width: 80%" disabled="disabled"
+                           id="input_fromAmount"/>
+                </td>
+                <td style="width:8%"><span class='required'>*</span>ToCurrencyCode:</td>
+                <td style="width: 25%;text-align: left;padding: 5px">
+                    <input type="text" class="easyui-textbox" style="width: 80%" disabled="disabled"
+                           id="input_toCurrencyCode"/>
+                </td>
+            </tr>
+            <tr style="width:100%;height:60px">
+                <td style="width:8%"><span class='required'>*</span>ToAmount:</td>
+                <td style="width: 25%;text-align: left;padding: 5px">
+                    <input type="text" class="easyui-numberbox" style="width: 80%" disabled="disabled"
+                           id="input_toAmount"/>
+                </td>
+                <td style="width:8%"><span class='required'>*</span>ExchangeRate:</td>
+                <td style="width: 25%;text-align: left;padding: 5px">
+                    <input type="text" class="easyui-numberbox" style="width: 80%" disabled="disabled"
+                           id="input_exchangeRate"/>
+                </td>
+                <td style="width:8%"><span class='required'>*</span>TransmodeCode:</td>
+                <td style="width: 25%;text-align: left;padding: 5px">
+                    <input type="text" class="easyui-textbox" style="width: 80%" disabled="disabled"
+                           id="input_transmodeCode"/>
+                </td>
+            </tr>
+            <tr style="width:100%;height:60px">
+                <td style="width:8%"><span class='required'>*</span>transactionDescription:</td>
+                <td style="width: 25%;text-align: left;padding: 5px">
+                    <input type="text" class="easyui-textbox" style="width: 80%;height: 46px" disabled="disabled"
+                           id="input_transactionDescription"/>
+                </td>
+                <td style="width:8%"><span class='required'>*</span>TransmodeComm:</td>
+                <td style="width: 25%;text-align: left;padding: 5px">
+                    <input type="text" class="easyui-textbox" style="width: 80%;height: 46px" disabled="disabled"
+                           id="input_transmodeComment"/>
+                </td>
+            </tr>
+        </table>
+        <div style="float: right;margin:15px">
+            <span>AmountLocal:</span>
+            <input type="text" class="easyui-textbox" style="width: 70%;height: 30px;"
+                   id="input_amountLocal" disabled='disabled'/>
+        </div>
+    </form>
+</div>
+<div id="div_reported" class="easyui-panel" title="reported"
+     style="width:100%;height:400px;padding:10px;background:#fafafa;overflow: hidden"
+     data-options="iconCls:'icon-save',closable:false,
+    collapsible:true,minimizable:false,maximizable:false,selected:true">
+    <div class="easyui-panel" title="Data" style="width:100%;height:255px;overflow:hidden;">
+        <table id="tb_reported"></table>
+    </div>
+</div>
+<div id="formClient" class="easyui-panel" title="FromClient"
+     style="width:100%;height:400px;padding:10px;background:#fafafa;overflow: hidden"
+     data-options="iconCls:'icon-save',closable:false,
+    collapsible:true,minimizable:false,maximizable:false,selected:true">
+    <div id="fromClientToolBar">
+        <a class="easyui-linkbutton" data-options="iconCls:'icon-add',plain:'false'"
+           onclick="reportData('#fromClientDlg')" style="width: 70px">Report</a>
+        <a class="easyui-linkbutton" data-options="iconCls:'icon-remove',plain:'false'"
+           onclick="updateGridData('#fromClientDlg')" style="width: 70px">Update</a>
+    </div>
+    <div class="easyui-panel" title="Data" style="width:100%;height:255px;overflow: hidden">
+        <table id="fromClientDlg"></table>
+    </div>
+</div>
+<div id="toClient" class="easyui-panel" title="ToClient"
+     style="width:100%;height:400px;padding:10px;background:#fafafa;overflow: hidden"
+     data-options="iconCls:'icon-save',closable:false,
+    collapsible:true,minimizable:false,maximizable:false,selected:true">
+    <div id="toClientToolBar">
+        <a class="easyui-linkbutton" data-options="iconCls:'icon-add',plain:'false'"
+           onclick="reportData('#toClientDlg')" style="width: 70px">Report</a>
+        <a class="easyui-linkbutton" data-options="iconCls:'icon-remove',plain:'false'"
+           onclick="updateGridData('#toClientDlg')" style="width: 70px">Update</a>
+    </div>
+    <div class="easyui-panel" title="Data" style="width:100%;height:255px;overflow:hidden;">
+        <table id="toClientDlg"></table>
+    </div>
+</div>
+<div id="serviceFee" class="easyui-panel" title="Service Fee"
+     style="width:100%;height:110px;padding:10px;background:#fafafa;overflow: hidden"
+     data-options="iconCls:'icon-save',closable:false,
+    collapsible:true,minimizable:false,maximizable:false,selected:true">
+    <form>
+        <table id="ff_serviceFree" style="width:100%">
+            <tr style="width: 100%;height: 60px">
+                <td><span class='required'>*</span>CompanyAccount:</td>
+                <td style="width: 25%;text-align: left;padding: 5px">
+                    <input type="text" class="easyui-combobox" style="width: 80%" disabled="disabled"
+                           id="input_companyAccountId"/>
+                </td>
+                <td><span class='required'>*</span>PaymentType:</td>
+                <td style="width: 25%;text-align: left;padding: 5px">
+                    <input type="text" class="easyui-combobox" style="width: 80%" disabled="disabled"
+                           id="input_payment"/>
+                </td>
+                <td><span class='required'>*</span>ServiceAmount:</td>
+                <td style="width: 25%;text-align: left;padding: 5px">
+                    <input type="text" class="easyui-numberbox" style="width: 80%" disabled="disabled"
+                           id="input_amount"/>
+                </td>
+            </tr>
+        </table>
+    </form>
+</div>
+<div id="dlg" class="easyui-dialog" closed="true">
+    <iframe id="ifrmEdit" height="100%" width="100%" frameborder="0" scrolling="no"></iframe>
+</div>
+<script type="text/javascript" src="../../JS/jquery.min.js"></script>
+<!--必须使用这个js而不是min.js ,因为做了封装修改-->
+<script type="text/javascript" src="../../JS/jquery.easyui.js"></script>
+<script type="text/javascript" src="../../JS/common.js"></script>
+<script type="text/javascript" src="../../Utils/ip.js"></script>
+<script type="text/javascript" src="../../Utils/ShareComponent.js"></script>
+<script type="text/javascript" src="../../JS/ToolBar.js"></script>
+<script type="text/javascript" src="../../Utils/BasicList.js"></script>
+<script type="text/javascript" src="../../Utils/BasicPreview.js"></script>
+<script type="text/javascript" src="../../Utils/Request.js"></script>
+<script type="text/javascript" src="../../Utils/Enum.js"></script>
+<script type="text/javascript" src="../../JS/Header.js"></script>
+<script type="text/javascript" src="../../JS/SearchComponent.js"></script>
+<script type="text/javascript" src="../../Utils/BasicDetail.js"></script>
+<script type="text/javascript" src="./ReceiptDetailCommon.js"></script>
+<script>
+    var gCurrid = getID();
+    var gDealKey = "DEAL";
+    var gRequest = new RequestHandle();
+    var gBasicList = new BasicListPage();
+    var gCustomerId = '';
+    var gConfigFormClient = {
+        columns : [
+            [{
+                field : 'ck',
+                checkbox : true,
+            }, {
+                field : 'id',
+                title : 'id',
+                width : '0%',
+                align : 'center'
+            }, {
+                field : 'type',
+                title : 'Type',
+                width : '18%',
+                align : 'center',
+            }, {
+                field : 'payment',
+                title : 'Payment',
+                width : '18%',
+                align : 'center',
+            }, {
+                field : 'companyAccountId',  //需要拿获取到的companyAccountId去获取CompanyAccount？？？？？？
+                title : 'CompanyAccount',
+                width : '18%',
+                align : 'center',
+            }, {
+                field : 'foreignAmount',
+                title : 'Amount',
+                width : '18%',
+                align : 'center',
+            }, {
+                field : 'reported',
+                title : 'Reported',
+                width : '5%',
+                align : 'center',
+            }, {
+                field : 'fundsComment',
+                title : 'FundsComment',
+                width : '16%',
+                align : 'center',
+            },]
+        ],
+        singleSelect : true,
+    };
+    var gConfigReported = {
+        columns : [
+            [{
+                field : 'ck',
+                checkbox : true,
+            }, {
+                field : 'id',
+                title : 'id',
+                width : '10%',
+                align : 'center'
+            }, {
+                field : 'type',
+                title : 'Type',
+                width : '18%',
+                align : 'center',
+            }, {
+                field : 'payment',
+                title : 'Payment',
+                width : '18%',
+                align : 'center',
+            }, {
+                field : 'companyAccountId',  //需要拿获取到的companyAccountId去获取CompanyAccount？？？？？？
+                title : 'CompanyAccount',
+                width : '18%',
+                align : 'center',
+            }, {
+                field : 'foreignAmount',
+                title : 'Amount',
+                width : '18%',
+                align : 'center',
+            },  {
+                field : 'fundsComment',
+                title : 'FundsComment',
+                width : '16%',
+                align : 'center',
+            },]
+        ],
+        singleSelect : true,
+    };
+    var gFromClientSelect = -1;//初始没选择为-1
+    var gToClientSelect = -1;
+    var gReportToClient = {};
+    var gReportFromClient = {};
+    var gUpdateData = {};
+
+    init();
+
+    $(function () {
+        var _sendData = {id : gCurrid};
+        gRequest.putRemoteData(gDealKey, "get", _sendData).done(function (_result) {
+            gUpdateData = _result.data;
+            var currentData = _result.data;
+            getFormData(_result.data, true, gFormList);
+            setServiceFee(_result.data.serviceFee);
+            changeValueToText(_result.data.arrives, gConvertGridData.arrives);
+            _result.data.arrives.forEach(function (current) {
+                current.reported = REPORTED_CODE.unreport;
+            });
+            var _obj = {"total" : _result.data.arrives.length, "rows" : _result.data.arrives};
+            $('#fromClientDlg').datagrid('loadData', _obj);
+            changeValueToText(_result.data.pays, gConvertGridData.pays);
+            _result.data.pays.forEach(function (current) {
+                current.reported = REPORTED_CODE.unreport;
+            });
+            _obj = {"total" : _result.data.pays.length, "rows" : _result.data.pays};
+            $('#toClientDlg').datagrid('loadData', _obj);
+            if (currentData.reports.length > 0) {
+                changeValueToText(currentData.reports, gConvertGridData.arrives);
+                _obj = {"total" : currentData.reports.length, "rows" : currentData.reports};
+                $('#tb_reported').datagrid('loadData', _obj);
+            }
+            getCustomerInfo(_result.data.customerId);
+        });
+    });
+
+    function init() {
+        createDataGrid(extendConfig(gConfigFormClient, "#fromClientDlg", 'reportFromClients'), "#fromClientDlg");
+        createDataGrid(extendConfig(gConfigFormClient, "#fromClientDlg", 'reportToClients'), "#toClientDlg");
+        createDataGrid(extendConfig(gConfigReported, "#tb_reported", 'reported'), "#tb_reported");
+        $('#fromClientDlg').datagrid('hideColumn', 'id');
+        $('#toClientDlg').datagrid('hideColumn', 'id');
+        $("#toolbar a").each(function (index, value) {
+            $(value).removeAttr("plain");
+        });
+    }
+
+    function saveReport() {
+        var _sendData = {};
+        _sendData.reportFromClient = convertSendData(gReportFromClient);
+        _sendData.reportToClient = convertSendData(gReportToClient);
+        _sendData.id = gCurrid;
+        _sendData.amountLocal = gUpdateData.amountLocal;
+        _sendData.fromAmountReport = gReportFromClient.foreignAmount;
+        _sendData.toAmountReport = gReportToClient.foreignAmount;
+        if (Object.keys(_sendData.reportFromClient).length === 0 || Object.keys(_sendData.reportToClient).length === 0) {
+            alertMsg('please report first ?');
+        } else {
+            gRequest.postRemoteData(gDealKey, 'report', JSON.stringify(_sendData)).done(function (_result) {
+                if (_result.code === 0) {
+                    $.messager.alert('Info', 'report data success!');
+                } else {
+                    $.messager.alert('Alert', 'report data failed!' + _result.msg);
+                }
+            });
+        }
+    }
+
+
+    function reloadGridData(grid, data, id) {
+        var originData = $(grid).datagrid('getRows');
+        JSON.parse(localStorage.getItem("FundsType")).forEach(function (current) {
+            if (current.name == data.fundsCode) {
+                data.fundsCode = current.code;
+            }
+        });
+        originData[id] = data;
+        $(grid).datagrid('loadData', originData);
+        switch (grid) {
+            case "#fromClientDlg":
+                if (id == gFromClientSelect) {
+                    gReportFromClient = data;
+                }
+                break;
+            case "#toClientDlg":
+                if (id == gToClientSelect) {
+                    gReportToClient = data;
+                }
+                break;
+            default:
+                break;
+        }
+    }
+
+    function getRow(grid, id) {
+        var myConvertData = {};
+        myConvertData.fundsCode = {src : "FundsType", key : "code", value : "name"};
+        var currentRow = deepCopy($(grid).datagrid('getSelected'));
+        currentRow = convertFormData(currentRow, myConvertData);
+        JSON.parse(localStorage.getItem('currentAccount')).forEach(function (current) {
+            if (currentRow.accountId == current.accountId) {
+                currentRow.accountId = current.accountName;
+            }
+        });
+        JSON.parse(localStorage.getItem('currentEntity')).filter(function (current) {
+            if (currentRow.entityId == current.entityId) {
+                currentRow.entityId = current.accountName;
+            }
+            return currentRow.entityId === current.entityId;
+        });
+
+        return currentRow;
+    }
+
+    function reportData(gridId, id) {
+
+        var originData = $(gridId).datagrid('getRows');
+        var selectData = $(gridId).datagrid('getSelected');
+        console.log(selectData);
+        switch (gridId) {
+            case "#fromClientDlg":
+                if (gFromClientSelect >= 0) {
+                    $.messager.confirm('Info', 'Are you sure you want to report this data?', function (r) {
+                        if (r) {
+                            originData.forEach(function (current, index) {
+                                console.log(current)
+                                if (current.id == selectData.id) {
+                                    current.reported = REPORTED_CODE.report;
+                                } else {
+                                    current.reported = REPORTED_CODE.unreport;
+                                }
+                            });
+                            $(gridId).datagrid('loadData', originData);
+                            gReportFromClient = $(gridId).datagrid('getRows')[gFromClientSelect];
+                            $(gridId).datagrid('clearSelections');
+                            gFromClientSelect = -1;//初始没选择为-1
+                        }
+                    });
+                } else {
+                    alertMsg('please check selection');
+                }
+                break;
+            case "#toClientDlg":
+                if (gToClientSelect >= 0) {
+                    $.messager.confirm('Info', 'Are you sure you want to report this data?', function (r) {
+                        if (r) {
+                            originData.forEach(function (current, index) {
+                                if (current.id == selectData.id) {
+                                    current.reported = REPORTED_CODE.report;
+                                } else {
+                                    current.reported = REPORTED_CODE.unreport;
+                                }
+                            });
+                            $(gridId).datagrid('loadData', originData);
+                            gReportToClient = $(gridId).datagrid('getRows')[gToClientSelect];
+                            $(gridId).datagrid('clearSelections');
+                            gToClientSelect = -1;
+                        }
+                    });
+                } else {
+                    alertMsg('please check selection');
+                }
+                break;
+            default:
+                break;
+        }
+
+    }
+
+    function updateGridData(gridId) {
+        var _pLocation = "UI/Transaction/ReportForm.html?";
+        if (gFromClientSelect >= 0 || gToClientSelect >= 0) {
+            switch (gridId) {
+                case "#fromClientDlg":
+                    _pLocation += "rowIndex=" + gFromClientSelect + "&gridId=" + "#fromClientDlg";
+                    break;
+                case "#toClientDlg":
+                    _pLocation += "rowIndex=" + gToClientSelect + "&gridId=" + "#toClientDlg";
+                    break;
+                default:
+                    break;
+            }
+            $("#ifrmEdit").attr("src", _pLocation);
+            constructDialog($('#dlg'), "arrives", 400, 400);
+            AddDialog.dialog('open');
+        } else {
+            alertMsg('please check selection');
+        }
+    }
+
+    function getCustomerInfo(customerId) {
+        gCustomerId = customerId;
+        //用customerId去拿accountId
+        gRequest.putRemoteData(gAccountKey, "list", {id : customerId.toString()}).done(function (_result) {
+            // gUpdateData.customerId = _result.data[0].customerId;
+            // gUpdateData.accountId = _result.data[0].id;
+            localStorage.setItem('currentAccount', JSON.stringify(_result.data));
+        });
+        gRequest.putRemoteData(gEntityKey, "list", {id : customerId.toString()}).done(function (_result) {
+            localStorage.setItem('currentEntity', JSON.stringify(_result.data));
+        });
+    }
+
+    function convertSendData(data) {
+        var _data = deepCopy(data);
+        var myConvertData = deepCopy(gConvertData);
+        myConvertData.type = {src : transactionTypeData, key : 'value', value : 'text'};//type字段冲突，复写掉
+        myConvertData.accountId = {src : 'currentAccount', key : 'id', value : 'accountName'};
+        myConvertData.entityId = {src : 'currentAccount', key : 'id', value : 'accountName'};
+        _data = convertFormData(_data, myConvertData, true);
+        if (_data.type === transactionTypeCode.Person) {
+            delete _data.entityId;
+            delete _data.accountId;
+        } else if (_data.type === transactionTypeCode.Account) {
+            delete _data.entityId;
+        } else if (_data.type === transactionTypeCode.Entity) {
+            delete _data.accountId;
+        }
+        return _data;
+    }
+
+
+</script>
+</body>
+
+</html>

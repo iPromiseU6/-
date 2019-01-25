@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" type="text/css" href="../../Themes/material/easyui.css">
+    <link rel="stylesheet" type="text/css" href="../../Themes/icon.css">
+    <link rel="stylesheet" type="text/css" href="../../CSS/common.css">
+    <link rel="stylesheet" type="text/css" href="../../CSS/BasicDataPreview.css">
+    <style>
+        .required_Input{
+            color: red;
+        }
+    </style>
+</head>
+<body>
+<div id="div_content">
+    <form id="ff">
+        <table id="basicData" class="displaytable"  style="text-align: left;padding:20px;">
+            <tr>
+                <td width="15%"><span class="required_Input">*</span>AccountName:</td>
+                <td width="35%">
+                    <input id="input_name" type="text" class="easyui-textbox" data-options='required:true' style="width: 80%"/>
+                </td>
+                <td width="15%"><span class="required_Input">*</span>AccountNumber:</td>
+                <td width="35%">
+                    <input id="input_accountNumber" type="text" class="easyui-textbox" data-options='required:true' style="width: 80%"/>
+                </td>
+            </tr>
+            <tr>
+                <td width="15%"><span class="required_Input">*</span>CurrencyCode:</td>
+                <td width="35%">
+                    <input id="input_currencyCode" type="text" class="easyui-combobox" data-options='required:true' style="width: 80%"/>
+                </td>
+                <td width="15%"><span class="required_Input">*</span>Type:</td>
+                <td width="35%">
+                    <input id="input_type" type="text" class="easyui-combobox" data-options='required:true' style="width: 80%"/>
+                </td>
+            </tr>
+            <tr>
+                <td width="15%"><span class="required_Input">*</span>Bank:</td>
+                <td width="35%">
+                    <input id="input_bankName" type="text" class="easyui-textbox" data-options='required:true' style="width: 80%"/>
+                </td>
+                <td width="15%">StartBalance:</td>
+                <td width="35%">
+                    <input id="input_startBalance" type="text" class="easyui-textbox" style="width: 80%"/>
+                </td>
+            </tr>
+            <tr>
+                <td width="15%">SwiftCode:</td>
+                <td width="35%">
+                    <input id="input_swiftCode" type="text" class="easyui-textbox" style="width: 80%"/>
+                </td>
+                <td width="15%">AccountInformation:</td>
+                <td width="35%">
+                    <input id="input_accountInformation" type="text" class="easyui-textbox" style="width: 80%"/>
+                </td>
+            </tr>
+            <tr>
+                <td width="15%">Other:</td>
+                <td width="35%">
+                    <input id="input_memo" type="text" class="easyui-textbox" style="width: 80%"/>
+                </td>
+            </tr>
+        </table>
+    </form>
+    <div class="submit_button" style="margin-left: 50px;">
+        <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-save" onclick="save()"
+           style="width:100px;margin-left: -70px;"> Save</a>
+        <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-reload" onclick="cls()"
+           style="width:100px;margin-left: 70px;">Reset</a>
+    </div>
+</div>
+</body>
+<script type="text/javascript" src="../../JS/jquery.min.js"></script>
+<script type="text/javascript" src="../../JS/jquery.easyui.js"></script>
+<script type="text/javascript" src="../../JS/common.js"></script>
+<script type="text/javascript" src="../../Utils/ip.js"></script>
+<script type="text/javascript" src="../../Utils/ShareComponent.js"></script>
+<script type="text/javascript" src="../../Utils/Request.js"></script>
+<script type="text/javascript" src="../../Utils/BasicPreview.js"></script>
+<script type="text/javascript" src="../../Utils/Enum.js"></script>
+<script type="text/javascript">
+    var gRequest = new RequestHandle();
+    var gApiKey = "ACCOUNT_COMPANY";
+    var getData;
+    var gconfigcurrencyCode ={
+        panelWidth: 160,
+        panelHeight: 160,
+        onChange: function (newValue, oldValue) {
+            if (isEnglish(newValue) || newValue === "") {
+                var _searchData = fuzzySearch(newValue.trim(), CURRENCYCODE);
+                $(this).combobox("loadData", _searchData ? _searchData : CURRENCYCODE);
+            }
+        }
+    };
+
+    createComponentFactory("CURRENCY_CODE","#input_currencyCode",gconfigcurrencyCode);
+    createComponentFactory("ACCOUNT_TYPE","#input_type");
+
+    $(document).ready(function () {
+        gRequest.putRemoteData(gApiKey, "list",).done(function (data) {
+            getData = data.data;
+        });
+    });
+
+    function cls() {//重置
+        $('#ff').form('reset');
+    }
+
+    function save() {
+        var _isValid = $("#ff").form('validate');
+        if (!_isValid) {
+            $.messager.alert("Info", "There are mandatory fields not filled in");
+            return;
+        }
+        var _data = submitFormData();
+        _data.accountNumber = delSpace(_data.accountNumber);
+        saveData(_data);
+    }
+
+    function saveData(data) {
+        gRequest.postRemoteData(gApiKey, 'add', JSON.stringify(data)).done(function (result) {
+            if (result.code == 0) {
+                var parentLocation;
+                parentLocation = searchParent("CompanyAccountList.html");
+                parentLocation.dialogClose();
+            } else {
+                $.messager.alert("Info", result.msg);
+            }
+        })
+    }
+
+    function fuzzySearch(value,data) {//模糊查询
+        return data.filter(function (current) {
+            return current.currencyCode.indexOf(value.toUpperCase()) >= 0;
+        });
+    }
+</script>
+</html>

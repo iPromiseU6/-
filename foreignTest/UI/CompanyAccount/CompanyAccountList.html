@@ -1,0 +1,215 @@
+<!--创建人：谢先博-->
+<!--创建时间：2018.9.16-->
+<!--描述：实现入库单数据展示-->
+
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" type="text/css" href="../../Themes/material/easyui.css">
+    <link rel="stylesheet" type="text/css" href="../../Themes/icon.css">
+    <link rel="stylesheet" type="text/css" href="../../CSS/common.css">
+</head>
+<style>
+</style>
+<body style="padding: 0px;">
+<div id="div_layout" class="easyui-layout" style="overflow: hidden">
+    <div id="div_search" data-options="region:'north'">
+    </div>
+    <div data-options="region:'center'">
+        <div class="easyui-panel" title="DataList">
+            <table id="dg">
+            </table>
+        </div>
+    </div>
+</div>
+<div id="toolbar"></div>
+<div id="dlg" class="hiddenDialog">
+    <iframe id="ifrmEdit" height="100%" width="100%" frameborder="0" scrolling="no"></iframe>
+</div>
+</body>
+<script type="text/javascript" src="../../JS/jquery.min.js"></script>
+<script type="text/javascript" src="../../JS/jquery.easyui.js"></script>
+<script type="text/javascript" src="../../JS/common.js"></script>
+<script type="text/javascript" src="../../Utils/ip.js"></script>
+<script type="text/javascript" src="../../Utils/ShareComponent.js"></script>
+<script type="text/javascript" src="../../JS/ToolBar.js"></script>
+<script type="text/javascript" src="../../JS/SearchComponent.js"></script>
+<script type="text/javascript" src="../../Utils/BasicList.js"></script>
+<script type="text/javascript" src="../../Utils/Request.js"></script>
+<script type="text/javascript" src="../../Utils/Enum.js"></script>
+<script>
+    ///声明部分
+    var gBasicList = new BasicListPage();
+    var gRequest = new RequestHandle();
+    var gApiKey = "ACCOUNT_COMPANY";
+    var config_add = {dialogWidth: 700, dialogHeight: 420};
+    var config_edit = {dialogWidth: 710, dialogHeight: 325};
+    var AddDialog;
+    var url_add = 'UI/CompanyAccount/CompanyAccountAdd.html';
+    var url_updata = 'UI/CompanyAccount/CompanyAccountUpdate.html?id=';
+    var url_detail = 'UI/CompanyAccount/CompanyAccountDetail.html?id=';
+    ////主流程
+    var gSearchOptions = SEARCH_ACCOUNT_NAME;
+    gSearchOptions += SEARCH_ACCOUNT_NUMBER;
+    gSearchOptions += SEARCH_CURRENCY_CODE;
+    gBasicList.createSearch(gSearchOptions);//创建搜索界面
+    var gToolbar = DATAGRID_TOOLBAR_ADD;
+    gToolbar += DATAGRID_TOOLBAR_EDITOR;
+    // gToolbar += DATAGRID_TOOLBAR_DELETE;
+    var detailTooLbar = [{
+        "icon": "icon-sum",
+        "func": "ToDetail()",
+        "functionname": "Detail"
+    }, {
+        "icon": "icon-remove",
+        "func": "destroy()",
+        "functionname": "Delete"
+    }]
+    gBasicList.createToolbar(gToolbar, detailTooLbar);//创建toolbar
+    ////创建表格
+    var gDatagridUrl = RequestUrl.constructURL(gApiKey, "list");
+    var gConfig = {
+        url: gDatagridUrl,
+        method: 'put',
+        singleSelect: true,
+        columns: [
+            [{
+                field: 'ck',
+                checkbox: true,
+            }, {
+                field: 'id',
+                title: 'id',
+                width: '0%',
+                align: 'center',
+            }, {
+                field: 'name',
+                title: 'AccountName',
+                width: '15%',
+                align: 'center',
+                formatter: function (value) {
+                    return "<a style=\"color:#108ee9;cursor:pointer\" onclick=\"ToDetail()\">" + value + "</a>"
+                },
+
+            }, {
+                field: 'accountNumber',
+                title: 'AccountNumber',
+                width: '15%',
+                align: 'center',
+            }, {
+                field: "currencyCode",
+                title: 'CurrencyCode',
+                width: '15%',
+                align: 'center',
+            }, {
+                field: "type",
+                title: 'Type',
+                width: '15%',
+                align: 'center',
+                formatter: function (value) {
+                    if (value) {
+                        return getValueByKey(COMPANYACCOUNT_TYPE, value);
+                    }
+                }
+            }, {
+                field: 'bankName',
+                title: 'Bank',
+                width: '15%',
+                align: 'center',
+            }, {
+                field: 'amount',
+                title: 'Amount',
+                width: '15%',
+                align: 'center',
+            },
+            ]
+        ],
+        onDblClickRow: function (index, row) {
+            editData();
+        },
+    };
+    gBasicList.createDataGrid(gConfig);
+    gBasicList.hideColumn(['id']);
+
+    $('#search_currency_code').combobox({
+        data: CURRENCYCODE,
+        onChange: function (newValue, oldValue) {
+            if (isEnglish(newValue) || newValue === "") {
+                var _searchData = fuzzySearch(newValue.trim(), CURRENCYCODE);
+                $(this).combobox("loadData", _searchData ? _searchData : CURRENCYCODE);
+            }
+        }
+    });
+
+    //函数部分
+    function doSearch() {
+        var _searchCondition = processSearchConditionObject();
+        gRequest.putRemoteData(gApiKey, "list", _searchCondition).done(function (result) {
+            if (result.code === 0) {
+                $("#dg").datagrid('loadData', result.data.data);
+            } else {
+                $.messager.alert("false", result.msg);
+            }
+        })
+    }
+
+    function doReset() {
+        gBasicList.resetHandle(gApiKey);
+        gRequest.putRemoteData(gApiKey, "list");
+        $('#dg').datagrid('reload', gDatagridUrl);
+    }
+
+    function destroy() {
+        var _rows = $("#dg").datagrid("getSelected");
+        var _Send_ID = {};
+        if (!_rows) {
+            $.messager.alert('Info', 'Please select one data');
+            return;
+        }
+        $.messager.confirm('confirm', 'Are you sure delete this record?', function (r) {
+            if (r) {
+                _Send_ID.id = _rows.id;
+                gRequest.delRemoteData(gApiKey, 'del', JSON.stringify(_Send_ID)).complete(function (result) {
+                    result  = result.responseJSON;
+                    if (result.code == 0) {
+                        $("#dg").datagrid('reload', gDatagridUrl);
+                    } else {
+                        $.messager.alert("fail", result.msg);
+                    }
+                });
+            }
+        });
+    }
+
+    function ToDetail() {
+        requestAnimationFrame(function () {
+            var _row = $("#dg").datagrid('getSelected');
+            if(!_row){
+                $.messager.alert('Info', 'Please select one data');
+                return;
+            }
+            var pLocation = url_detail + _row.id;
+            AddTabIn("CompanyAccountDetail", parent.$('#tabs'), pLocation);
+        });
+    }
+
+    function fuzzySearch(value, data) {//模糊查询
+        return data.filter(function (current) {
+            return current.currencyCode.indexOf(value.toUpperCase()) >= 0;
+        });
+    }
+
+    function newData() {
+        gBasicList.newHandle(url_add, config_add);
+    }
+
+    function editData() {
+        gBasicList.editHandle(url_updata, config_edit);
+    }
+
+    function dialogClose() {
+        AddDialog.dialog('close');
+    }
+</script>
+</html>

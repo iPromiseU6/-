@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" type="text/css" href="../../Themes/material/easyui.css">
+    <link rel="stylesheet" type="text/css" href="../../Themes/icon.css">
+    <link rel="stylesheet" type="text/css" href="../../CSS/demo.css">
+    <link rel="stylesheet" type="text/css" href="../../CSS/common.css">
+    <link rel="stylesheet" type="text/css" href="../../CSS/AccountTable.css">
+</head>
+<body>
+<div>
+    <form>
+        <table id="Table"></table>
+        <table>
+            <tr>
+                <td width="15%">Other:</td>
+                <td width="35%" style="margin-left: 20px">
+                    <input class="easyui-textbox" id="memo" style="width: 580px;height: 25px">
+                </td>
+            </tr>
+        </table>
+    </form>
+    <div class="submit_button" style="margin-left: 50px;">
+        <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-save" onclick="save()"
+           style="width:100px;margin-left: -70px;"> Save</a>
+        <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-reload" onclick="cancel()"
+           style="width:100px;margin-left: 70px;">Cancel</a>
+    </div>
+</div>
+</body>
+<script type="text/javascript" src="../../JS/jquery.min.js"></script>
+<script type="text/javascript" src="../../JS/jquery.easyui.js"></script>
+<script type="text/javascript" src="../../JS/common.js"></script>
+<script type="text/javascript" src="../../Utils/ip.js"></script>
+<script type="text/javascript" src="../../Utils/Request.js"></script>
+<script type="text/javascript" src="../../Utils/Enum.js"></script>
+<script type="text/javascript" src="../../UI/CompanyAccount/CreatTable.js"></script>
+<script type="text/javascript">
+    var gApiKey = 'ACCOUNT_COMPANY';
+    var gRequest = new RequestHandle();
+    var _Send_ID = {};
+    var getdata;
+    var Table = document.getElementById('Table');
+    var ModelArr = [
+        {field: 'name', value: 'AccountName'},
+        {field: 'accountNumber', value: 'AccountNumber'},
+        {field: 'currencyCode', value: 'CurrencyCode'},
+        {field: 'type', value: 'type'},
+        {field: 'bankName', value: 'Bank'},
+        {field: 'swiftCode', value: 'SwiftCode'},
+        {field: 'startBalance', value: 'StartBalance'},
+        {field: 'accountInformation', value: 'AccountInformation'},
+        {field: 'amount', value: 'Amount'},
+        {field: 'customerAmount', value: 'CustomerAmount'}];
+    $(document).ready(function () {
+        var id = getID();
+        _Send_ID.id = id;
+        gRequest.putRemoteData(gApiKey, 'get', _Send_ID).done(function (result) {
+            getdata = deepCopy(result.data);
+            result.data["type"] = getValueByKey(COMPANYACCOUNT_TYPE, result.data["type"]);
+            CreatTable(result.data, ModelArr, Table);
+            if(result.data.memo){
+                $("#memo").textbox("setValue", result.data.memo);
+            }
+        });
+    });
+
+    function save() {
+        var _SendData = getdata;
+        _SendData.memo = $("#memo").textbox("getValue");
+        gRequest.putRemoteData(gApiKey, 'edit', _SendData).done(function (result) {
+            $.messager.alert('Succeed', 'modify successfully!');
+            cancel();
+        })
+    }
+
+    function cancel() {
+        var parentLocation;
+        parentLocation = searchParent("CompanyAccountList.html");
+        parentLocation.dialogClose();
+    }
+</script>
+</html>

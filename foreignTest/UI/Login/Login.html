@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>FOREIGNEXCHANGE</title>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" type="text/css" href="../../Themes/default/easyui.css">
+    <link rel="stylesheet" type="text/css" href="../../Themes/icon.css">
+    <link rel="stylesheet" type="text/css" href="../../CSS/demo.css">
+    <link rel="stylesheet" type="text/css" href="../../CSS/common.css">
+    <link rel="Stylesheet" href="../../CSS/login/Login.css"/>
+</head>
+
+<body>
+<div id="login_contral_layout">
+    <div id="login">
+        <div id="icon_GNS">
+            <div>
+                <img src="../../images/login/logo.png" alt="code" id="login_png"/>
+            </div>
+            <div id="login_login">FOREIGNEXCHANGE</div>
+        </div>
+        <div class="login_input">
+            <div class="login_message">Username</div>
+            <div class="login_input_new">
+                <input type="text" id="userName" placeholder=" Please input your userName" maxlength="18"
+                       onfocus="this.placeholder=''" onblur="input_cheak(this.id)"/>
+                <div class="login_check_div">
+                    <img src="../../images/login/check-circle-fill.png">
+                </div>
+            </div>
+        </div>
+        <div class="login_input">
+            <div class="login_message">Password</div>
+            <div class="login_input_new">
+                <input type="password" id="password" placeholder=" Please input your Password" maxlength="16"
+                       onfocus="this.placeholder=''" onblur="input_cheak(this.id)"/>
+                <div class="login_check_div">
+                    <img src="../../images/login/check-circle-fill.png">
+                </div>
+            </div>
+        </div>
+        <div class="login_input">
+            <div class="login_message">Verification Code</div>
+            <div class="login_input_new">
+                <input type="text" id="validate" placeholder=" Please enter the verification code"
+                       onfocus="this.placeholder=''" onblur="this.placeholder='Please enter the verification code'"/>
+                <div id="checkCode" onclick="createCode()">
+                    <div id="cheakcode" onclick="createCode()"></div>
+                </div>
+            </div>
+        </div>
+        <div class="login_input">
+            <input type="button" id="reset_button" value="Reset" onclick="formReset()"/>
+            <input type="button" id="login_button" value="Login" onclick="login()"/>
+        </div>
+    </div>
+</div>
+<div id="version">
+    <div id="txtversion">
+        <a>版权所有：西南科技大学计算机科学与技术学院移动互联网实验室</a>
+        <a>Version：</a>
+    </div>
+</div>
+</body>
+<script type="text/javascript" src="../../JS/jquery.min.js"></script>
+<script type="text/javascript" src="../../JS/jquery.easyui.min.js"></script>
+<script type="text/javascript" src="../../Utils/ip.js"></script>
+<script type="text/javascript" src="../../JS/Login/LimitBrowser.js"></script>
+<script type="text/javascript" src="../../JS/Login/CheckCode.js"></script>
+<script type="text/javascript" src="../../JS/Login/StoreLocalStorage.js"></script>
+<script type="text/javascript" src="../../JS/Login/DOMFocus.js"></script>
+<script type="text/javascript" src="../../JS/common.js"></script>
+<script type="text/javascript" src="../../Utils/Request.js"></script>
+<script type="text/javascript" src="../../JS/json2.js"></script>
+<script type="text/javascript" src='../../JS/SHA-1.js'></script>
+<script type="text/javascript">
+    var gRequest = new RequestHandle();
+    var gApiKey = "LOGIN";
+    var gversion = "3.0";
+    $('#txtversion:last-child').append(gversion);
+    $(".login_check_div").hide();
+    document.onkeydown = jumpPage; //有键盘的键被按下，触发事件
+
+    function jumpPage(event) {
+        var ev = event || window.event;
+        if (ev.keyCode === 13) {
+            //按下回车
+            if(!$("#login_button").prop("disabled"))
+            login();
+        }
+    }
+
+    function formReset() {
+        $(".login_input_new > input").val("");
+    }
+
+    function login() {
+        $("#login_button").attr("disabled", true);
+        var checkresult = checkLoginInfo();
+        if (checkresult) {
+            var user = $("#userName").val();
+            var pass = $("#password").val(); //获得用户名和密码的值
+            pass = Number(pass)
+            //pass = hex_sha1(pass);
+            var POST_USER = {
+                name: user,
+                password: pass,
+                //captcha: '123456',
+            };
+            var res = gRequest.postRemoteDataWithOutToken(gApiKey, "", POST_USER)
+            res.complete(function (result) {
+                var _result = result.responseJSON;
+                var token = result.getResponseHeader('Content-Length')
+                console.log(token)
+
+                console.log(result)
+                if (_result.code === 0) {
+                    sessionStorage.setItem("token", _result.data.token);
+                    //window.location = '../../index.html';
+                } else {
+                    $.messager.alert("fail", _result.msg, "", function () {
+                        $("#login_button").attr("disabled", false);
+                    });
+                }
+            });
+        }
+        createCode();
+    }
+
+    function checkLoginInfo() {
+        var _txtUserName = $("#userName").val();
+        var _txtPassword = $("#password").val();
+        var _code = $("#checkCode").html();
+        var _validate = $("#validate").val().toLowerCase(); //获取输入 的验证码、用户名和密码
+        // $("#login_button").attr("disabled",false);
+        if (_txtUserName === "" && _txtPassword === "" && _validate === "") {
+            $.messager.alert("warring", "Please complete the login information！","",function () {
+                $("#login_button").attr("disabled", false);
+            });
+            return false;
+        }
+        if (_txtUserName === "") {
+            $.messager.alert("warring", "Username can not be empty！","",function () {
+                $("#login_button").attr("disabled", false);
+            });
+            return false;
+        }
+        if (_txtPassword === "") {
+            $.messager.alert("warring", "Password can not be empty！","",function () {
+                $("#login_button").attr("disabled", false);
+            });
+            return false;
+        }
+        if (_validate === "") {
+            $.messager.alert("warring", "Verification code can not be empty！","",function () {
+                $("#login_button").attr("disabled", false);
+            });
+            return false;
+        }
+        if (_validate !== _code.toLowerCase()) {
+            $.messager.alert("warring", "Verification code is not true！","",function () {
+                $("#login_button").attr("disabled", false);
+            });
+            return false;
+        }
+        return true;
+    }
+
+    function input_cheak(id) {
+        var _id = "#" + id;
+        var _input = $(_id);
+        if (_input.val()) {
+            _input.next().show();
+        } else {
+            _input.next().hide();
+            _input.attr("placeholder", " Please input your " + id);
+        }
+    }
+</script>
+</html>

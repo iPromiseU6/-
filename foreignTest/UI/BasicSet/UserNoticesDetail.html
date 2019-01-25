@@ -1,0 +1,93 @@
+<!--创建人：lhf-->
+<!--创建时间：2018.1.3-->
+<!--描述：userNotices编辑详情页-->
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8"/>
+    <link rel="stylesheet" type="text/css" href="../../Themes/default/easyui.css">
+    <link rel="stylesheet" type="text/css" href="../../Themes/icon.css">
+    <link rel="stylesheet" type="text/css" href="../../CSS/demo.css">
+    <link rel="stylesheet" type="text/css" href="../../CSS/common.css">
+</head>
+
+<body style="padding: 0px;">
+<div id="toolbar" class="receipts_toolbar_style"></div>
+<form id="ff" style="width: 100%">
+    <table id="sss" class="displayable" style="text-align:right;width: 100%;table-layout:fixed">
+        <tr style="height: 60px;width: 100%">
+            <td style="width: 15%;"><span style="color:red;">*</span>Title:</td>
+            <td style="width: 35%;text-align: left;">
+                <input type="text"  class="easyui-textbox" data-options='required:true' style="width: 85%;"
+                       id="input_title"/>
+            </td>
+        </tr>
+        <tr style="height: 100px">
+            <td ><span style="color:red;">*</span>Content:</td>
+            <td style="text-align: left">
+                <input type="text"  class="easyui-textbox" data-options='multiline:true' style="width: 85%;height: 60%;"
+                       id="input_content"/>
+            </td>
+        </tr>
+    </table>
+    <div class="submit_button">
+        <a class="easyui-linkbutton" iconCls="icon-save" onclick="save()" style="width: 100px;"> OK</a>
+        <a class="easyui-linkbutton" iconCls="icon-reload" onclick="cls()"
+           style="width: 100px;margin-left: 10px;">Cancel</a>
+    </div>
+</form>
+<script type="text/javascript" src="../../JS/jquery.min.js"></script>
+<script type="text/javascript" src="../../JS/jquery.easyui.js"></script>
+<script type="text/javascript" src="../../Utils/ip.js"></script>
+<script type="text/javascript" src="../../JS/common.js"></script>
+<script type="text/javascript" src="../../Utils/Request.js"></script>
+<script type="text/javascript" src="../../Utils/ShareComponent.js"></script>
+<script type="text/javascript" src="../../JS/ToolBar.js"></script>
+<script type="text/javascript" src="../../Utils/BasicList.js"></script>
+<script type="text/javascript" src="../../Utils/Enum.js"></script>
+</body>
+<script type="text/javascript">
+    var gId = JSON.parse(localStorage.getItem("userNoticesDataId"));
+    var gRequest = new RequestHandle();
+    var gApiKey = "NOTICES";
+    var gCurrid = Number(getID());
+    var gData;
+
+    $(document).ready(function () {
+        if (gCurrid !== AddFlag) {
+            gRequest.putRemoteData(gApiKey,"get",{id:gId}).done(function (response) {
+                getFormData(response.data);
+                gData = deepCopy(response.data)
+            })
+        }
+    });
+    function cls() {
+        var parentLocation = searchParent("UserNotices.html");
+        parentLocation.closeDlg();
+    }
+    function save() {
+        var flag = checkInput();
+        if(flag){
+            saveData();
+        }
+    }
+    function saveData() {
+        if(gData.readed) {
+            gData.readed = false;
+            gRequest.putRemoteData(gApiKey,'edit',gData).done(function(result){
+                if (result.code === 0) {
+                    $.messager.alert("Info", result.msg);
+                    var parentLocation;
+                    parentLocation = searchParent("Notices.html");
+                    parentLocation.closeDlg();
+                } else {
+                    $.messager.alert("Info", result.msg);
+                }
+            })
+        }
+        var parentLocation = searchParent("UserNotices.html");
+        parentLocation.closeDlg();
+    }
+</script>
+</html>

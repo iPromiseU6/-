@@ -1,0 +1,314 @@
+<!--创建人：简佳成-->
+<!--创建时间：2018.12.4-->
+<!--描述：客户详情展示页面框架 未完成-->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link rel="stylesheet" type="text/css" href="../../Themes/material/easyui.css">
+    <link rel="stylesheet" type="text/css" href="../../Themes/icon.css">
+    <link rel="stylesheet" type="text/css" href="../../CSS/common.css">
+
+</head>
+<body>
+<div id="header" style="margin-bottom: 10px">
+</div>
+<div id="toolbar" style="margin-bottom: 10px"></div>
+<div id="p" class="easyui-panel" title="Basic information"
+     style="width:100%;height:300px;padding:10px;background:#fafafa;overflow: hidden"
+     data-options="iconCls:'icon-save',closable:false,
+    collapsible:true,minimizable:false,maximizable:false">
+    <form id="ff" style="width: 100%">
+        <table id="sss" class="displayable" style="text-align:right;width: 100%">
+            <tr style="height: 60px;width: 100%">
+                <td style="width: 8%;">Role:</td>
+                <td style="width: 25%;text-align: left;">
+                    <input type="text"  class="easyui-combobox" data-options='' style="width: 80%;"
+                           id="input_role"/>
+                </td>
+                <td style="width: 8%">FirstName:</td>
+                <td style="width: 25%;text-align: left">
+                    <input type="text"  class="easyui-textbox" id="input_firstName" style="width: 80%;"
+                           data-options=""/>
+                </td>
+                <td style="width: 8%"><span class="required">*</span>MiddleName:</td>
+                <td style="width: 25%;text-align: left">
+                    <input type="text"  class="easyui-textbox" id="input_middleName" style="width: 80%;"
+                           data-options="required:true"/>
+                </td>
+            </tr>
+
+            <tr style="height: 60px">
+                <td ><span class="required">*</span>LastName:</td>
+                <td style="width: 25%;text-align: left">
+                    <input type="text"  class="easyui-textbox" data-options='required:true' style="width: 80%;"
+                           id="input_lastName"/>
+                </td>
+                <td >Title:</td>
+                <td style="width: 25%;text-align: left">
+                    <input type="text"  class="easyui-textbox" id="input_title" style="width: 80%;"
+                           data-options=""/>
+                </td>
+                <td ><span class="required">*</span>Alias:</td>
+                <td style="width: 25%;text-align: left">
+                    <input type="text"  class="easyui-textbox" id="input_alias" style="width: 80%;"
+                           data-options="required:true"/>
+                </td>
+            </tr>
+            <tr style="height: 60px">
+                <td ><span class="required">*</span>Birthdate:</td>
+                <td style="width: 25%;text-align: left">
+                    <input type="text"  class="easyui-datebox" data-options='required:true' style="width: 80%;"
+                           id="input_birthdate"/>
+                </td>
+                <td ><span class="required">*</span>Gender:</td>
+                <td style="width: 25%;text-align: left">
+                    <input type="text"  class="easyui-combobox" id="input_gender" style="width: 80%;"
+                           data-options="required:true"/>
+                </td>
+                <td >BirthPlace:</td>
+                <td style="width: 25%;text-align: left">
+                    <input type="text"  class="easyui-textbox" id="input_birthPlace" style="width: 80%;"
+                           data-options="validType:'email'"/>
+                </td>
+            </tr>
+        </table>
+    </form>
+</div>
+<div class="easyui-panel" title="IdentityInfo"
+     style="width:100%;height:150px;padding:10px;background:#fafafa;overflow: hidden"
+     data-options="iconCls:'icon-save',closable:false,
+    collapsible:true,minimizable:false,maximizable:false">
+    <form id="ff" style="width: 100%">
+        <table id="sss" class="displayable" style="text-align:right;width: 100%">
+            <tr style="height: 60px;width: 100%">
+                <td ><span class="required">*</span>Nationality1:</td>
+                <td style="width: 25%;text-align: left">
+                    <input type="text"  class="easyui-combobox" data-options="required:true,validType:'phonePattern[phoneRegular]'" style="width: 80%;"
+                           id="input_nationality1"/>
+                </td>
+                <td ><span class="required">*</span>Nationality2:</td>
+                <td style="width: 25%;text-align: left">
+                    <input type="text"  class="easyui-combobox" id="input_nationality2" style="width: 80%;"
+                           data-options="required:true"/>
+                </td>
+                <td style="width: 8%"></td>
+                <td style="width: 25%;">
+                </td>
+            </tr>
+        </table>
+    </form>
+</div>
+<div id="r" class="easyui-panel" title="OtherInfo"
+     style="width:100%;height:250px;padding:10px;background:#fafafa;"
+     data-options="iconCls:'icon-save',closable:false,
+    collapsible:true,minimizable:false,maximizable:false">
+    <form id="ff" style="width: 100%">
+        <table id="sssf" class="displayable" style="text-align:right;width: 100%">
+            <tr style="height: 60px;width: 100%">
+                <td >Occupation:</td>
+                <td style="width: 25%;text-align: left">
+                    <input type="text"  class="easyui-textbox" id="input_occupation" style="width: 80%;"
+                           data-options=""/>
+                </td>
+                <td style="width: 8%">Residence:</td>
+                <td style="width: 25%;text-align: left">
+                    <input type="text"  class="easyui-textbox" id="input_residence" style="width: 80%;"
+                           data-options=""/>
+                </td>
+            </tr>
+
+            <tr style="height: 60px">
+                <td style="width: 8%">Employer Name:</td>
+                <td style="width: 25%;text-align: left">
+                    <input type="text"  class="easyui-textbox" id="inpu_employerName" style="width: 80%;"
+                           data-options=""/>
+                </td>
+                <td >Source of Wealth:</td>
+                <td style="width: 25%;text-align: left">
+                    <input type="text"  class="easyui-textbox" data-options='' style="width: 80%;"
+                           id="input_sourceOfWealth"/>
+                </td>
+                <td >SSN:</td>
+                <td style="width: 25%;text-align: left">
+                    <input type="text"  class="easyui-textbox" id="input_ssn" style="width: 80%;"
+                           data-options=""/>
+                </td>
+            </tr>
+            <tr style="height: 60px">
+                <td >comments:</td>
+                <td style="width: 25%;text-align: left">
+                    <input type="text"  class="easyui-textbox" id="input_comments" style="width: 80%;height: 100%"
+                           data-options="multiline:true"/>
+                </td>
+            </tr>
+        </table>
+    </form>
+</div>
+</body>
+<script type="text/javascript" src="../../JS/jquery.min.js"></script>
+<!--必须使用这个js而不是min.js ,因为做了封装修改-->
+<script type="text/javascript" src="../../JS/jquery.easyui.js"></script>
+<script type="text/javascript" src="../../JS/common.js"></script>
+<script type="text/javascript" src="../../Utils/ip.js"></script>
+<script type="text/javascript" src="../../Utils/ShareComponent.js"></script>
+<script type="text/javascript" src="../../JS/ToolBar.js"></script>
+<script type="text/javascript" src="../../Utils/BasicList.js"></script>
+<script type="text/javascript" src="../../Utils/Request.js"></script>
+<script type="text/javascript" src="../../Utils/Enum.js"></script>
+<script type="text/javascript" src="../../JS/Header.js"></script>
+<script type="text/javascript">
+    var gCreatHeader = new creatHeader();
+    var gBasicList = new BasicListPage();
+    var gRequest = new RequestHandle();
+    var gPersonId = JSON.parse(localStorage.getItem("personId"))
+    var gEntityId = localStorage.getItem("entityId")
+    var gHeadData = ["DirectorPhone","DirectorAddress"]
+    var gPostId = getIdArry();
+    var gCurrid = getID()
+    var getData;
+    var phoneRegular = /^(13[0-9]|14[579]|15[0-3,5-9]|16[6]|17[0135678]|18[0-9]|19[89])\d{8}$/;
+
+    var gApiKey = "ENTITY"
+    gCreatHeader.creatContent("#header",gHeadData);
+
+    var buttons = [{//配置toolbar
+        'functionname': "Save",
+        'func': 'save()',
+        'icon': 'icon-save',
+    }];
+    gBasicList.createToolbar("",buttons);
+
+    $("#toolbar a").each(function (index,value) {
+        $(value).removeAttr("plain")
+    })
+
+    var gComboboxConfig = {//配置combobox
+        panelWidth:285,
+        onHidePanel: checkCombobox
+    }
+
+    //构造combobox
+    createComponentFactory("SYSUSER_SEX", '#input_gender',gComboboxConfig);
+    createComponentFactory("TITLE_TYPE", '#input_title',gComboboxConfig);
+    createComponentFactory("BASICDATA_COUNTRYCODES", '#input_nationality1',gComboboxConfig);
+    createComponentFactory("BASICDATA_COUNTRYCODES", '#input_nationality2',gComboboxConfig);
+    $(document).ready(function () {
+        var _param = {entityId: gEntityId,personId:gCurrid};
+        var _res;
+        if (gCurrid != AddFlag) {
+            _res = gRequest.putRemoteData(gApiKey, "director/get", _param);
+            _res.done(function (data) {
+                getFormData(data.data);
+            });
+        } else {
+            gCurrid = AddFlag;
+        }
+
+    });
+    $.extend($.fn.validatebox.defaults.rules, {
+        phonePattern: {
+            validator: function (value, param) {
+                return param[0].test(value);
+            },
+            message: 'Please enter the correct telephone number format!'
+        }
+    });
+    function getIdArry() {
+        var _idArry = {}
+        var urlinfo = window.location.href;
+
+        var len = urlinfo.length;
+        var offset = urlinfo.indexOf("?");
+        if (offset == -1) {
+            return undefined;
+        }
+        var newsidinfo = urlinfo.substr(offset+1, len);
+        var newsids = newsidinfo.split("&");
+        newsids.forEach(function (value, index) {
+            var arr = value.split("=")
+            _idArry[arr[0]] = arr[1]
+        })
+        return _idArry
+    }
+    function doEdit(){
+        $("#Identification").click();
+    }
+    function checkCombobox() {//输入与下拉不一致返回空
+        var _options = $(this).combobox('options');
+        var _data = $(this).combobox('getData');
+        var _value = $(this).combobox('getValue');
+        var _flag = false;
+        for (var i = 0; i < _data.length; i++) {
+            if (_data[i][_options.valueField] == _value) {
+                _flag=true;
+                break;
+            }
+        }
+        if(!_flag){
+            $(this).combobox('setValue', '');
+        }
+    }
+    function doSearch(){
+        AddTabIn('Customer', parent.$('#tabs'), 'UI/BasicData/CustomerList.html');
+    }
+    function save() {
+        if(!$("#input_phoneNumber").textbox('isValid')){
+            $.messager.alert("Info", "Format error, not saved！");
+            return
+        };
+        if(!$("#input_email").textbox('isValid')){
+            $.messager.alert("Info", "Format error, not saved！");
+            return
+        };
+
+        var _url;
+        var _method;
+        if (gCurrid == AddFlag) {
+            _url = "add";
+            _method = "post";
+        } else {
+            _url = "edit";
+            _method = "put";
+        }
+        saveData(_url);
+    }
+    var _data
+    function saveData(_url) {
+        function saveData(_url) {
+            var _data = submitFormData();
+
+            for(var i in _data){
+                if(_data[i]==""){
+                    delete _data[i]
+                }
+            }
+            if (gPostIdData.id == AddFlag) {
+                var postData = $.extend(false,_data,{customerId:gPostIdData.parentId,id:1});
+                postData = JSON.stringify(postData)
+                gRequest.postRemoteData(gApiKey,_url,postData).done(function (result) {
+                    if (result.code == 0) {
+                        $.messager.alert("Info", result.msg);
+                    } else {
+                        $.messager.alert("Info", result.msg);
+                    }
+                });
+            } else {
+
+                var postData = $.extend(false,_data,{customerId:gPostIdData.parentId,id:gPostIdData.id});
+
+                gRequest.putRemoteData(gApiKey,_url,postData).done(function (result) {
+                    if (result.code == 0) {
+                        $.messager.alert("Info", result.msg);
+                    } else {
+                        $.messager.alert("Info", result.msg);
+                    }
+                });
+            }
+        }
+    }
+
+</script>
+</html>

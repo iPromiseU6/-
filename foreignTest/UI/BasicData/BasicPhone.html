@@ -1,0 +1,242 @@
+<!--创建人：简佳成-->
+<!--创建时间：2018.12.4-->
+<!--描述：电话类型展示页面框架 导入数据问题未处理-->
+
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" type="text/css" href="../../Themes/material/easyui.css">
+    <link rel="stylesheet" type="text/css" href="../../Themes/icon.css">
+    <link rel="stylesheet" type="text/css" href="../../CSS/common.css">
+</head>
+<style>
+</style>
+<body style="padding: 0px;">
+<div id="div_layout" class="easyui-layout">
+    <div data-options="region:'center'">
+        <div class="easyui-panel" title="Datalist">
+            <table id="dg">
+            </table>
+        </div>
+    </div>
+</div>
+<div id="toolbar"></div>
+<div id="dlg" class="hiddenDialog">
+    <iframe id="ifrmEdit" height="100%" width="100%" frameborder="0" scrolling="no"></iframe>
+</div>
+</body>
+<script type="text/javascript" src="../../JS/jquery.min.js"></script>
+<!--必须使用这个js而不是min.js ,因为做了封装修改-->
+<script type="text/javascript" src="../../JS/jquery.easyui.js"></script>
+<script type="text/javascript" src="../../JS/common.js"></script>
+<script type="text/javascript" src="../../Utils/ip.js"></script>
+<script type="text/javascript" src="../../Utils/ShareComponent.js"></script>
+<script type="text/javascript" src="../../JS/ToolBar.js"></script>
+<script type="text/javascript" src="../../JS/SearchComponent.js"></script>
+<script type="text/javascript" src="../../Utils/BasicList.js"></script>
+<script type="text/javascript" src="../../Utils/Request.js"></script>
+<script type="text/javascript" src="../../Utils/Enum.js"></script>
+<script>
+    var payload = JSON.parse(localStorage.getItem("customerPhone"))
+
+    var gPersonId = JSON.parse(localStorage.getItem("personId"))
+
+    var gEditOpenUrl = "UI/BasicData/BasicPhoneDetail.html?id="
+    var gAddOpenUrl = "UI/BasicData/BasicPhoneDetail.html?id=-1"
+    var config = {dialogWidth: 800, dialogHeight: 270};
+    var AddDialog
+    var nameData//保存从服务器拿到的数据
+    //声明
+    var gBasicList = new BasicListPage();
+    var gRequest = new RequestHandle();
+    var gApiKey = getApiKey()
+
+    ////主流程
+    var content = DATAGRID_TOOLBAR_EDITOR;
+    content+=DATAGRID_TOOLBAR_DELETE;
+    content+=DATAGRID_TOOLBAR_ADD;
+    gBasicList.createToolbar(content);//创建toolbar
+    ////创建表格
+    var gDatagridUrl = RequestUrl.constructURL(gApiKey, "phone/list");
+    var gConfig = {
+        toolbar: '#toolbar',
+        fitColumns: 'false',
+        rownumbers: 'true',
+        singleSelect : false,
+        width: '100%',
+        height:"500px",
+        striped: 'true',
+        loadMsg: 'In the process of laborious loading.....',
+        showFooter: 'true',
+        columns : [
+            [{
+                field: 'ck',
+                checkbox: 'true',
+            },{
+                field : 'id',
+                title : 'id',
+                width : '0%',
+                align : 'center'
+            }, {
+                field : 'contactType',
+                title : 'Type',
+                width : '15%',
+                align : 'center',
+                formatter:function (value) {
+                    return getReturnValue(value,"ContactType")
+                }
+            }, {
+                field : 'communicationType',
+                title : 'CommunicationType',
+                width : '25%',
+                align : 'center',
+                formatter:function (value) {
+                    return getReturnValue(value,"CommunicationType")
+                }
+            }, {
+                field : 'number',
+                title : 'Number',
+                width : '25%',
+                align : 'center',
+
+            },/*{
+                field : 'used',
+                title : 'Available',
+                width : '25%',
+                align : 'center',
+                formatter:function (value) {
+                    value = value+'';
+                    if(value){
+                        return getValueByKey(BASICDATA_STATE, value);
+                    }
+                }
+            }*/]
+        ],
+        onDblClickRow : function (index, row) {
+            localStorage.setItem("phoneData",JSON.stringify(row))
+            var _DialogWidth=800;
+            var _DialogHeight=270;
+            var pLocation = "UI/BasicData/BasicPhoneDetail.html?id="+ row.id;
+            if(row.entityId!=undefined){
+
+                localStorage.setItem("entityId",row.entityId)
+            }
+            if(row.personId!=undefined){
+
+                localStorage.setItem("personId",row.personId)
+            }
+            $("#ifrmEdit").attr("src", pLocation);
+            constructDialog($('#dlg'), 'Detail', _DialogWidth, _DialogHeight);
+            AddDialog.dialog('open');
+        },
+    }
+    $("#dg").datagrid(gConfig);
+   gBasicList.hideColumn(['id']);//隐藏id
+
+    //函数部分
+
+    $(document).ready(function () {
+        getData()//获取datagrid数据
+    });
+    function getApiKey() {
+        switch (payload.type) {
+            case "customerPhone":
+                return "CUSTOMERS";
+            case "entityPhone":
+                return "ENTITY";
+            case "entityDirectorPhone":
+                return "DIRECTOR";
+        }
+    }
+    function fuzzySearch(value,data) {//模糊查询
+        return data.filter(function (current) {
+            return current.name.toLowerCase().indexOf(value.toLowerCase()) >= 0;
+        });
+    }
+    function getData() {//获取name数据 载入模糊查询框
+        gRequest.putRemoteData(gApiKey,"phone/list",payload).done(function (result) {
+            if (result.code === 0) {
+                var phoneData = result.data;
+                $("#dg").datagrid("loadData",phoneData)
+            } else {
+                $.messager.alert("fail", _result.msg);
+            }
+        });
+    }
+    function editData() {
+        var _row = $("#dg").datagrid("getSelected");
+        if (!_row) {
+            $.messager.alert('Info', "Please select the data you need to modify");
+            return;
+        }
+        localStorage.setItem("phoneData",JSON.stringify(_row))
+        if(_row.entityId+""){
+            localStorage.setItem("entityId",_row.entityId)
+        }
+        if(_row.personId!=undefined){
+
+            localStorage.setItem("personId",_row.personId)
+        }
+        gBasicList.editHandle(gEditOpenUrl, config);
+    }
+
+    function newData() {
+        gBasicList.newHandle(gAddOpenUrl, config);
+    }
+    function closeDlg() {
+        getData()
+        AddDialog.dialog('close')
+    }
+    function destroy(){
+        var _row = $('#dg').datagrid('getSelected');
+        if (!_row) {
+            $.messager.alert('Info', "Please select the data you need to modify！");
+            return;
+        }
+        var _param = {id:_row.id,personId:gPersonId}
+        var _typeData = {type: payload.type}
+        var _sendData = $.extend(false,_param,_typeData)
+        _sendData = JSON.stringify(_sendData)
+        $.messager.confirm("Info", "confirm to Delete Data", function (r) {
+            if (r) {
+                gRequest.delRemoteData(gApiKey,"phone/del",_sendData).done(function (result) {
+                    if(result.code === 0){
+                        $.messager.alert("Info",result.msg)
+                        getData()
+                    }else{
+                        $.messager.alert("Info",result.msg)
+                    }
+                })
+            }
+        });
+
+    }
+    function updateBasicData() {
+        var _row = $('#dg').datagrid('getSelected');
+        if (!_row){
+            $.messager.alert('Info', "Please select the data you need to modify！");
+            return;
+        }
+        var postUsed;
+        if(_row.used ==0){
+            postUsed =1
+        }else{
+            postUsed =0
+        }
+        var _param = {id: _row.id,used:postUsed}
+        var _typeData = {type: payload.type}
+        var _sendData = $.extend(false, _param, _typeData)
+        gRequest.putRemoteData(gApiKey, "used", _sendData).done(function (result) {
+            if (result.code === 0) {
+                $("#dg").datagrid('reload', gDatagridUrl)
+            }
+            else {
+                $.messager.alert("fail", result.msg);
+            }
+        })
+    }
+</script>
+
+</html>

@@ -1,0 +1,199 @@
+<!--创建人：简佳成-->
+<!--创建时间：2018.12.4-->
+<!--描述：客户详情展示页面框架 未完成-->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link rel="stylesheet" type="text/css" href="../../Themes/material/easyui.css">
+    <link rel="stylesheet" type="text/css" href="../../Themes/icon.css">
+    <link rel="stylesheet" type="text/css" href="../../CSS/common.css">
+
+</head>
+<body>
+<div id="header">
+</div>
+<div id="p" class="easyui-panel" title="Basic information"
+     style="width:100%;height:400px;padding:10px;background:#fafafa;overflow: hidden"
+     data-options="iconCls:'icon-save',closable:false,
+    collapsible:true,minimizable:false,maximizable:false">
+    <form id="ff" style="width: 100%">
+        <table id="sss" class="displayable" style="text-align:right;width: 100%;table-layout:fixed">
+            <tr style="height: 60px;width: 100%">
+                <td style="width: 20%;"><span class="required">*</span>ContactType:</td>
+                <td style="width: 25%;text-align: left;">
+                    <input type="text"  class="easyui-combobox" data-options='required:true' style="width: 80%;"
+                           id="input_addressType"/>
+                </td>
+                <td style="width: 15%"><span class="required">*</span>Address:</td>
+                <td style="text-align: left">
+                    <input type="text"  class="easyui-textbox" id="input_address" style="width: 50%;height:40px "
+                           data-options="required:true,multiline:true"/>
+                </td>
+            </tr>
+
+            <tr style="height: 60px">
+                <td ><span class="required">*</span>Country:</td>
+                <td style="width: 25%;text-align: left">
+                    <input type="text"  class="easyui-textbox" data-options='required:true' style="width: 80%;"
+                           id="input_countryCode"/>
+                </td>
+                <td ><span class="required">*</span>City:</td>
+                <td style="width: 25%;text-align: left">
+                    <input type="text"  class="easyui-textbox" id="input_city" style="width: 50%;"
+                           data-options="required:true"/>
+                </td>
+            </tr>
+            <tr style="height: 60px">
+                <td >State:</td>
+                <td style="width: 25%;text-align: left">
+                    <input type="text"  class="easyui-textbox" data-options='' style="width: 80%;"
+                           id="input_state"/>
+                </td>
+                <td >Town:</td>
+                <td style="width: 25%;text-align: left">
+                    <input type="text"  class="easyui-textbox" id="input_town" style="width: 50%;"
+                           data-options=""/>
+                </td>
+            </tr>
+            <tr style="height: 60px">
+                <td >Zip:</td>
+                <td style="width: 25%;text-align: left">
+                    <input type="text"  class="easyui-textbox" data-options='' style="width: 80%;"
+                           id="input_zip"/>
+                </td>
+                <td >Comments:</td>
+                <td style="width: 25%;text-align: left">
+                    <input type="text"  class="easyui-textbox" id="input_comments" style="width: 50%;height: 100%"
+                           data-options="multiline:true"/>
+                </td>
+            </tr>
+        </table>
+        <div class="submit_button" style="margin-top: 30px">
+            <a class="easyui-linkbutton" iconCls="icon-save" onclick="save()" style="width: 100px;"> Save</a>
+            <a class="easyui-linkbutton" iconCls="icon-reload" onclick="doDelete()"
+               style="width: 100px;margin-left: 10px;">Delete</a>
+        </div>
+    </form>
+</div>
+</body>
+<script type="text/javascript" src="../../JS/jquery.min.js"></script>
+<!--必须使用这个js而不是min.js ,因为做了封装修改-->
+<script type="text/javascript" src="../../JS/jquery.easyui.js"></script>
+<script type="text/javascript" src="../../JS/common.js"></script>
+<script type="text/javascript" src="../../Utils/ip.js"></script>
+<script type="text/javascript" src="../../Utils/ShareComponent.js"></script>
+<script type="text/javascript" src="../../JS/ToolBar.js"></script>
+<script type="text/javascript" src="../../JS/SearchComponent.js"></script>
+<script type="text/javascript" src="../../Utils/BasicList.js"></script>
+<script type="text/javascript" src="../../Utils/Request.js"></script>
+<script type="text/javascript" src="../../Utils/Enum.js"></script>
+<script type="text/javascript" src="../../JS/Header.js"></script>
+<script type="text/javascript">
+    var gCreatHeader = new creatHeader();
+    var gBasicList = new BasicListPage();
+    var gRequest = new RequestHandle();
+    var gApiKey = "CUSTOMERS"
+    var payload = JSON.parse(localStorage.getItem("customerEmployer"))
+    var addressId
+    var gPersonId = localStorage.getItem("personId")
+    var gComboboxConfig = {//配置combobox
+        panelWidth:285,
+        onHidePanel: checkCombobox,
+    }
+    createComponentFactory("BASICDATA_CONTACTTYPE", '#input_addressType',gComboboxConfig);
+    createComponentFactory("BASICDATA_COUNTRYCODES", '#input_countryCode',gComboboxConfig);
+    $(document).ready(function () {
+        var _param = {id: gCurrid};
+        var _res;
+
+            _res = gRequest.putRemoteData(gApiKey, "employer/addr/get", payload);
+            _res.done(function (data) {
+                if(data.data==null){
+                    gCurrid = AddFlag;
+                }else{
+                    getFormData(data.data);
+                    addressId= data.data.id;
+
+                }
+            });
+
+
+    });
+    $.extend($.fn.validatebox.defaults.rules, {
+        gPattern: {
+            validator: function (value, param) {
+                return param[0].test(value);
+            },
+            message: 'Format error!'
+        }
+    });
+    function doDelete(){
+        var _sendData = {personId:gPersonId,id:addressId,type:payload.type};
+        _sendData = JSON.stringify(_sendData);
+        $.messager.confirm("Info", "confirm to Delete Data", function (r) {
+            if (r) {
+                gRequest.delRemoteData(gApiKey,"employer/phone/del",_sendData).done(function (result) {
+                    if(result.code === 0){
+                        $.messager.alert("Info",result.msg)
+                    }else{
+                        $.messager.alert("Info",result.msg)
+                    }
+                })
+            }
+        });
+    }
+    function save() {
+        var flag = checkInput()
+        var _url;
+        var _method;
+        if (gCurrid == AddFlag) {
+            _url = "employer/addr/edit";
+        } else {
+            _url = "employer/addr/edit";
+        }
+        if(flag){
+            saveData(_url);
+        }
+    }
+
+    function saveData(_url) {
+        var employerAddressId = localStorage.getItem("employerAddressId")
+        var _data = submitFormData();
+        for(var i in _data){
+            if(_data[i]==""){
+                delete _data[i]
+            }
+        }
+        if (gCurrid == AddFlag) {
+            var postData = $.extend(false,_data,{personId:gPersonId,id:1});
+            gRequest.putRemoteData(gApiKey,_url,postData).done(function (result) {
+                if (result.code == 0) {
+                    $.messager.alert({
+                        title: 'Info',
+                        msg: result.msg,
+                        fn: function(){
+                            localStorage.setItem("employerAddressId",result.data)
+                            gCurrid = result.data;
+                        }
+                    });
+                } else {
+                    $.messager.alert("Info", result.msg);
+                }
+            });
+        } else {
+            var postData = $.extend(false,_data,{personId:gPersonId,id:employerAddressId,type:payload.type});
+            gRequest.putRemoteData(gApiKey,_url,postData).done(function (result) {
+                if (result.code == 0) {
+                    $.messager.alert("Info", result.msg);
+                } else {
+                    $.messager.alert("Info", result.msg);
+                }
+            });
+        }
+    }
+
+</script>
+</html>

@@ -1,0 +1,112 @@
+<!--创建人：邓奔成-->
+<!--创建时间：2018.9.15-->
+<!--描述：实现用户组数据展示-->
+
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" type="text/css" href="../../Themes/material/easyui.css">
+    <link rel="stylesheet" type="text/css" href="../../Themes/icon.css">
+    <link rel="stylesheet" type="text/css" href="../../CSS/common.css">
+</head>
+<style>
+</style>
+<body style="padding: 0px;">
+<div id="div_layout" class="easyui-layout">
+    <div id="div_search" data-options="region:'north'">
+    </div>
+    <div data-options="region:'center'">
+        <div class="easyui-panel" title="数据列表">
+            <table id="dg">
+            </table>
+        </div>
+    </div>
+</div>
+<div id="toolbar"></div>
+<div id="dlg" class="easyui-dialog" closed="true">
+    <iframe id="ifrmEdit" height="100%" width="100%" frameborder="0" scrolling="no"></iframe>
+</div>
+</body>
+<script type="text/javascript" src="../../JS/jquery.min.js"></script>
+<!--必须使用这个js而不是min.js ,因为做了封装修改-->
+<script type="text/javascript" src="../../JS/jquery.easyui.js"></script>
+<script type="text/javascript" src="../../JS/common.js"></script>
+<script type="text/javascript" src="../../Utils/ip.js"></script>
+<script type="text/javascript" src="../../Utils/ShareComponent.js"></script>
+<script type="text/javascript" src="../../JS/ToolBar.js"></script>
+<script type="text/javascript" src="../../JS/SearchComponent.js"></script>
+<script type="text/javascript" src="../../Utils/BasicList.js"></script>
+<script type="text/javascript" src="../../Utils/Request.js"></script>
+<script type="text/javascript" src="../../Utils/Enum.js"></script>
+<script>
+    var dataType = localStorage.getItem("dataType")
+    ///声明部分
+    var gBasicList = new BasicListPage();
+    var gApiKey="BASECODE";
+    ////主流程
+    gBasicList.createSearch(SEARCH_CUSTOMER_TYPE_ID);//创建搜索界面
+    gBasicList.createToolbar(DATAGRID_TOOLBAR_UPDATEDATA);//创建toolbar
+    ////创建表格
+    var gDatagridUrl = RequestUrl.constructURL(gApiKey, "listbrif");
+    var gConfig = {
+        url : gDatagridUrl,
+        method:"post",
+        queryParams:{type: "FundsType"},
+        columns : [
+            [{
+                field : 'id',
+                title : 'id',
+                width : '0%',
+                align : 'center'
+            }, {
+                field : 'code',
+                title : 'Code',
+                width : '15%',
+                align : 'center',
+            }, {
+                field : 'name',
+                title : 'Name',
+                width : '25%',
+                align : 'center',
+            }, {
+                field : 'type',
+                title : 'Type',
+                width : '25%',
+                align : 'center'
+            },{
+                field : 'used',
+                title : 'Available',
+                width : '25%',
+                align : 'center'
+            }]
+        ],
+        onDblClickRow : function (index, row) {
+            var _DialogWidth=600;
+            var _DialogHeight=210;
+            var pLocation = "UI/BasicData/CustomerTypePreview.html?id="+ row.customerTypeId;
+            $("#ifrmEdit").attr("src", pLocation);
+            constructDialog($('#dlg'), '详细信息', _DialogWidth, _DialogHeight);
+            AddDialog.dialog('open');
+        },
+    }
+    gBasicList.createDataGrid(gConfig);
+    gBasicList.hideColumn(['id']);//隐藏id
+
+    //函数部分
+
+    function doSearch() {
+        gBasicList.searchHandle(gApiKey);
+    }
+
+    function doReset() {
+        gBasicList.resetHandle(gApiKey);
+    }
+
+    function updateBasicData() {
+
+    }
+</script>
+
+</html>

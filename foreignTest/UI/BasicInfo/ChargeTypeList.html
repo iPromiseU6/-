@@ -1,0 +1,156 @@
+<!--创建人：吴永佳-->
+<!--创建时间：2018.12.2-->
+<!--描述：ChargeTypeList的展示-->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" type="text/css" href="../../Themes/material/easyui.css">
+    <link rel="stylesheet" type="text/css" href="../../Themes/icon.css">
+    <link rel="stylesheet" type="text/css" href="../../CSS/common.css">
+</head>
+<body style="padding: 0">
+<div id="div_layout" class="easyui-layout">
+    <div data-options="region:'center'">
+        <div class="easyui-panel" title="ChargeType">
+            <table id="dg"></table>
+        </div>
+    </div>
+</div>
+<div id="toolbar"></div>
+<div id="dlg" class="easyui-dialog" closed="true">
+    <iframe id="ifrmEdit" height="100%" width="100%" frameborder="0" scrolling="no"></iframe>
+</div>
+</body>
+<script type="text/javascript" src="../../JS/jquery.min.js"></script>
+<script type="text/javascript" src="../../JS/jquery.easyui.js"></script>
+<script type="text/javascript" src="../../JS/common.js"></script>
+<script type="text/javascript" src="../../Utils/ip.js"></script>
+<script type="text/javascript" src="../../Utils/ShareComponent.js"></script>
+<script type="text/javascript" src="../../JS/ToolBar.js"></script>
+<script type="text/javascript" src="../../JS/SearchComponent.js"></script>
+<script type="text/javascript" src="../../Utils/BasicList.js"></script>
+<script type="text/javascript" src="../../Utils/Request.js"></script>
+<script type="text/javascript" src="../../Utils/Enum.js"></script>
+<script type="text/javascript">
+    //创建页面对象
+    var gBasicList = new BasicListPage();
+    //创建接口
+    var gApiKey = "CHARGETYPE";
+    //创建请求对象
+    var gRequest = new RequestHandle();
+    //创建工具栏
+    gBasicList.createToolbar(DATAGRID_TOOLBAR_EDITOR + DATAGRID_TOOLBAR_DELETE + DATAGRID_TOOLBAR_ADD);
+    //创建Url
+    var gDatagridUrl = RequestUrl.constructURL(gApiKey, "list");
+    //弹出框高宽大小
+    var gDialogWidth = 400;
+    var gDialogHeight = 300;
+    //表格配置（创建表格时传入）
+    var gConfig = {
+        url: gDatagridUrl,
+        method: 'put',
+        columns: [
+            [{
+                field: 'ck',
+                checkbox: true,
+            },
+                {
+                    field: 'typeName',
+                    title: 'Type Name',
+                    width: '45%',
+                    align: 'center'
+                },
+                {
+                    field: 'memo',
+                    title: 'Memo',
+                    width: '20%',
+                    align: 'center',
+                },
+            ]
+        ],
+        onDblClickRow: function (index, row) {
+            var pLocation = "UI/BasicInfo/ChargeTypePreview.html?id=" + row.id;
+            $("#ifrmEdit").attr("src", pLocation);
+            constructDialog($('#dlg'), 'Updata', gDialogWidth, gDialogHeight);
+            AddDialog.dialog('open');
+        },
+    };
+    //创建表格
+    gBasicList.createDataGrid(gConfig);
+
+    /**
+     * 函数
+     */
+    //重置
+    function doReset() {
+        gBasicList.resetHandle(gApiKey);
+    }
+
+    //详情框关闭
+    function dialogClose() {
+        AddDialog.dialog('close');
+    }
+
+    //编辑(Updata)
+    function editData() {
+        var _rowdata = $('#dg').datagrid('getSelected');
+        if (!_rowdata) {
+            $.messager.alert('Info', "Please select the information you want to modify!");
+            return;
+        }
+        var _id = _rowdata.id
+        var pLocation = "UI/BasicInfo/ChargeTypePreview.html?id=" + _id;
+        $("#ifrmEdit").attr("src", pLocation);
+        constructDialog($('#dlg'), 'Updata', gDialogWidth, gDialogHeight);
+        AddDialog.dialog('open');
+    }
+
+    function newData() {
+        var pLocation = "UI/BasicInfo/ChargeTypePreview.html";
+        $("#ifrmEdit").attr("src", pLocation);
+        constructDialog($('#dlg'), 'Create', gDialogWidth, gDialogHeight);
+        AddDialog.dialog('open');
+    }
+
+    function destroy() {
+        var _rowdata = $('#dg').datagrid('getChecked');
+        if (!_rowdata) {
+            $.messager.alert('Info', "Please select the information you want to modify!");
+            return;
+        }
+        var idsList = [];
+        _rowdata.forEach(function (item) {
+            idsList.push(item.id)
+        })
+        var _sendData = {
+            ids: idsList
+        };
+        $.messager.confirm('Confirm', 'Are you sure delete this record?', function (r) {
+            if (r) {
+                gRequest.delRemoteData(gApiKey, "delall", JSON.stringify(_sendData)).done(function (result) {
+                    destroySuccess(result);
+                })
+            }
+        })
+    }
+
+    function destroySuccess(result) {
+        $('#dg').datagrid('reload');
+        if (result.code === -1) {
+            $.messager.alert({
+                title: 'Delete success!',
+                msg: 'Ok'
+            });
+            return;
+        } else {
+            $.messager.alert({
+                title: 'Info',
+                msg: result.msg
+            });
+            return;
+        }
+
+    }
+</script>
+</html>

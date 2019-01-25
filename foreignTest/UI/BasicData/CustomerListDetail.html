@@ -1,0 +1,663 @@
+<!--创建人：简佳成-->
+<!--创建时间：2018.12.4-->
+<!--描述：客户详情展示页面框架 未完成-->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link rel="stylesheet" type="text/css" href="../../Themes/material/easyui.css">
+    <link rel="stylesheet" type="text/css" href="../../Themes/icon.css">
+    <link rel="stylesheet" type="text/css" href="../../CSS/common.css">
+
+</head>
+<body>
+<div id="header" style="margin-bottom: 10px">
+</div>
+<div id="toolbar" style="margin-bottom: 10px"></div>
+<div id="p" class="easyui-panel" title="Basic information"
+     style="width:100%;height:350px;padding:10px;background:#fafafa;overflow: hidden"
+     data-options="iconCls:'icon-save',closable:false,
+    collapsible:true,minimizable:false,maximizable:false">
+    <form id="ff" style="width: 100%">
+        <table id="sss" class="displayable" style="text-align:right;width: 100%">
+            <tr style="height: 60px;width: 100%">
+                <td style="width: 8%;">CustomerNO:</td>
+                <td style="width: 25%;text-align: left;">
+                    <input type="text" class="easyui-textbox" data-options='' style="width: 80%;" disabled='disabled'
+                           id="input_customerNumber"/>
+                </td>
+                <td style="width: 8%">Title:</td>
+                <td style="width: 25%;text-align: left">
+                    <input type="text" class="easyui-combobox" id="input_title" style="width: 80%;"
+                           data-options=""/>
+                </td>
+                <td style="width: 8%"><span class="required">*</span>Gender:</td>
+                <td style="width: 25%;text-align: left">
+                    <input type="text" class="easyui-combobox" id="input_gender" style="width: 80%;"
+                           data-options="required:true"/>
+                </td>
+            </tr>
+
+            <tr style="height: 60px">
+                <td><span class="required">*</span>LastName:</td>
+                <td style="width: 25%;text-align: left">
+                    <input type="text" class="easyui-textbox" data-options='required:true' style="width: 80%;"
+                           id="input_lastName"/>
+                </td>
+                <td>MiddleName:</td>
+                <td style="width: 25%;text-align: left">
+                    <input type="text" class="easyui-textbox" id="input_middleName" style="width: 80%;"
+                           data-options=""/>
+                </td>
+                <td><span class="required">*</span>FirstName:</td>
+                <td style="width: 25%;text-align: left">
+                    <input type="text" class="easyui-textbox" id="input_firstName" style="width: 80%;"
+                           data-options="required:true"/>
+                </td>
+            </tr>
+            <tr style="height: 60px">
+                <td><span class="required">*</span>BirthPlace:</td>
+                <td style="width: 25%;text-align: left">
+                    <input type="text" class="easyui-textbox" data-options='required:true' style="width: 80%;"
+                           id="input_birthPlace"/>
+                </td>
+                <td><span class="required">*</span>Birthdate:</td>
+                <td style="width: 25%;text-align: left">
+                    <input type="text" class="easyui-datebox" id="input_birthdate" style="width: 80%;"
+                           data-options="required:true"/>
+                </td>
+                <td>Email:</td>
+                <td style="width: 25%;text-align: left">
+                    <input type="text" class="easyui-textbox" id="input_email" style="width: 80%;"
+                           data-options="validType:'email'"/>
+                </td>
+            </tr>
+            <tr style="height: 60px">
+                <td><span class="required">*</span>Phone:</td>
+                <td style="width: 25%;text-align: left">
+                    <input type="text" class="easyui-textbox"
+                           data-options="required:true,validType:'phonePattern[phoneRegular]'" style="width: 80%;"
+                           id="input_phoneNumber"/>
+                </td>
+                <td><span class="required">*</span>Nationality:</td>
+                <td style="width: 25%;text-align: left">
+                    <input type="text" class="easyui-combobox" id="input_nationality1" style="width: 80%;"
+                           data-options="required:true"/>
+                </td>
+                <td><span class="required">*</span>AccountType:</td>
+                <td style="width: 25%;text-align: left">
+                    <input type="text" class="easyui-combobox" id="input_customerAccountType" style="width: 80%"
+                           data-options="required:true"/>
+                </td>
+            </tr>
+        </table>
+        <div>
+            <p style="display: inline-block;margin-left: 70px">Residence:</p>
+            <input type="text" class="easyui-textbox" id="input_residence" style="width: 87%"
+                   data-options="multiline:true"/>
+        </div>
+    </form>
+</div>
+<div id="edit" class="easyui-panel" title="IdentityInfo"
+     style="width:100%;height:200px;padding:10px;background:#fafafa;overflow: hidden"
+     data-options="iconCls:'icon-save',closable:false,
+    collapsible:true,minimizable:false,maximizable:false,tools:'#tt'">
+    <div id="tt">
+        <a href="#" class="icon-edit" onclick="doEdit()"></a>
+    </div>
+    <table id="dg">
+    </table>
+</div>
+<div id="add" class="easyui-panel" title="IdentityInfo"
+     style="width:100%;height:150px;padding:10px;background:#fafafa;overflow: hidden"
+     data-options="iconCls:'icon-save',closable:false,
+    collapsible:true,minimizable:false,maximizable:false">
+    <form id="ff" style="width: 100%">
+        <table id="sssf" class="displayable" style="text-align:right;width: 100%">
+            <tr style="height: 60px;width: 100%">
+                <td style="width: 8%;"><span class="required">*</span>LicenseType:</td>
+                <td style="width: 25%;text-align: left">
+                    <input type="text" class="easyui-combobox" data-options='required:true' style="width: 80%"
+                           id="input_type"/>
+                </td>
+                <td style="width: 8%"><span class="required">*</span>Number:</td>
+                <td style="width: 25%;text-align: left">
+                    <input type="text" class="easyui-textbox" id="input_number" style="width: 80%;"
+                           data-options="required:true"/>
+                </td>
+                <td style="width: 8%"><span class="required">*</span>Country:</td>
+                <td style="width: 25%;text-align: left">
+                    <input type="text" class="easyui-combobox" id="input_issueCountry" style="width: 80%;"
+                           data-options="required:true"/>
+                </td>
+            </tr>
+        </table>
+    </form>
+</div>
+<div id="r" class="easyui-panel" title="OtherInfo"
+     style="width:100%;height:500px;padding:10px;background:#fafafa;"
+     data-options="iconCls:'icon-save',closable:false,
+    collapsible:true,minimizable:false,maximizable:false">
+    <form id="ff" style="width: 100%">
+        <table id="sssf" class="displayable" style="text-align:right;width: 100%">
+            <tr style="height: 60px;width: 100%">
+                <td style="width: 8%;">Occupation:</td>
+                <td style="width: 25%;text-align: left">
+                    <input type="text" class="easyui-textbox" data-options='' style="width: 80%"
+                           id="input_occupation"/>
+                </td>
+                <td style="width: 8%">Employer Name:</td>
+                <td style="width: 25%;text-align: left">
+                    <input type="text" class="easyui-textbox" id="input_employerName" style="width: 80%;"
+                           data-options=""/>
+                </td>
+                <td style="width: 8%">IRD Number:</td>
+                <td style="width: 25%;text-align: left">
+                    <input type="text" class="easyui-textbox" id="input_IRDNumber" style="width: 80%;"
+                           data-options=""/>
+                </td>
+            </tr>
+
+            <tr style="height: 60px">
+                <td>Source of Wealth:</td>
+                <td style="width: 25%;text-align: left">
+                    <input type="text" class="easyui-textbox" data-options='' style="width: 80%;"
+                           id="input_sourceOfWealth"/>
+                </td>
+                <td>Average.A.T:</td>
+                <td style="width: 25%;text-align: left">
+                    <input type="text" class="easyui-textbox" id="input_averageAnnualTurnover" style="width: 80%;"
+                           data-options=""/>
+                </td>
+                <td>TradingFrequency:</td>
+                <td style="width: 25%;text-align: left">
+                    <input type="text" class="easyui-textbox" id="input_tradingFrequency" style="width: 80%;"
+                           data-options=""/>
+                </td>
+            </tr>
+            <tr style="height: 80px">
+                <td>UseOfFunds:</td>
+                <td style="width: 25%;text-align: left">
+                    <input type="text" class="easyui-textbox" data-options='' style="width: 80%;"
+                           id="input_fundUse"/>
+                </td>
+                <td>comments:</td>
+                <td colspan="3" style="width: 25%;text-align: left;padding-top: 25px">
+                    <input type="text" class="easyui-textbox" id="input_comments" style="width: 92%;height: 100%"
+                           data-options="multiline:true"/>
+                </td>
+
+            </tr>
+            <tr style="height: 60px">
+                <td>
+                    <input type="file" name="FileUpload" id="FileUpload">
+                </td>
+                <td><input value="上传图片" type="button" id="btn_uploadimg" onclick="uploadImg()"></td>
+            </tr>
+        </table>
+    </form>
+    <div id="imgList" style="width: 100%;height: 150px;display: flex">
+    </div>
+</div>
+</body>
+<script type="text/javascript" src="../../JS/jquery.min.js"></script>
+<!--必须使用这个js而不是min.js ,因为做了封装修改-->
+<script type="text/javascript" src="../../JS/jquery.easyui.js"></script>
+<script type="text/javascript" src="../../JS/jquery.ui.widget.js"></script>
+<script type="text/javascript" src="../../JS/common.js"></script>
+<script type="text/javascript" src="../../Utils/ip.js"></script>
+<script type="text/javascript" src="../../Utils/ShareComponent.js"></script>
+<script type="text/javascript" src="../../JS/ToolBar.js"></script>
+<script type="text/javascript" src="../../Utils/BasicList.js"></script>
+<script type="text/javascript" src="../../Utils/Request.js"></script>
+<script type="text/javascript" src="../../Utils/Enum.js"></script>
+<script type="text/javascript" src="../../JS/Header.js"></script>
+<script type="text/javascript">
+    var gCreatHeader = new creatHeader();
+    var gBasicList = new BasicListPage();
+    var gRequest = new RequestHandle();
+    var gPostAddData = new peopleDataObj();
+    var gPersonId = JSON.parse(localStorage.getItem("personId"));
+    var gHeadData = ["Phone", "Address", "Identification", "EmployerPhone", "EmployerAddress", "Account", "Entity"];
+    var gCurrid = getID();
+    var gFileArry = [];
+    var getData;
+    var phoneRegular = /^[0-9]+$/;
+    var filed;
+    var gApiKey = "CUSTOMERS";
+    var upApiKey = "FILES";
+    gCreatHeader.creatContent("#header", gHeadData);
+
+    var buttons = [{//配置toolbar
+        'functionname': "Save",
+        'func': 'save()',
+        'icon': 'icon-save',
+    }, {
+        'functionname': "Search",
+        'func': 'doSearch()',
+        'icon': 'icon-search',
+    }, {
+        'functionname': "Delete",
+        'func': 'doDelete()',
+        'icon': 'icon-remove',
+    }
+    ];
+    gBasicList.createToolbar("", buttons);
+
+    $("#toolbar a").each(function (index, value) {
+        $(value).removeAttr("plain");
+    });
+
+    var gComboboxConfig = {//配置combobox
+        panelWidth: 285,
+        onHidePanel: checkCombobox
+    };
+
+    //构造combobox
+    createComponentFactory("SYSUSER_SEX", '#input_gender', gComboboxConfig);
+    createComponentFactory("TITLE_TYPE", '#input_title', gComboboxConfig);
+    createComponentFactory("BASICDATA_COUNTRYCODES", '#input_nationality1', gComboboxConfig);
+    createComponentFactory("BASICDATA_IDENTIFIERTYPE", '#input_type', gComboboxConfig);
+    createComponentFactory("BASICDATA_COUNTRYCODES", '#input_issueCountry', gComboboxConfig);
+    createComponentFactory("CUSTOMER_ACCOUNT_TYPE", '#input_customerAccountType', gComboboxConfig);
+    var gConfig = {
+        fitColumns: 'false',
+        rownumbers: 'true',
+        singleSelect: false,
+        width: '100%',
+        height: "150px",
+        striped: 'true',
+        loadMsg: '正在吃力加载中.....',
+        showFooter: 'true',
+        columns: [
+            [{
+                field: 'ck',
+                checkbox: 'true',
+            }, {
+                field: 'id',
+                title: 'id',
+                width: '0%',
+                align: 'center'
+            }, {
+                field: 'type',
+                title: 'Type',
+                width: '15%',
+                align: 'center',
+                formatter: function (value) {
+                    return getReturnValue(value, "IdentifierType");
+                }
+            }, {
+                field: 'number',
+                title: 'Number',
+                width: '25%',
+                align: 'center'
+            }, {
+                field: 'issueCountry',
+                title: 'IssueCountry',
+                width: '25%',
+                align: 'center',
+                formatter: function (value) {
+                    return getReturnValue(value, "CountryCodes");
+                }
+            },]
+        ],
+    };
+    $("#dg").datagrid(gConfig);
+    gBasicList.hideColumn(['id']);//隐藏id
+    $(document).ready(function () {
+        var _param = {id: gCurrid};
+        var _res;
+        if (gCurrid != AddFlag) {
+            $('#add').panel('close');
+            $('#add').remove();
+            _res = gRequest.putRemoteData(gApiKey, "get", _param);
+            _res.done(function (data) {
+                if (data.data.person.employerPhoneId != undefined) {
+                    localStorage.setItem("employerPhoneId", data.data.person.employerPhoneId);
+                }
+                if (data.data.person.employerAddressId != undefined) {
+                    localStorage.setItem("employerAddressId", data.data.person.employerAddressId);
+                }
+                if (data.data.fileMd5 != undefined) {
+                    gFileArry = data.data.fileMd5;
+                    data.data.fileMd5.forEach(function (value, index) {
+                        getImg({fileMd5: value.fileMd5}, value.id);
+                    });
+                }
+                getData = data.data.person;
+                data.data.person = convertDateData(data.data.person, "/");
+                getFormData(data.data);
+                $("#dg").datagrid("loadData", data.data.identifications);
+                getFormData(data.data.person);
+            });
+        } else {
+            _res = gRequest.putRemoteData(gApiKey, "getnum");
+            _res.done(function (data) {
+                $('#input_customerNumber').textbox('setValue', data.data);
+            });
+            $('#edit').panel('close');
+
+            gCurrid = AddFlag;
+        }
+
+    });
+    $.extend($.fn.validatebox.defaults.rules, {
+        phonePattern: {
+            validator: function (value, param) {
+                return param[0].test(value);
+            },
+            message: '请输入正确的电话号码格式!'
+        }
+    });
+
+    function doEdit() {
+        $("#Identification").click();
+    }
+
+    function uploadImg() {
+        var fileObj = document.getElementById("FileUpload").files[0]; // js 获取文件对象
+        var reads = new FileReader();
+
+        if (typeof (fileObj) == "undefined" || fileObj.size <= 0) {
+            $.messager.alert('提示', "请选择图片");
+            return;
+        }
+        var formFile = new FormData();
+        formFile.append("action", "UploadVMKImagePath");
+        formFile.append("file", fileObj);
+        var gUpImgUrl = RequestUrl.constructURL(upApiKey, "upload");
+        var data = formFile;
+        $.ajax({
+            url: gUpImgUrl,
+            data: data,
+            type: "Post",
+            dataType: "json",
+            headers: {
+                token: sessionStorage.getItem("token"),
+            },
+            cache: false,//上传文件无需缓存
+            processData: false,//用于对data参数进行序列化处理 这里必须false
+            contentType: false, //必须
+            success: function (result) {
+                $.messager.alert('提示', "上传成功");
+                if (result.code == 0) {
+                    var param = {"id": result.data.id};
+                    var res = gRequest.putRemoteData(upApiKey, "get", param);
+                    res.done(function (result) {
+                        filed = result.data.fileMd5;
+                        gFileArry.push({customerId: gCurrid, fileMd5: filed});
+                        reads.readAsDataURL(fileObj);
+                        reads.onload = function (e) {
+                            var content = "<div style=\"width: 140px;height: 170px\">";
+                            content += "<img ";
+                            content += "id=\"";
+                            content += result.data.id + "\"";
+                            content += "class=\"show\"";
+                            content += "style=\"width: 140px;height: 140px\">";
+                            content += "<input style=\"margin-left:35px\" value=\"删除图片\" onclick=\"delImgLocal(this)\" id=\"" + result.data.id + "\" name=\"" + filed + "\" type=\"button\">";
+                            content += "</div>";
+                            $("#imgList").append(content);
+                            document.getElementById(result.data.id).src = this.result;
+                        };
+                    });
+                }
+            },
+        });
+    }
+
+    function getImg(param, id) {
+        var _url;
+        _url = RequestUrl.constructURL("CUSTOMERS", "getimg", param);
+        var xhr = new XMLHttpRequest();
+        xhr.open('GET', _url, true);
+        xhr.responseType = "blob";
+        xhr.setRequestHeader("token", sessionStorage.getItem("token"));
+        xhr.onload = function () {
+            if (this.status == 200) {
+                var blob = this.response;
+                var content = "<div style=\"width: 140px;height: 170px\">";
+                content += "<img src=\"\"";
+                content += "id=\"";
+                content += id + "\"";
+                content += "style=\"width: 140px;height: 140px\">";
+                content += "<input style=\"margin-left:35px\"  id=\"" + id + "\" onclick=\"delImgLocal(this)\"  value=\"删除图片\" name=\"" + param.fileMd5 + "\" type=\"button\">";
+                content += "</div>";
+                $(".show").remove();
+                $("#imgList").append(content);
+                var img = document.getElementById(id);
+                img.onload = function (e) {
+                    window.URL.revokeObjectURL(img.src);
+                };
+                img.src = window.URL.createObjectURL(blob);
+            }
+        };
+        xhr.send();
+    };
+
+    function delImg(e) {
+        var sendData = {id: e.id};
+        sendData = JSON.stringify(sendData);
+        $.messager.confirm("Info", "confirm to Delete Data", function (r) {
+            if (r) {
+                $("#" + e.id).parent().remove();
+                gFileArry = gFileArry.filter(function (current) {
+                    return current.fileMd5 != e.name;
+                });
+                _res = gRequest.delRemoteData("FILES", "del", sendData);
+                _res.done(function (result) {
+                    $.messager.alert("Info", result.msg);
+                });
+            }
+        });
+    }
+
+    function delImgLocal(e) {
+        var sendData = {id: e.id};
+        sendData = JSON.stringify(sendData);
+        $.messager.confirm("Info", "confirm to delete Data", function (r) {
+            if (r) {
+                $("#" + e.id).parent().remove();
+                gFileArry = gFileArry.map(function (current) {
+                    if (current.fileMd5 === e.name) {
+                        current.id = 0;//0代表删除
+                    }
+                    return current;
+                });
+            }
+        });
+    }
+
+    function checkCombobox() {//输入与下拉不一致返回空
+        var _options = $(this).combobox('options');
+        var _data = $(this).combobox('getData');
+        var _value = $(this).combobox('getValue');
+        var _flag = false;
+        for (var i = 0; i < _data.length; i++) {
+            if (_data[i][_options.valueField] == _value) {
+                _flag = true;
+                break;
+            }
+        }
+        if (!_flag) {
+            $(this).combobox('setValue', '');
+        }
+    }
+
+    function doSearch() {
+        AddTabIn('Customer', parent.$('#tabs'), 'UI/BasicData/CustomerList.html');
+    }
+
+    function save() {
+        var flag = checkInput();
+        var _url;
+        var _method;
+        if (gCurrid == AddFlag) {
+            _url = "add";
+            _method = "post";
+        } else {
+            _url = "edit";
+            _method = "put";
+        }
+        if (flag) {
+            saveData(_url);
+        }
+
+    }
+
+    var _data;
+
+    function saveData(_url) {
+        if (gCurrid == AddFlag) {
+            _data = submitFormData();
+            if (_data.IRDNumber) {
+                _data.IRDNumber = delSpace(_data.IRDNumber);
+            }
+            if (gFileArry) {
+                _data.fileMd5 = gFileArry;
+            }
+            _data.id = 1;
+            deleteBlankField(gPostAddData);
+            var postData = JSON.stringify(gPostAddData);
+            gRequest.postRemoteData(gApiKey, _url, postData).done(function (result) {
+                if (result.code == 0) {
+                    $.messager.alert({
+                        title: 'Info',
+                        msg: result.msg,
+                        fn: function () {
+                            _res = gRequest.putRemoteData(gApiKey, "get", {id: result.data});
+                            _res.done(function (data) {
+                                if (data.data.person.employerPhoneId == undefined) {
+                                    localStorage.setItem("employerPhoneId", data.data.personId);
+                                }
+                                if (data.data.person.employerAddressId == undefined) {
+                                    localStorage.setItem("employerAddressId", data.data.personId);
+                                }
+                                localStorage.setItem("personId", data.data.personId);
+                                var pLocation = "UI/BasicData/CustomerListDetail.html?id=" + result.data;
+                                AddTabIn("CustomerDetail", parent.$('#tabs'), pLocation);
+                                $("#dg").datagrid("loadData", data.data.identifications);
+                            });
+                        }
+                    });
+                } else {
+                    $.messager.alert("Info", result.msg);
+                }
+            });
+        } else {
+            _data = submitFormData();
+            if (_data.IRDNumber) {
+                _data.IRDNumber = delSpace(_data.IRDNumber);
+            }
+            if (gFileArry) {
+                _data.fileMd5 = gFileArry;
+            }
+            _data = convertDateData(_data, "-");
+            deleteBlankField(gPostAddData);
+            var postData = $.extend(true, gPostAddData, {id: gCurrid, person: {id: gPersonId}});
+            postData.identifications[0] = {};
+            gRequest.putRemoteData(gApiKey, _url, postData).done(function (result) {
+                if (result.code == 0) {
+                    $.messager.alert({
+                        title: 'Info',
+                        msg: result.msg,
+                        fn: function () {
+                            _res = gRequest.putRemoteData(gApiKey, "get", {id: result.data});
+                            _res.done(function (data) {
+                                if (data.data.person.employerPhoneId == undefined) {
+                                    localStorage.setItem("employerPhoneId", data.data.personId);
+                                }
+                                if (data.data.person.employerAddressId == undefined) {
+                                    localStorage.setItem("employerAddressId", data.data.personId);
+                                }
+                                localStorage.setItem("personId", data.data.personId);
+                                var pLocation = "UI/BasicData/CustomerListDetail.html?id=" + result.data;
+                                AddTabIn("CustomerDetail", parent.$('#tabs'), pLocation);
+                                $("#dg").datagrid("loadData", data.data.identifications);
+                            });
+                        }
+                    });
+                } else {
+                    $.messager.alert("Info", result.msg);
+                }
+            });
+        }
+    }
+
+    function peopleDataObj() {
+        this.IRDNumber = "";
+        this.fileMd5 = "";
+        this.averageAnnualTurnover = "";
+        this.customerNumber = "";
+        this.firstName = "";
+        this.fundUse = "";
+        this.id = "1";
+        this.identifications = [{type: "", issueCountry: "", number: ""}];
+        this.lastName = "";
+        this.middleName = "";
+        this.customerAccountType="",
+        this.person = {
+            birthPlace: "",
+            birthdate: "",
+            comments: "",
+            email: "",
+            employerName: "",
+            firstName: "",
+            gender: "",
+            id: '1',
+            lastName: "",
+            middleName: "",
+            nationality1: "",
+            occupation: "",
+            residence: "",
+            sourceOfWealth: "",
+            title: "",
+        };
+        this.phoneNumber = "";
+        this.tradingFrequency = "";
+    }
+
+    function deleteBlankField(obj) {//递归遍历嵌套的obj，arr
+        if (typeof obj === 'object' && isNaN(obj.length)) {
+            for (var i  in  obj) {
+                if (typeof obj[i] === 'object' && isNaN(obj[i].length)) {
+                    deleteBlankField(obj[i]);
+                } else if (typeof obj[i] === 'object') {
+                    for (var j = 0; j < obj[i].length; j++) {
+                        deleteBlankField(obj[i][j]);
+                    }
+                } else {
+                    obj[i] = _data[i];
+                    if (obj[i] === "") {
+                        delete obj[i];
+                    }
+                }
+            }
+        } else if (typeof obj === 'object') {
+            for (var j = 0; j < obj.length; j++) {
+                deleteBlankField(obj[j]);
+            }
+        }
+    }
+
+    function doDelete() {
+        var _param = {id: gCurrid};
+        var _sendData = JSON.stringify(_param);
+        $.messager.confirm("Info", "confirm to Delete Data", function (r) {
+            if (r) {
+                gRequest.delRemoteData(gApiKey, "del", _sendData).done(function (result) {
+                    if (result.code === 0) {
+                        $.messager.alert("Info", result.msg);
+                        parent.$('#tabs').tabs("close", "CustomerDetail");
+                    } else {
+                        $.messager.alert("Info", result.msg);
+                    }
+                });
+            }
+        });
+    }
+
+
+</script>
+</html>

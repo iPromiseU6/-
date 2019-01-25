@@ -1,0 +1,113 @@
+<!--创建人：lhf-->
+<!--创建时间：2018.1.3-->
+<!--描述：Notices编辑详情页-->
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8"/>
+    <link rel="stylesheet" type="text/css" href="../../Themes/default/easyui.css">
+    <link rel="stylesheet" type="text/css" href="../../Themes/icon.css">
+    <link rel="stylesheet" type="text/css" href="../../CSS/demo.css">
+    <link rel="stylesheet" type="text/css" href="../../CSS/common.css">
+</head>
+
+<body style="padding: 0px;">
+<div id="toolbar" class="receipts_toolbar_style"></div>
+<form id="ff" style="width: 100%">
+    <table id="sss" class="displayable" style="text-align:right;width: 100%;table-layout:fixed">
+        <tr style="height: 60px;width: 100%">
+            <td style="width: 15%;"><span style="color:red;">*</span>Title:</td>
+            <td style="width: 35%;text-align: left;">
+                <input type="text"  class="easyui-textbox" data-options='required:true' style="width: 85%;"
+                       id="input_title"/>
+            </td>
+        </tr>
+        <tr style="height: 90px">
+            <td ><span style="color:red;">*</span>Content:</td>
+            <td style="text-align: left">
+                <input type="text"  class="easyui-textbox" data-options='required:true,multiline:true' style="width: 85%;height: 60%;"
+                       id="input_content"/>
+            </td>
+        </tr>
+        <tr style="height: 90px">
+            <td >Memo:</td>
+            <td style=";text-align: left">
+                <input type="text"  class="easyui-textbox" data-options="multiline:true" style="width: 85%;height: 60%;"
+                       id="input_memo"/>
+            </td>
+        </tr>
+    </table>
+    <div class="submit_button">
+        <a class="easyui-linkbutton" iconCls="icon-save" onclick="save()" style="width: 100px;"> Save</a>
+        <a class="easyui-linkbutton" iconCls="icon-reload" onclick="cls()"
+           style="width: 100px;margin-left: 10px;">Reset</a>
+    </div>
+</form>
+<script type="text/javascript" src="../../JS/jquery.min.js"></script>
+<script type="text/javascript" src="../../JS/jquery.easyui.js"></script>
+<script type="text/javascript" src="../../Utils/ip.js"></script>
+<script type="text/javascript" src="../../JS/common.js"></script>
+<script type="text/javascript" src="../../Utils/Request.js"></script>
+<script type="text/javascript" src="../../Utils/ShareComponent.js"></script>
+<script type="text/javascript" src="../../JS/ToolBar.js"></script>
+<script type="text/javascript" src="../../Utils/BasicList.js"></script>
+<script type="text/javascript" src="../../Utils/Enum.js"></script>
+</body>
+<script type="text/javascript">
+    var gRequest = new RequestHandle();
+    var gApiKey = "NOTICES";
+    var gCurrid = Number(getID());
+    $(document).ready(function () {
+        if (gCurrid !== AddFlag) {
+            gRequest.putRemoteData(gApiKey,"get",{id:gCurrid}).done(function (response) {
+                getFormData(response.data)
+            })
+        }
+    });
+    function cls() {
+        $('#ff').form('reset');
+    }
+    function save() {
+        var flag=checkInput();
+        if(flag){
+            saveData();
+        }
+    }
+
+    function saveData() {
+        var _data = submitFormData();
+        for(var i in _data){
+            if(_data[i]===""){
+                delete _data[i];
+            }
+        }
+        if(gCurrid===AddFlag){
+            //_data = $.extend(false,_data,{isPrivated:"0"});
+            gRequest.postRemoteData(gApiKey,'add',JSON.stringify(_data)).done(function(result){
+                if (result.code === 0) {
+                    $.messager.alert("Info", result.msg);
+                    var parentLocation;
+                    parentLocation = searchParent("Notices.html");
+                    parentLocation.closeDlg();
+                } else {
+                    $.messager.alert("Info", result.msg);
+                }
+            })
+        }
+        else{
+            _data = $.extend(false,_data,{id:gCurrid});
+            gRequest.putRemoteData(gApiKey,'edit',_data).done(function(result){
+                if (result.code === 0) {
+                    $.messager.alert("Info", result.msg);
+                    var parentLocation;
+                    parentLocation = searchParent("Notices.html");
+                    parentLocation.closeDlg();
+                } else {
+                    $.messager.alert("Info", result.msg);
+                }
+            })
+        }
+    }
+</script>
+</html>

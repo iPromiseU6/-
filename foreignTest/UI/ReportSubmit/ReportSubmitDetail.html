@@ -1,0 +1,333 @@
+<!--创建人：李海峰-->
+<!--创建时间：2018-1-3-->
+<!--描述：reportBase  未完成-->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link rel="stylesheet" type="text/css" href="../../Themes/material/easyui.css">
+    <link rel="stylesheet" type="text/css" href="../../Themes/icon.css">
+    <link rel="stylesheet" type="text/css" href="../../CSS/common.css">
+    <link rel="stylesheet" type="text/css" href="../../CSS/BasicDataPreview.css">
+</head>
+<body>
+<div id="header" style="margin-bottom: 10px"></div>
+<div id="toolbar" style="margin-bottom: 10px"></div>
+<div id="reportEntity" class="easyui-panel" title="ReportEntity"
+     style="width:100%;height:300px;padding:10px;background:#fafafa;overflow: hidden"
+     data-options="iconCls:'icon-save',closable:false,
+    collapsible:true,minimizable:false,maximizable:false">
+    <form id="ff" style="width: 100%">
+        <table id="tableEntity" class="displayable" style="text-align:right;width: 100%">
+            <tr style="height: 60px;width: 100%">
+                <td style="width: 8%;"><span style="color:red;">*</span>FiuRefNo</td>
+                <td style="width: 25%;text-align: left;">
+                    <input type="text" class="easyui-textbox" data-options="required:true" style="width: 80%;"
+                           id="input_fiuRefNo"/>
+                </td>
+                <td style="width: 8%;">Reference</td>
+                <td style="width: 25%;text-align: left;">
+                    <input type="text" class="easyui-textbox" data-options="" style="width: 80%;"
+                           id="input_reference"/>
+                </td>
+                <td style="width: 8%;"><span style="color:red;">*</span>RentityBranch</td>
+                <td style="width: 25%;text-align: left;">
+                    <input type="text" class="easyui-textbox" data-options="required:true" style="width: 80%;"
+                           id="input_rentityBranch"/>
+                </td>
+            </tr>
+            <tr style="height: 60px;width: 100%">
+                <td style="width: 8%;"><span style="color:red;">*</span>RentityId</td>
+                <td style="width: 25%;text-align: left;">
+                    <input type="text" class="easyui-textbox" data-options="required:true" style="width: 80%;"
+                           id="input_rentityId"/>
+                </td>
+                <td style="width: 8%;"><span style="color:red;">*</span>ReportCode</td>
+                <td style="width: 25%;text-align: left;">
+                    <input type="text" class="easyui-combobox" data-options="required:true" style="width: 80%;"
+                           id="input_reportCode"/>
+                </td>
+                <td style="width: 8%;"><span style="color:red;">*</span>SubmissionCode</td>
+                <td style="width: 25%;text-align: left;">
+                    <input type="text" class="easyui-textbox" data-options="required:true" style="width: 80%;"
+                           id="input_submissionCode"/>
+                </td>
+            </tr>
+            <tr style="height: 60px;width: 100%">
+                <td style="width: 8%;"><span style="color:red;">*</span>Action</td>
+                <td style="width: 25%;text-align: left;">
+                    <input type="text" class="easyui-textbox" data-options="required:true" style="width: 80%;"
+                           id="input_action"/>
+                </td>
+                <td style="width: 8%;"><span style="color:red;">*</span>submissionDate</td>
+                <td style="width: 25%;text-align: left;">
+                    <input type="text" class="easyui-datebox" style="width: 80%" id="input_submissionDate"
+                           data-options="required:true"/>
+                </td>
+                <td style="width: 8%;">Reason</td>
+                <td style="width: 25%;text-align: left;">
+                    <input type="text" class="easyui-textbox" data-options="multiline:true"
+                           style="width: 80%;height: 100%"
+                           id="input_Reason"/>
+                </td>
+            </tr>
+        </table>
+    </form>
+</div>
+<div class="easyui-panel" title="Report Transaction"
+     style="width:98%;height:240px;padding:10px;background:#fafafa;overflow: hidden"
+     data-options="iconCls:'icon-save',closable:false,minimizable:false,maximizable:false,selected:false,collapsible:true,collapsed:false">
+    <div id="tb_transaction" style="width: 80%;height:100px"></div>
+</div>
+<div class="easyui-panel" title="Report Person Info"
+     style="width:98%;height:240px;padding:10px;background:#fafafa;overflow: hidden"
+     data-options="iconCls:'icon-save',closable:false,minimizable:false,maximizable:false,selected:true,collapsible:true,collapsed:true">
+    <div id="div_reportPerson" style="width: 80%;height:100px"></div>
+</div>
+
+<div class="easyui-panel" title="Report Person Address"
+     style="width:98%;height:250px;padding:10px;background:#fafafa;overflow: hidden"
+     data-options="iconCls:'icon-save',closable:false,
+    collapsible:true,collapsed:true,minimizable:false,maximizable:false,tools:'#addressInfoEdit',selected:false">
+    <table id='table_address' style="height: auto;"></table>
+</div>
+<div class="easyui-panel" title="Report Person Phone"
+     style="width:98%;height:250px;padding:10px;background:#fafafa;overflow: hidden"
+     data-options="iconCls:'icon-save',closable:false,
+    collapsible:true,collapsed:true,minimizable:false,maximizable:false,tools:'#addressInfoEdit',selected:false">
+    <table id='table_phone' style="height: auto;"></table>
+</div>
+<div id="tb_transaction_toolbar"></div>
+
+</body>
+<script type="text/javascript" src="../../JS/jquery.min.js"></script>
+<!--必须使用这个js而不是min.js ,因为做了封装修改-->
+<script type="text/javascript" src="../../JS/jquery.easyui.js"></script>
+<script type="text/javascript" src="../../JS/common.js"></script>
+<script type="text/javascript" src="../../Utils/ip.js"></script>
+<script type="text/javascript" src="../../Utils/ShareComponent.js"></script>
+<script type="text/javascript" src="../../JS/ToolBar.js"></script>
+<script type="text/javascript" src="../../Utils/BasicPreview.js"></script>
+<script type="text/javascript" src="../../Utils/BasicList.js"></script>
+<script type="text/javascript" src="../../Utils/Request.js"></script>
+<script type="text/javascript" src="../../Utils/Enum.js"></script>
+<script type="text/javascript" src="../../JS/HeaderBasicSet.js"></script>
+<script type="text/javascript" src="../../JS/SearchComponent.js"></script>
+<script type="text/javascript" src="../Transaction/ReceiptDetailCommon.js"></script>
+<script type="text/javascript">
+    var gBasicList = new BasicListPage();
+    var gRequest = new RequestHandle();
+    var gPostAddData = new peopleDataObj();
+    var gPostAddDataDemo = new peopleDataObj();
+    var gTransactionApiKey = "DEAL";
+    var gReportApiKey = "REPORT";
+    var gReportBaseApiKey = "REPORTBASE"
+    var gCurrId = getID();
+    var gDatagridUrl = RequestUrl.constructURL(gTransactionApiKey, "list");
+    var gAddButtons = [{
+        'functionname' : 'Save',
+        'func' : 'save()',
+        'icon' : 'icon-save',
+    }];
+    var gUpdateButtons = [{
+        'functionname' : 'DownloadXml',
+        'func' : 'downloadXml()',
+        'icon' : 'icon-save',
+    }
+    ]
+    var gToolbarData = gCurrId == AddFlag ? gAddButtons : gUpdateButtons;
+    var gTransactionTableConfig = {
+        url : gCurrId == AddFlag ? gDatagridUrl : "",
+        method : "put",
+        singleSelect : false,
+        queryParams : {allReport : 1},
+        columns : gTransactionColumnConfig,
+    };
+
+    var gConfigCustomerInfo = [
+        {
+            field : 'firstName',
+            title : 'firstName',
+        },
+        {
+            field : 'middleName',
+            title : 'MiddleName',
+        },
+        {
+            field : 'lastName',
+            title : 'LastName',
+        }, {
+            field : 'alias',
+            title : 'Alias',
+        }, {
+            field : 'gender',
+            title : 'Gender',
+        },
+        {
+            field : 'title',
+            title : 'Title',
+        }, {
+            field : 'birthPlace',
+            title : 'BirthPlace',
+        },
+        {
+            field : 'birthDate',
+            title : 'birthDate',
+        },
+        {
+            field : 'nationality2',
+            title : 'nationality2',
+        },
+        {
+            field : 'nationality1',
+            title : 'nationality1',
+        },
+        {
+            field : 'residence',
+            title : 'Residence',
+        },
+    ];
+
+
+    gBasicList.createToolbar("", gToolbarData);
+
+    createDataGrid(gTransactionTableConfig, "#tb_transaction", "#tb_transaction_toolbar");
+
+
+    //构造combobox
+    createComponentFactory("REPORT_CODE", '#input_reportCode');
+    $(document).ready(function () {
+        if (gCurrId != AddFlag) {
+            getUpdateData();
+        }
+        else {
+            getSaveData();
+        }
+
+
+    });
+
+    function save() {
+        var flag = checkInput();
+        if (flag) {
+            saveData();
+        }
+    }
+
+    function getUpdateData() {
+        var _res;
+        _res = gRequest.putRemoteData(gReportApiKey, "get", {id : gCurrId});
+        _res.done(function (result) {
+            localStorage.setItem("reportperson", JSON.stringify(result.data.reportingPerson));
+            createPreview(gConfigCustomerInfo, "#div_reportPerson", "local", "reportperson");
+            createDataGrid(gPhoneConfig, "#table_phone");
+            $("#table_phone").datagrid("loadData", result.data.reportingPerson.phones)
+            createDataGrid(gAddressConfig, "#table_address");
+            $("#table_address").datagrid("loadData", result.data.reportingPerson.addresses)
+            $("#tb_transaction").datagrid("loadData", result.data.transactions);
+            getFormData(result.data.reportingPerson);
+            getFormData(result.data);
+        });
+    }
+
+    function getSaveData() {
+        var _res;
+        _res = gRequest.putRemoteData(gReportBaseApiKey, "get", {});
+        _res.done(function (result) {
+            localStorage.setItem("reportperson", JSON.stringify(result.data.person));
+            createPreview(gConfigCustomerInfo, "#div_reportPerson", "local", "reportperson");
+            createDataGrid(gPhoneConfig, "#table_phone");
+            $("#table_phone").datagrid("loadData", result.data.person.phones)
+            createDataGrid(gAddressConfig, "#table_address");
+            $("#table_address").datagrid("loadData", result.data.person.addresses)
+            getFormData(result.data.person);
+            getFormData(result.data);
+        });
+    }
+
+    var _data;
+
+    function saveData() {
+        _data = submitFormData();
+        _data.id = 1;
+        _data.entityId = 1;
+        _data.submissionDate = new Date(_data.submissionDate).format("yyyy-MM-dd").toString();
+        f(gPostAddDataDemo, gPostAddData);
+        gPostAddData.transactionIds = [];
+        if ($("#tb_transaction").datagrid('getChecked').length == 0) {
+            $.messager.alert("Info", "please select transactionData");
+            return;
+        }
+        $("#tb_transaction").datagrid('getChecked').forEach(function (_current, _index) {
+            gPostAddData.transactionIds.push(_current.id);
+        });
+        var postData = JSON.stringify(gPostAddData);
+        gRequest.postRemoteData(gReportApiKey, 'add', postData).done(function (result) {
+            if (result.code === 0) {
+                parent.$('#tabs').tabs('close', "Report Submit Detail");
+                $.messager.alert("Info", result.msg);
+            } else {
+                $.messager.alert("Info", result.msg);
+            }
+        });
+    }
+
+    function peopleDataObj() {
+        this.action = "";
+        this.entityId = "";
+        this.fiuRefNo = "";
+        this.id = 1;
+        this.memo = "";
+        this.reference = "";
+        this.rentityBranch = "";
+        this.rentityId = "";
+        this.reportCode = "";
+        this.submissionCode = "";
+        this.submissionDate = "";
+    }
+
+    function downloadXml() {
+        gRequest.postRemoteData(gReportApiKey, "xml", JSON.stringify({id : gCurrId})).complete(function (result) {
+            downloadFile('report.xml', result.responseText);
+        });
+    }
+
+    function downloadFile(fileName, content) {
+        var aLink = document.createElement('a');
+        var blob = new Blob([content]);//将得到的text文档转换成blob
+        aLink.download = fileName;
+        aLink.href = URL.createObjectURL(blob);//创建一个 DOMString，其中包含一个表示参数中给出的对象的URL。
+        aLink.click();//模拟a标签的点击事件
+    }
+
+    function f(obj, data) {//递归遍历嵌套的obj，arr
+        if (typeof obj === 'object' && isNaN(obj.length)) {
+            for (var i  in  obj) {
+                if (typeof obj[i] === 'object' && isNaN(obj[i].length)) {
+                    f(obj[i], data[i]);
+                }
+                else if (typeof obj[i] === 'object') {
+                    for (var j = 0; j < obj[i].length; j++) {
+                        f(obj[i][j], data[i][j])
+                    }
+                }
+                else {
+                    if (_data[i] && _data[i] !== '') {
+                        data[i] = _data[i];
+                    }
+                    else {
+                        delete data[i];
+                    }
+                }
+            }
+        }
+        else if (typeof obj === 'object') {
+            for (var j = 0; j < obj.length; j++) {
+                f(obj[j])
+            }
+        }
+    }
+</script>
+</html>
