@@ -116,7 +116,7 @@
                 console.log(result)
                 if (_result.code === 0) {
                     sessionStorage.setItem("token", _result.data.token);
-                    //window.location = '../../index.html';
+                    window.location = '../../index.html';
                 } else {
                     $.messager.alert("fail", _result.msg, "", function () {
                         $("#login_button").attr("disabled", false);

@@ -67,7 +67,8 @@
         var _gRequest = new RequestHandle();
         $(document).ready(function () {
             createPwdDialog();//创建登陆弹窗
-            //getAllBasicData();
+            var token = sessionStorage.getItem("token");
+            console.log(token)
             checkLocalStorage();
         });
 
