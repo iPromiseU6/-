@@ -1031,7 +1031,17 @@ var ISTHREE = [
     {text: "yes", value: "1"},
     {text: "no", value: "0"}
 ];
-
+var JUDEG = [
+{text: "是", value: "1"},
+{text: "否", value: "0"}
+]
+var DATA_TYPE = [
+{text: "光照强度"},
+{text: "温度"},
+{text: "空气湿度"},
+{text: "土壤湿度"},
+{text: "二氧化碳浓度"},
+]
 
 
 

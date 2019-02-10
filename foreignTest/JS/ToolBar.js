@@ -18,15 +18,15 @@ function addDataGridToolBar(type, newData) {
     var data = [{
         "icon" : "icon-add",
         "func" : "newData()",
-        "functionname" : "Create"
+        "functionname" : "新增"
     }, {
         "icon" : "icon-edit",
         "func" : "editData()",
-        "functionname" : "Update"
+        "functionname" : "修改"
     }, {
         "icon" : "icon-remove",
         "func" : "destroy()",
-        "functionname" : "Delete"
+        "functionname" : "删除"
     }, {
         "icon":"icon-redo",
         "func":"arrive()",

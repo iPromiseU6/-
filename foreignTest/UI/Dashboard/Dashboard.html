@@ -12,6 +12,7 @@
 <div id="Dashboard">
     <form onclick="ToExchangeRate()" id="Dashboard_form" class="easyui-tooltip">
         <h1>Current Exchange Rate</h1>
+        <a href="#" class="easyui-linkbutton" data-options="iconCls:'icon-to_do'" onclick="updateRate()">Update Rate</a>
         <table id="Table"></table>
     </form>
 </div>
@@ -29,11 +30,12 @@
 
     $(document).ready(function () {
         CreatTable();
-        gRequestHandle.putRemoteData(gApiKey, "list").complete(function (result) {
+        var sendData={};
+        gRequestHandle.postRemoteData(gApiKey, "allbrif",JSON.stringify(sendData)).complete(function (result) {
             var _result = result.responseJSON;
             var _data = _result.data;
             var TablePoint = document.getElementById("Table");
-            _data.data.forEach(function (item, index) {
+            _data.forEach(function (item, index) {
                 CreatRow(item, _data, TablePoint);
             });
         });
@@ -44,7 +46,6 @@
         _content += "<tr><th>Currency Code</th><th>Buy T/T</th><th>Buy Cash</th>";
         _content += "<th>Sell T/T</th><th>Sell Cash</th><th>Exchange Rate</th>";
         _content += "<th>Update time</th></tr>";
-        // _content += "<tr><td></td></tr>"
         $("#Table").append(_content);
     }
 
@@ -88,5 +89,11 @@
             });
         }
     })
+
+    function  updateRate() {
+        gRequestHandle.putRemoteData(gApiKey, "set").complete(function (result) {
+            refreshTabs(parent.$('#tabs'),"Dashboard");
+        });
+    }
 </script>
 </html>

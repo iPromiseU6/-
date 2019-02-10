@@ -1,0 +1,208 @@
+<!--创建人：简佳成-->
+<!--创建时间：2018.12.4-->
+<!--描述：地址类型展示页面框架-->
+
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" type="text/css" href="../../Themes/material/easyui.css">
+    <link rel="stylesheet" type="text/css" href="../../Themes/icon.css">
+    <link rel="stylesheet" type="text/css" href="../../CSS/common.css">
+</head>
+<style>
+</style>
+<body style="padding: 0px;">
+<div id="div_layout" class="easyui-layout">
+    <div id="div_search" data-options="region:'north'">
+    </div>
+    <div data-options="region:'center'">
+        <div class="easyui-panel" title="Datalist">
+            <table id="dg">
+            </table>
+        </div>
+    </div>
+</div>
+<div id="toolbar"></div>
+<div id="dlg" class="hiddenDialog">
+    <iframe id="ifrmEdit" height="100%" width="100%" frameborder="0" scrolling="no"></iframe>
+</div>
+</body>
+<script type="text/javascript" src="../../JS/jquery.min.js"></script>
+<!--必须使用这个js而不是min.js ,因为做了封装修改-->
+<script type="text/javascript" src="../../JS/jquery.easyui.js"></script>
+<script type="text/javascript" src="../../JS/common.js"></script>
+<script type="text/javascript" src="../../Utils/ip.js"></script>
+<script type="text/javascript" src="../../Utils/ShareComponent.js"></script>
+<script type="text/javascript" src="../../JS/ToolBar.js"></script>
+<script type="text/javascript" src="../../JS/SearchComponent.js"></script>
+<script type="text/javascript" src="../../Utils/BasicList.js"></script>
+<script type="text/javascript" src="../../Utils/Request.js"></script>
+<script type="text/javascript" src="../../Utils/Enum.js"></script>
+<script>
+    var payload = JSON.parse(localStorage.getItem("customerAddress"))
+    var gPersonId = JSON.parse(localStorage.getItem("personId"))
+    var gEditOpenUrl = "UI/Device/SensorDetail.html?id="
+    var gAddOpenUrl = "UI/Device/SensorDetail.html?id=-1"
+    var config = {dialogWidth: 800, dialogHeight: 300};
+    var AddDialog
+    //声明
+    var gBasicList = new BasicListPage();
+    var gRequest = new RequestHandle();
+    var gPostId = getID()
+    var gApiKey = "SENSOR"
+    ////主流程
+    var gSearchOptions = SEARCH_CUSTOMER_NO_W;
+    gSearchOptions += SEARCH_CUSTOMER_NAME_W;
+    gSearchOptions += SEARCH_PHONE_NO_W;
+    gSearchOptions += SEARCH_CUSTOMER_ID_W;
+    gBasicList.createSearch(gSearchOptions);//创建搜索界面
+    var content = DATAGRID_TOOLBAR_EDITOR;
+    content+=DATAGRID_TOOLBAR_DELETE;
+    content+=DATAGRID_TOOLBAR_ADD;
+    gBasicList.createToolbar(content);//创建toolbar
+    ////创建表格
+    var gDatagridUrl = RequestUrl.constructURL(gApiKey, "addr/list");
+    var gConfig = {
+        toolbar: '#toolbar',
+        fitColumns: 'false',
+        rownumbers: 'true',
+        singleSelect : false,
+        width: '100%',
+        height:"500px",
+        striped: 'true',
+        loadMsg: 'Loading in progress.....',
+        showFooter: 'true',
+        columns: [
+            [{
+                field: 'ck',
+                checkbox: true,
+            },{
+                field : 'sensor_id',
+                title : 'sensor_id',
+                width : '0%',
+                align : 'center'
+            }, {
+                field : 'identification',
+                title : '标识',
+                width : '5%',
+                align : 'center'
+            }, {
+                field : 'sensor_type',
+                title : '类型',
+                width : '10%',
+                align : 'center',
+            }, {
+                field : 'sensor_name',
+                title : '名称',
+                width : '15%',
+                align : 'center',
+            }, {
+                field : '1212',
+                title : '最新数值',
+                width : '15%',
+                align : 'center'
+            },{
+                field : 'value_min',
+                title : '最小值',
+                width : '15%',
+                align : 'center'
+            },{
+                field : 'value_max',
+                title : '最大值',
+                width : '15%',
+                align : 'center'
+            },{
+                field : 'is_warn',
+                title : '警告值',
+                width : '15%',
+                align : 'center'
+            },]
+        ],
+        onDblClickRow : function (index, row) {
+            localStorage.setItem("addressData",JSON.stringify(row))
+            if(row.entityId+""){
+                localStorage.setItem("entityId",row.entityId)
+            }
+            if(row.personId+""){
+                localStorage.setItem("personId",row.personId)
+            }
+            var _DialogWidth=800;
+            var _DialogHeight=300;
+            var pLocation = "UI/BasicData/BasicAddressDetail.html?id="+ row.id;
+            $("#ifrmEdit").attr("src", pLocation);
+            constructDialog($('#dlg'), 'Detail', _DialogWidth, _DialogHeight);
+            AddDialog.dialog('open');
+        },
+    }
+    $("#dg").datagrid(gConfig);
+    gBasicList.hideColumn(['sensor_id']);//隐藏id
+
+    //函数部分
+
+    $(document).ready(function () {
+        getData()//获取datagrid数据
+    });
+
+    function getData() {//获取name数据 载入模糊查询框
+        gRequest.postRemoteData(gApiKey,"list",{device_id:gPostId}).done(function (result) {
+            if (result.code == 0) {
+                $("#dg").datagrid("loadData",result.data)
+            } else {
+                $.messager.alert("fail", result.msg);
+            }
+        });
+    }
+
+    function editData() {
+        var _row = $("#dg").datagrid("getSelected");
+        if (!_row) {
+            $.messager.alert('Info', "Please select the data you need to modify");
+            return;
+        }
+        localStorage.setItem("addressData",JSON.stringify(_row))
+        if(_row.entityId+""){
+            localStorage.setItem("entityId",_row.entityId)
+        }
+        if(_row.personId+""){
+            localStorage.setItem("personId",_row.personId)
+        }
+        gBasicList.editHandle(gEditOpenUrl, config);
+    }
+
+    function newData() {
+        gBasicList.newHandle(gAddOpenUrl, config);
+    }
+    function closeDlg() {
+        getData()
+        AddDialog.dialog('close')
+    }
+    function destroy(){
+        var _row = $('#dg').datagrid('getSelected');
+        if (!_row) {
+            $.messager.alert('Info', "Please select the data you need to modify！");
+            return;
+        }
+        var _param = {id:_row.id,personId:gPersonId}
+        var _typeData = {type: payload.type}
+        var _sendData = $.extend(false,_param,_typeData)
+        _sendData = JSON.stringify(_sendData)
+        $.messager.confirm("Info", "confirm to Delete Data", function (r) {
+            if (r) {
+                gRequest.delRemoteData(gApiKey,"addr/del",_sendData).done(function (result) {
+                    if(result.code === 0){
+                        $.messager.alert("Info",result.msg)
+                        getData()
+                    }else{
+                        $.messager.alert("Info",result.msg)
+                    }
+                })
+            }
+        });
+
+
+    }
+</script>
+
+</html>

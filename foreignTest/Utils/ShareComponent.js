@@ -26,6 +26,26 @@ var ComboboxComponent = {
                 return current.code.toLowerCase().indexOf(value.toLowerCase()) >= 0;
             });
         },
+        DEVICE_TYPE:function(elementName, config,_defaultConfig){
+            var _defaultConfig = {
+                panelWidth: 270,
+                panelHeight: 100,
+                valueField: 'text',
+                textField: 'text',
+                data:DATA_TYPE
+            };
+            this.handleConfig(elementName, config, _defaultConfig);
+        },
+        JUDGE_TYPES: function (elementName, config,_defaultConfig) {
+            var _defaultConfig = {
+            panelWidth: 270,
+            panelHeight: 100,
+            valueField: 'value',
+            textField: 'text',
+            data:JUDEG
+        };
+        this.handleConfig(elementName, config, _defaultConfig);
+    },
         CUSTOMER_TYPES: function (elementName, config) { //用户组（可多选）
             var _defaultConfig = {
                 valueField: 'customerTypeId',

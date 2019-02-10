@@ -2,18 +2,31 @@ var _menus = {
     basic: [
         {
             "menuid": "1",
-            "menuname": "物流管理",
+            "menuname": "我的物联",
             "icon": "icon-logistic",
             "menus": [{
                 "menuid": "011",
-                "menuname": "订单单据",
+                "menuname": "我的物联",
+                "url": "UI/WebOrder/List.html",
                 "menus": [{
                     "menuid": "0111",
-                    "menuname": "网络单据",
-                    "url": "UI/WebOrder/List.html"
+                    "menuname": "我的设备",
+                    "url": "UI/Device/DeviceList.html"
                 }, {
                     "menuid": "0112",
-                    "menuname": "订单单据",
+                    "menuname": "传感器与控制器",
+                    "url": "UI/OriginalOrder/List.html"
+                },{
+                    "menuid": "0112",
+                    "menuname": "实时监控",
+                    "url": "UI/OriginalOrder/List.html"
+                },{
+                    "menuid": "0112",
+                    "menuname": "地图模式",
+                    "url": "UI/OriginalOrder/List.html"
+                },{
+                    "menuid": "0112",
+                    "menuname": "集中监控",
                     "url": "UI/OriginalOrder/List.html"
                 },]
             }, {

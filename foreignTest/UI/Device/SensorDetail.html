@@ -1,0 +1,187 @@
+<!--创建人：简佳成-->
+<!--创建时间：2018.12.1-->
+<!--描述：基础数据类型详情页-->
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8"/>
+    <link rel="stylesheet" type="text/css" href="../../Themes/material/easyui.css">
+    <link rel="stylesheet" type="text/css" href="../../Themes/icon.css">
+    <link rel="stylesheet" type="text/css" href="../../CSS/demo.css">
+    <link rel="stylesheet" type="text/css" href="../../CSS/common.css">
+</head>
+
+<body style="padding: 0px;">
+<div id="toolbar" class="receipts_toolbar_style"></div>
+<form id="ff">
+    <table id="basicData" class="displaytable" style="text-align:right;width: 100%;table-layout:fixed">
+        <tr style="height: 60px;width: 100%">
+            <td style="width: 15%;"><span class="required">*</span>标识:</td>
+            <td style="width: 35%;text-align: left;">
+                <input type="text" style="width: 85%" class="easyui-combobox" data-options="required:true"
+                       id="input_type"/>
+            </td>
+            <td style="width: 15%"><span class="required">*</span>单位:</td>
+            <td style="text-align: left">
+                <input type="text" style="width: 80%" class="easyui-textbox" id="input_number" data-options="required:true"/>
+            </td>
+        </tr>
+        <tr>
+            <td >设备:</td>
+            <td style="text-align: left">
+                <input type="text" style="width: 85%" class="easyui-datebox" id="input_issueDate"
+                       data-options=''/>
+            </td>
+            <td>名称:</td>
+            <td style="text-align: left">
+                <input type="text" style="width: 80%" class="easyui-datebox" id="input_expiryDate" data-options=""/>
+            </td>
+        </tr>
+        <tr>
+            <td>正常值范围:</td>
+            <td style="text-align: left">
+                <input type="text" style="width: 85%" class="easyui-textbox" id="input_issuedBy"
+                       data-options=''/>
+            </td>
+            <td><span class="required">*</span>超过范围警报:</td>
+            <td style="text-align: left">
+                <input type="text" style="width: 80%" class="easyui-combobox" id="input_issueCountry" data-options="required:true"/>
+            </td>
+        </tr>
+    </table>
+    <div class="submit_button">
+        <a class="easyui-linkbutton" iconCls="icon-save" onclick="save()" style="width: 100px;">保存</a>
+        <a class="easyui-linkbutton" iconCls="icon-reload" onclick="cls()"
+           style="width: 100px;margin-left: 10px;">重置</a>
+    </div>
+</form>
+<script type="text/javascript" src="../../JS/jquery.min.js"></script>
+<script type="text/javascript" src="../../JS/jquery.easyui.js"></script>
+<script type="text/javascript" src="../../Utils/ip.js"></script>
+<script type="text/javascript" src="../../JS/common.js"></script>
+<script type="text/javascript" src="../../Utils/Request.js"></script>
+<script type="text/javascript" src="../../Utils/ShareComponent.js"></script>
+<script type="text/javascript" src="../../JS/ToolBar.js"></script>
+<script type="text/javascript" src="../../Utils/BasicList.js"></script>
+<script type="text/javascript" src="../../Utils/Enum.js"></script>
+</body>
+<script type="text/javascript">
+    var gData = JSON.parse(localStorage.getItem("identData"))
+    var gPersonId = localStorage.getItem("personId")
+    var config = {dialogWidth: 530, dialogHeight: 400};
+    var gEnNumRegular = /^[A-Za-z0-9\-\s]+$/;
+    var gEnRegular = /^[A-Z\-]+$/;
+    var gNumRegular = /^[0-9\-]+$/;
+    var gRequest = new RequestHandle();
+    var gCurrid = getID();
+    var gApiKey = "CUSTOMERS";
+    var gComboboxConfig = {//配置combobox
+        panelWidth:217,
+        panelHeight:150,
+        onHidePanel: checkCombobox,
+
+    }
+
+    //构造combobox
+    createComponentFactory("BASICDATA_IDENTIFIERTYPE", '#input_type',gComboboxConfig);
+    createComponentFactory("BASICDATA_COUNTRYCODES", '#input_issueCountry',gComboboxConfig);
+
+    $(document).ready(function () {
+        var _res;
+        if (gCurrid != AddFlag) {
+
+            getFormData(gData);
+
+        } else {
+            gCurrid = AddFlag;
+        }
+
+    });
+    $.extend($.fn.validatebox.defaults.rules, {
+        gPattern: {
+            validator: function (value, param) {
+
+                return param[0].test(value);
+            },
+            message: 'Format error!'
+        }
+    });
+
+    function cls() {
+        $('#ff').form('reset');
+    }
+    function save() {
+        if(!$("#input_type").textbox('isValid')){
+            $.messager.alert("Info", "Format error, not saved！");
+            return
+        };
+        if(!$("#input_number").textbox('isValid')){
+            $.messager.alert("Info", "Format error, not saved！");
+            return
+        };
+        if(!$("#input_issueCountry").textbox('isValid')){
+            $.messager.alert("Info", "Format error, not saved！");
+            return
+        };
+        var _url;
+        var _method;
+        if (gCurrid == AddFlag) {
+            _url = "ident/add";
+            _method = "post";
+        } else {
+            _url = "ident/edit";
+            _method = "put";
+        }
+        saveData(_url);
+    }
+
+    function saveData(_url) {
+        var _data = submitFormData();
+        _data.expiryDate=new Date(_data.expiryDate)
+        _data.issueDate=new Date(_data.issueDate)
+        _data.number = delSpace(_data.number)
+        /*for(var i in _data){
+            if(_data[i]==""){
+                delete _data[i]
+            }
+        }*/
+        if (gCurrid == AddFlag) {
+            var postData = $.extend(false,_data,{personId:gPersonId,id:1});
+            postData = JSON.stringify(postData)
+            gRequest.postRemoteData(gApiKey,_url,postData).done(function (result) {
+                if (result.code == 0) {
+                    var parentLocation;
+                    parentLocation = searchParent("BasicIdentification.html");
+                    $.messager.alert({
+                        title: 'Info',
+                        msg: result.msg,
+                        fn: function(){
+                            parentLocation.closeDlg();
+                        }
+                    });
+                } else {
+                    $.messager.alert("Info", result.msg);
+                }
+            });
+        } else {
+            var postData = $.extend(false,_data,{personId:gPersonId,id:gCurrid});
+            gRequest.putRemoteData(gApiKey,_url,postData).done(function (result) {
+                if (result.code == 0) {
+                    var parentLocation;
+                    parentLocation = searchParent("BasicIdentification.html");
+                    $.messager.alert({
+                        title: 'Info',
+                        msg: result.msg,
+                        fn: function(){
+                            parentLocation.closeDlg();
+                        }
+                    });
+                } else {
+                    $.messager.alert("Info", result.msg);
+                }
+            });
+        }
+    }
+</script>
+</html>

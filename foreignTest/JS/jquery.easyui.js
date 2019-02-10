@@ -13304,7 +13304,7 @@
                 data : _sendData,
                 dataType : "json",
                 headers : {
-                    token : sessionStorage.getItem("token"),
+                    Authorization : sessionStorage.getItem("token"),
                     'Content-Type' : 'application/json',
                     Accept : 'application/json',
                 },
@@ -16294,7 +16294,7 @@
                 data : _9df,
                 dataType : "json",
                 headers : {
-                    token : sessionStorage.getItem("token"),
+                    Authorization : sessionStorage.getItem("token"),
                     'Content-Type' : 'application/json',
                     Accept : 'application/json',
                 },

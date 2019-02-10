@@ -19,7 +19,7 @@ RequestHandle.prototype.getRemoteData = function (apiKey, restMethod, param) {
     return $.ajax({ //调用ajax方法，从服务器获取到该订单的所有数据
         type: "get",
         headers: {
-            token: sessionStorage.getItem("token"),
+            Authorization: sessionStorage.getItem("token"),
             'Content-Type': 'application/json',
             Accept: 'application/json',
         },
@@ -34,7 +34,7 @@ RequestHandle.prototype.putRemoteData = function (apiKey, restMethod, param) {
     return $.ajax({ //调用ajax方法，从服务器获取到该订单的所有数据
         type: "put",
         headers: {
-            token: sessionStorage.getItem("token"),
+            Authorization: sessionStorage.getItem("token"),
             'Content-Type': 'application/json',
             Accept: 'application/json',
         },
@@ -78,10 +78,36 @@ RequestHandle.prototype.postRemoteData = function (apiKey, restMethod, sendData)
     return $.ajax({
         dataType: 'JSON',
         url: _url,
-        data: sendData,
+        data:  sendData ? JSON.stringify(sendData) : JSON.stringify({}),
         type: "POST",
         headers: {
-            token: sessionStorage.getItem("token"),
+            Authorization: sessionStorage.getItem("token"),
+            'Content-Type': 'application/json',
+            Accept: 'application/json',
+        },
+    }).complete(function (response) {
+        if (response.status == 401) {
+            var _urlToLocalLength = window.urlinfo.split("/").reverse().indexOf("UI");
+            var _loginUrl = function () {
+                var _dol = "";
+                for (var _ = 0; _ < _urlToLocalLength; _++) {
+                    _dol += "../";
+                }
+                return _dol + "UI/Login/Login.html";
+            };
+            window.location = _loginUrl();
+        }
+    });
+};
+RequestHandle.prototype.postWithOutData = function (apiKey, restMethod) {
+    var _url = RequestUrl.constructURL(apiKey, restMethod);
+    return $.ajax({
+        dataType: 'JSON',
+        url: _url,
+        type: "POST",
+        data:"",
+        headers: {
+            Authorization: sessionStorage.getItem("token"),
             'Content-Type': 'application/json',
             Accept: 'application/json',
         },
@@ -116,7 +142,7 @@ RequestHandle.prototype.delRemoteData = function (apiKey, restMethod, sendData) 
         data: sendData,
         type: "DELETE",
         headers: {
-            token: sessionStorage.getItem("token"),
+            Authorization: sessionStorage.getItem("token"),
             'Content-Type': 'application/json',
             Accept: 'application/json',
         },
@@ -160,71 +186,14 @@ RequestHandle.prototype.postRemoteDataWithOutToken = function (apiKey, restMetho
 var RequestUrl = {
     baseURL: GLOBAL_URL,
     API: {
-        REPORT: "/api/ift/report",
-        DEAL: "/api/ift/deal",
-        RATE: "/api/ift/rate",
-        SFEE: "/api/ift/sfee",
-        MERGE: "/api/ift/Merge",
-        REPORTBASE: "/api/ift/reportbase",
-        CHARGETYPE: "/api/ift/chargetype",
-        BASECODE: '/api/ift/basecode',
-        RSET: "/api/ift/rset",
-        CUSTOMERS: "/api/ift/customers",
-        ACCOUNT: "/api/ift/account",
-        ENTITY: "/api/ift/entity",
-        DIRECTOR: "/api/ift/entity/director",
-        ACCOUNT_DETAIL: "/api/ift/account/detail",
-        ACCOUNT_STATISTICS: "/api/ift/account/Statistics",
-        CUSTOMERS_ACCOUNT_DETAIL: "/api/ift/customer/account/detail",
-        ACCOUNT_COMPANY: "/api/ift/account/company",
-        ACCOUNT_SURPLUS: "/api/ift/account/surplus",
-        GETCAPTCHA: "/getcaptcha",
         LOGIN: "/user/login",
-        NOTICES: "/api/notices",
-        ROLE: "/api/roles",
-        PERMISSION: "/api/permissions",
-        LOGS: "/api/logs",
-        FILES: "/api/files",
-        USERS: "/api/users",
-        DICTS: "/api/dicts",
+        DEVICE:"/device",
+        SENSOR:"/sensor"
 
-        //高水II期
-        CUSTOMER: "/api/customer",
-        CUSTOMER_TYPE: "/api/customertype",
-        ORDER_DETAIL: "/api/orderDetail",
-        ORDER: "/api/order",
-        WEB_ORDER: "/api/order/web",
-        PURCHASE_ORDER: "/api/purchaseOrder",
-        PRE_PURCHASE: "/api/pre_purchase/",
-        STOREHOUSR: "/api/storehouse",
-        STOREHOUSR_TYPE: "/api/storehousetype",
-        PROVIDER: "/api/provider",
-        PROVIDER_TYPE: "/api/providertype",
-        GOODS: "/api/goods",
-        GOODS_CONVERT: "/api/goodsconvert",
-        GOODS_TYPE: "/api/goodstype",
-        USER: "/api/users",
-        Dict: "/api/dicts",
-        NOTICE: "/api/notices",
-        FILE: "/api/files",
-        WEBPLUGIN: "/api/webPlugin",
-        STOREHOUSEIN: "/api/stroehouseIn",
-        PLANSTOREHOUSEIN: "/api/plannedStorage",
-        OUT_ORDER: "/api/outer",
-        OUT_ORDER_PRINT: "/api/outer",
-        RECEIVE_ORDER: "/api/receive",
-        STORE_LOSS: "/api/storeLoss",
-        ORDER_DETAIL_DETAIL: '/api/purchaseOrder/detail',
-        STORE_LOSS_TYPE: "/api/storeLossType",
-        CAR: "/api/car",
-        DEPARTMENT: "/api/department",
-        SYSWXUSER: "/api/sysWxUser",//微信用户
-        AUDITLOG: "/api/auditlog",
-        PURCHASEPRICE: "/api/purchaseprice",//供应商询价
-        STORE_IN_PRINT: "/api/printIn",
-        SYSSET: "/api/sysset",
-    },
+
+},
     constructURL: function (apiKey, restMethod, paramObj) {
+        console.log(apiKey)
         var _paramURL = "";
         if (arguments.length < 1) {
             console.log("此函数必须有一个参数");

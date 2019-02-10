@@ -36,11 +36,10 @@ var data = {
                     htmlType:"Entity",
                     },
             EntityPhone:{
-                url:"UI/BasicData/BasicPhone.html",
-                payload:{type:"entityPhone",id: gIdArry.id ? gIdArry.id : -1}
+                url:"UI/Device/SensorList.html",
             },
             EntityAddress:{
-                url:"UI/BasicData/BasicAddress.html",
+                url:"UI/Device/ControllerList.html",
                 payload:{type:"entityAddress",id: gIdArry.id ? gIdArry.id : -1}
             },
             EntityDirector:{
@@ -90,7 +89,8 @@ var creatHeader = function () {
         },{
             "icon": "icon-phone",
             "func": "openDetail(this)",
-            "functionname": "EntityPhone"
+            "functionname": "EntityPhone",
+            "name":"传感器"
         }, {
             "icon": "icon-location",
             "func": "openDetail(this)",
@@ -128,7 +128,7 @@ creatHeader.prototype.creatContent = function (element,arr) {
         _content+="id=\""+_data[i].functionname+"\"";
         _content+="class=\"easyui-linkbutton\"  iconCls=\"";
         _content += _data[i].icon + "\"  onclick=\"" + _data[i].func + "\">"
-        _content += _data[i].functionname + "</a>";
+        _content += _data[i].name?_data[i].name:_data[i].functionname + "</a>";
     }
     $(element).append(_content);
 }

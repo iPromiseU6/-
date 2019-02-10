@@ -21,56 +21,70 @@
      data-options="iconCls:'icon-save',closable:false,
     collapsible:true,minimizable:false,maximizable:false">
     <form id="ff" style="width: 100%">
-        <table id="sss" class="displayable" style="text-align:right;width: 100%;table-layout:fixed">
+        <table id="basicData" class="displaytable" style="text-align:right;width: 100%;table-layout:fixed">
             <tr style="height: 60px;width: 100%">
-                <td style="width: 20%;"><span class="required">*</span>Name:</td>
-                <td style="width: 25%;text-align: left;">
-                    <input type="text" class="easyui-textbox" data-options='required:true' style="width: 80%;"
-                           id="input_name"/>
+                <td style="width: 15%;"><span class="required">*</span>标识:</td>
+                <td style="width: 35%;text-align: left;">
+                    <input type="text" style="width: 85%" class="easyui-combobox" data-options="required:true"
+                           id="input_type"/>
                 </td>
-                <td style="width: 15%">CommercialName:</td>
+                <td style="width: 15%"><span class="required">*</span>类型:</td>
                 <td style="text-align: left">
-                    <input type="text" class="easyui-textbox" id="input_commercialName" style="width: 50%;"
-                           data-options=""/>
+                    <input type="text" style="width: 80%" class="easyui-textbox" id="input_number" data-options="required:true"/>
+                </td>
+            </tr>
+            <tr>
+                <td >数据上传频率:</td>
+                <td style="text-align: left">
+                    <input type="text" style="width: 85%" class="easyui-datebox" id="input_issueDate"
+                           data-options=''/>
+                </td>
+                <td>名称:</td>
+                <td style="text-align: left">
+                    <input type="text" style="width: 80%" class="easyui-datebox" id="input_expiryDate" data-options=""/>
+                </td>
+            </tr>
+            <tr>
+                <td>是否可控:</td>
+                <td style="text-align: left">
+                    <input type="text" style="width: 85%" class="easyui-textbox" id="input_issuedBy"
+                           data-options=''/>
+                </td>
+                <td><span class="required">*</span>公网访问:</td>
+                <td style="text-align: left">
+                    <input type="text" style="width: 80%" class="easyui-combobox" id="input_issueCountry" data-options="required:true"/>
+                </td>
+            </tr>
+            <tr>
+                <td>API地址:</td>
+                <td style="text-align: left">
+                    <input type="text" style="width: 85%" class="easyui-textbox" id="input_issuedBy"
+                           data-options=''/>
+                </td>
+                <td><span class="required">*</span>公网IP:</td>
+                <td style="text-align: left">
+                    <input type="text" style="width: 80%" class="easyui-combobox" id="input_issueCountry" data-options="required:true"/>
+                </td>
+            </tr>
+            <tr>
+                <td>是否公开:</td>
+                <td style="text-align: left">
+                    <input type="text" style="width: 85%" class="easyui-textbox" id="input_issuedBy"
+                           data-options=''/>
+                </td>
+                <td><span class="required">*</span>公网IP:</td>
+                <td style="text-align: left">
+                    <input type="text" style="width: 80%" class="easyui-combobox" id="input_issueCountry" data-options="required:true"/>
+                </td>
+            </tr>
+            <tr>
+                <td>简介:</td>
+                <td style="text-align: left">
+                    <input type="text" style="width: 225%;height: 50px" class="easyui-textbox" id="input_comments" data-options="multiline:true"/>
                 </td>
             </tr>
 
-            <tr style="height: 60px">
-                <td><span class="required">*</span>AccountName:</td>
-                <td style="width: 25%;text-align: left">
-                    <input type="text" class="easyui-textbox" data-options='required:true' style="width: 80%;"
-                           id="input_accountName"/>
-                </td>
-                <td><span class="required">*</span>Account:</td>
-                <td style="width: 25%;text-align: left">
-                    <input type="text" class="easyui-textbox" id="input_account" style="width: 50%;"
-                           data-options="required:true"/>
-                </td>
-            </tr>
-            <tr style="height: 60px">
-                <td>IncorporationLegalForm:</td>
-                <td style="width: 25%;text-align: left">
-                    <input type="text" class="easyui-combobox" data-options='' style="width: 80%;"
-                           id="input_incorporationLegalForm"/>
-                </td>
-                <td>Business:</td>
-                <td style="width: 25%;text-align: left">
-                    <input type="text" class="easyui-textbox" id="input_business" style="width: 50%;"
-                           data-options=""/>
-                </td>
-            </tr>
-            <tr style="height: 60px">
-                <td>IncorporationNumber:</td>
-                <td style="width: 25%;text-align: left">
-                    <input type="text" class="easyui-textbox" data-options='' style="width: 80%;"
-                           id="input_incorporationNumber"/>
-                </td>
-                <td>IncorporationDate:</td>
-                <td style="width: 25%;text-align: left">
-                    <input type="text" class="easyui-datebox" id="input_incorporationDate" style="width: 50%;"
-                           data-options=""/>
-                </td>
-            </tr>
+
         </table>
     </form>
 </div>
