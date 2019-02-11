@@ -113,7 +113,7 @@ function buildSearchOptions(searchType) {
             "id": "search_goods_original_name"
         }, {
             "name": "标识",
-            "type": "sensor_id",
+            "type": "identification",
             "className": "easyui-combobox",
             "id": "search_customer_type_id"
         }, {

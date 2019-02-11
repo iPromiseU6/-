@@ -172,6 +172,17 @@
                 align : 'center'
             },]
         ],
+        onDblClickRow : function (index, _row) {
+            var _id = _row.sensor_id;
+            var pLocation = "UI/Device/SensorDetail.html?id="+_id;
+            $("#ifrmEdit").attr("src", pLocation);
+            if (config) {
+                this.dialogWidth = config.dialogWidth;
+                this.dialogHeight = config.dialogHeight;
+            }
+            constructDialog($('#dlg'), 'Edit', this.dialogWidth, this.dialogHeight);
+            AddDialog.dialog('open');
+        },
     };
     $("#dg").datagrid(gConfig);
     gBasicList.hideColumn(['sensor_id']);//隐藏id
@@ -209,19 +220,21 @@
         });
     }
     function editData() {
-        var _row = $("#dg").datagrid("getSelected");
+        var _row = $('#dg').datagrid('getSelected');
         if (!_row) {
-            $.messager.alert('Info', "Please select the data you need to modify");
+            $.messager.alert('提示', "请选择一条需要修改的信息！");
             return;
         }
-        localStorage.setItem("addressData",JSON.stringify(_row))
-        if(_row.entityId+""){
-            localStorage.setItem("entityId",_row.entityId)
+        var _id = _row.sensor_id;
+        var pLocation = "UI/Device/SensorDetail.html?id="+_id;
+        $("#ifrmEdit").attr("src", pLocation);
+        if (config) {
+            this.dialogWidth = config.dialogWidth;
+            this.dialogHeight = config.dialogHeight;
         }
-        if(_row.personId+""){
-            localStorage.setItem("personId",_row.personId)
-        }
-        gBasicList.editHandle(gEditOpenUrl, config);
+        constructDialog($('#dlg'), 'Edit', this.dialogWidth, this.dialogHeight);
+        AddDialog.dialog('open');
+
     }
 
     function newData() {
@@ -265,8 +278,8 @@
                         msg: result.msg,
                         fn: function () {
                             gPostIdData = result.data;
-                            var pLocation = "UI/Device/DeviceDetail.html?id=" + gPostIdData;
-                            AddTabIn("EntityDetail", parent.$('#tabs'), pLocation);
+                            var pLocation = "UI/Device/DeviceDetail.html?id=" + result.data.device_id;
+                            AddTabIn("设备详情", parent.$('#tabs'), pLocation);
                         }
                     });
                 } else {
@@ -283,6 +296,31 @@
                 }
             });
         }
+    }
+    function destroy(){
+        var _row = $('#dg').datagrid('getSelected');
+        if (!_row) {
+            $.messager.alert('提示', "请选择一条需要修改的信息！");
+            return;
+        }
+        var _param = {sensor_id:_row.sensor_id,device_id:_row.device_id}
+        $.messager.confirm("提示", "确定删除该条数据？", function (r) {
+            if (r) {
+                console.log(_param)
+                gRequest.postRemoteData("SENSOR","del",_param).done(function (result) {
+                    if(result.code === 0){
+                        $.messager.alert("提示",result.msg)
+                        gRequest.postRemoteData("SENSOR","list",{device_id:_row.device_id}).done(function (result) {
+                            getData = result.data
+                            $('#dg').datagrid('loadData',getData);
+                        })
+                    }else{
+                        $.messager.alert("提示",result.msg)
+                    }
+                })
+            }
+        });
+
     }
 
 </script>

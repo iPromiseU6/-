@@ -78,7 +78,6 @@
 <script type="text/javascript" src="../../Utils/Enum.js"></script>
 </body>
 <script type="text/javascript">
-    var gData = JSON.parse(localStorage.getItem("identData"))
     var gDeviceId = localStorage.getItem("device_id")
     var config = {dialogWidth: 530, dialogHeight: 400};
     var gEnNumRegular = /^[A-Za-z0-9\-\s]+$/;
@@ -99,10 +98,12 @@
     createComponentFactory("BASICDATA_COUNTRYCODES", '#input_issueCountry',gComboboxConfig);
 
     $(document).ready(function () {
-        var _res;
+        var _id = localStorage.getItem("device_id");
         if (gCurrid != AddFlag) {
 
-            getFormData(gData);
+            gRequest.postRemoteData(gApiKey, "list", {sensor_id:gCurrid,device_id:_id}).done(function (data) {
+                getFormData(data.data[0]);
+            });
 
         } else {
             gCurrid = AddFlag;
@@ -160,11 +161,11 @@
                 }
             });
         } else {
-            var postData = $.extend(false,_data,{personId:gPersonId,id:gCurrid});
-            gRequest.putRemoteData(gApiKey,_url,postData).done(function (result) {
+            var postData = $.extend(false,_data,{device_id:gDeviceId,sensor_id:gCurrid});
+            gRequest.postRemoteData(gApiKey,_url,postData).done(function (result) {
                 if (result.code == 0) {
                     var parentLocation;
-                    parentLocation = searchParent("BasicIdentification.html");
+                    parentLocation = searchParent("DeviceDetail.html");
                     $.messager.alert({
                         title: 'Info',
                         msg: result.msg,

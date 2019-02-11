@@ -143,7 +143,6 @@
             return;
         }
         var _id = _row.device_id;
-        localStorage.setItem("device_id",_id)
         var pLocation = "UI/Device/DeviceDetail.html?id="+_id;
         AddTabIn("设备详情", parent.$('#tabs'), pLocation);
     }
