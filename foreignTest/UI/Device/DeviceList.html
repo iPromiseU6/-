@@ -63,7 +63,7 @@
                 align : 'center'
             }, {
                 field : 'device_id',
-                title : '标识',
+                title : '设备ID',
                 width : '10%',
                 align : 'center'
             }, {
@@ -96,7 +96,7 @@
         onDblClickRow : function (index, row) {
             var _row = row;
             var _id = _row.device_id;
-            var personId = toString(_row.personId)
+            localStorage.setItem("device_id",_id)
             var pLocation = "UI/Device/DeviceDetail.html?id="+_id;
             AddTabIn("设备详情", parent.$('#tabs'), pLocation);
         },
@@ -110,40 +110,26 @@
             $('#dg').datagrid('loadData',getData);
         })
     })
-    function doSearch() {
-        var _searchCondition = processSearchConditionObject();
-        gRequest.postRemoteData(gApiKey,"listbrif",JSON.stringify(_searchCondition)).done(function (result) {
-            if(result.code===0){
-                $("#dg").datagrid('loadData',result.data.data);
-            }
-            else{
-                $.messager.alert("fail", result.msg);
-            }
-        })
-    }
-
-    function doReset() {
-        gBasicList.resetHandle(gApiKey);
-        gRequest.postRemoteData(gApiKey,"listbrif");
-        $('#dg').datagrid('reload',gDatagridUrl);
-    }
 
     function destroy(){
         var _row = $('#dg').datagrid('getSelected');
         if (!_row) {
-            $.messager.alert('Info', "Please select the data you need to modify！");
+            $.messager.alert('提示', "请选择一条需要修改的信息！");
             return;
         }
-        var _param = {id:_row.id}
-        var _sendData = JSON.stringify(_param)
-        $.messager.confirm("Info", "confirm to Delete Data", function (r) {
+        var _param = {device_id:_row.device_id}
+        $.messager.confirm("提示", "确定删除该条数据？", function (r) {
             if (r) {
-                gRequest.delRemoteData(gApiKey,"del",_sendData).done(function (result) {
+                console.log(_param)
+                gRequest.postRemoteData(gApiKey,"del",_param).done(function (result) {
                     if(result.code === 0){
-                        $.messager.alert("Info",result.msg)
-                        $("#dg").datagrid('reload',gDatagridUrl);
+                        $.messager.alert("提示",result.msg)
+                        gRequest.postWithOutData(gApiKey,"list").done(function (result) {
+                            getData = result.data
+                            $('#dg').datagrid('loadData',getData);
+                        })
                     }else{
-                        $.messager.alert("Info",result.msg)
+                        $.messager.alert("提示",result.msg)
                     }
                 })
             }
@@ -153,18 +139,15 @@
     function editData(){
         var _row = $('#dg').datagrid('getSelected');
         if (!_row) {
-            $.messager.alert('Info', "Please select the data you need to modify！");
+            $.messager.alert('提示', "请选择一条需要修改的信息！");
             return;
         }
-        var _id = _row.id;
-        var personId = toString(_row.personId)
-        localStorage.setItem("personId",_row.personId)
-        var pLocation = "UI/BasicData/CustomerListDetail.html?id="+_id;
-        AddTabIn("CustomerDetail", parent.$('#tabs'), pLocation);
+        var _id = _row.device_id;
+        localStorage.setItem("device_id",_id)
+        var pLocation = "UI/Device/DeviceDetail.html?id="+_id;
+        AddTabIn("设备详情", parent.$('#tabs'), pLocation);
     }
     function newData(){
-        localStorage.setItem("personId",'-1')
-        var aa = localStorage.getItem("personId")
         var pLocation = "UI/Device/DeviceDetail.html?id=-1";
         AddTabIn("设备详情", parent.$('#tabs'), pLocation);
     }

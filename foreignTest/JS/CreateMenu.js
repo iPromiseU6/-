@@ -12,7 +12,7 @@ var _menus = {
             }, {
                 "menuid": "012",
                 "menuname": "传感器与控制器",
-                "url": "UI/OriginalOrder/List.html",
+                "url": "UI/Sensor/SensorList.html",
                 "icon": "icon-logistic",
                 "menus": []
             }, {
@@ -33,19 +33,19 @@ var _menus = {
             },]
         }, {
             "menuid": "4",
-            "menuname": "基础信息",
+            "menuname": "数据展示",
             "icon": "icon-information",
             "menus": [{
                 "menuid": "041",
                 "menuname": "物流基础信息",
                 "menus": [{
                     "menuid": "0411",
-                    "menuname": "供货商",
-                    "url": "UI/BasicData/SupplyList.html"
+                    "menuname": "实时数据",
+                    "url": "UI/Data/TimeData.html"
                 }, {
                     "menuid": "0412",
-                    "menuname": "供货商类型",
-                    "url": "UI/BasicData/SupplyTypeList.html"
+                    "menuname": "历史数据",
+                    "url": "UI/Data/HistoryData.html"
                 }, {
                     "menuid": "0413",
                     "menuname": "配送单位",

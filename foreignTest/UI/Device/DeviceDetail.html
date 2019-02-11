@@ -20,10 +20,10 @@
     <form id="ff" style="width: 100%">
         <table id="sssf" class="displayable" style="text-align:right;width: 100%;table-layout:fixed">
             <tr style="height: 60px;width: 100%">
-                <td style="width: 20%;">标识:</td>
+                <td style="width: 20%;">名称:</td>
                 <td style="width: 25%;text-align: left">
                     <input type="text" class="easyui-textbox" data-options='' style="width: 80%"
-                           id="input_device_id"/>
+                           id="input_device_name"/>
                 </td>
                 <td style="width: 15%">类型:</td>
                 <td style="text-align: left">
@@ -33,18 +33,6 @@
             </tr>
 
             <tr style="height: 60px">
-                <td>地理位置:</td>
-                <td style="width: 25%;text-align: left">
-                    <input type="text" class="easyui-textbox" id="input_place" style="width:80%;"
-                           data-options=""/>
-                </td>
-                <td>名称:</td>
-                <td style="width: 25%;text-align: left">
-                    <input type="text" class="easyui-textbox" id="input_device_name" style="width: 50%;"
-                           data-options=""/>
-                </td>
-            </tr>
-            <tr style="height: 60px">
                 <td>是否可控:</td>
                 <td style="width: 8%;text-align: left">
                     <input type="text" class="easyui-combobox" data-options="" style="width: 80%;"
@@ -53,6 +41,14 @@
                 <td>公网访问:</td>
                 <td style="width: 25%;text-align: left">
                     <input type="text" class="easyui-combobox" id="input_is_public" style="width: 50%;"
+                           data-options=""/>
+                </td>
+            </tr>
+
+            <tr style="height: 60px">
+                <td>地理位置:</td>
+                <td style="width: 25%;text-align: left">
+                    <input type="text" class="easyui-textbox" id="input_place" style="width:80%;"
                            data-options=""/>
                 </td>
             </tr>
@@ -73,6 +69,10 @@
     </div>
     <table id="dg">
     </table>
+    <div id="toolbar"></div>
+    <div id="dlg" class="hiddenDialog">
+        <iframe id="ifrmEdit" height="100%" width="100%" frameborder="0" scrolling="no"></iframe>
+    </div>
 </div>
 </body>
 <script type="text/javascript" src="../../JS/jquery.min.js"></script>
@@ -88,23 +88,20 @@
 <script type="text/javascript" src="../../Utils/Enum.js"></script>
 <script type="text/javascript" src="../../JS/Header.js"></script>
 <script type="text/javascript">
+    var gEditOpenUrl = "UI/Device/SensorDetail.html?id="
+    var gAddOpenUrl = "UI/Device/SensorDetail.html?id=-1"
+    var config = {dialogWidth: 800, dialogHeight: 330};
+    var AddDialog
     var gBasicList = new BasicListPage();
     var gRequest = new RequestHandle();
     var gCreatHeader = new creatHeader();
     var gApiKey = "DEVICE";
     var gPostIdData = getID();
-    var buttons = [
-        {//配置toolbar
-            'functionname': "保存",
-            'func': 'save()',
-            'icon': 'icon-save',
-        }, {
-            'functionname': "删除",
-            'func': 'doDelete()',
-            'icon': 'icon-remove',
-        }
-    ];
-    gBasicList.createToolbar("", buttons);
+    //gBasicList.createToolbar("", buttons);
+    var content = DATAGRID_TOOLBAR_EDITOR;
+    content+=DATAGRID_TOOLBAR_DELETE;
+    content+=DATAGRID_TOOLBAR_ADD;
+    gBasicList.createToolbar(content);//创建toolbar
     $("#toolbars a").each(function (index, value) {
         $(value).removeAttr("plain");
     });
@@ -120,6 +117,7 @@
 
 
     var gConfig = {
+        toolbar: '#toolbar',
         fitColumns: 'false',
         rownumbers: 'true',
         singleSelect: false,
@@ -142,35 +140,35 @@
                 title : '标识',
                 width : '5%',
                 align : 'center'
-            }, {
+            },{
                 field : 'sensor_type',
                 title : '类型',
-                width : '10%',
+                width : '12%',
                 align : 'center',
             }, {
                 field : 'sensor_name',
                 title : '名称',
-                width : '15%',
+                width : '12%',
                 align : 'center',
             }, {
-                field : '1212',
-                title : '最新数值',
-                width : '15%',
-                align : 'center'
+                field : 'unit',
+                title : '单位',
+                width : '12%',
+                align : 'center',
             },{
                 field : 'value_min',
                 title : '最小值',
-                width : '15%',
+                width : '12%',
                 align : 'center'
             },{
                 field : 'value_max',
                 title : '最大值',
-                width : '15%',
+                width : '12%',
                 align : 'center'
             },{
                 field : 'is_warn',
                 title : '警告值',
-                width : '15%',
+                width : '12%',
                 align : 'center'
             },]
         ],
@@ -204,21 +202,46 @@
             message: 'bad format!'
         }
     });
+    function getData() {
+        var _param = {device_id:gPostIdData};
+        gRequest.postRemoteData("SENSOR", "list", _param).done(function (data) {
+            $('#dg').datagrid('loadData',data.data);
+        });
+    }
+    function editData() {
+        var _row = $("#dg").datagrid("getSelected");
+        if (!_row) {
+            $.messager.alert('Info', "Please select the data you need to modify");
+            return;
+        }
+        localStorage.setItem("addressData",JSON.stringify(_row))
+        if(_row.entityId+""){
+            localStorage.setItem("entityId",_row.entityId)
+        }
+        if(_row.personId+""){
+            localStorage.setItem("personId",_row.personId)
+        }
+        gBasicList.editHandle(gEditOpenUrl, config);
+    }
 
-    function doDelete() {
-
+    function newData() {
+        gBasicList.newHandle(gAddOpenUrl, config);
+    }
+    function closeDlg() {
+        getData()
+        AddDialog.dialog('close')
     }
 
     function save() {
         var flag = checkInput();
         var _url;
         var _method;
-        if (gPostIdData.id == AddFlag) {
+        if (gPostIdData == AddFlag) {
             _url = "add";
             _method = "post";
         } else {
             _url = "edit";
-            _method = "put";
+            _method = "post";
         }
         if (flag) {
             saveData(_url);
@@ -233,17 +256,16 @@
                 delete _data[i];
             }
         }
-        if (gPostId == AddFlag) {
-            var postData = $.extend(false, _data, {customerId: gPostIdData.parentId, id: 1});
-            postData = JSON.stringify(postData);
-            gRequest.postRemoteData(gApiKey, _url, postData).done(function (result) {
+        if (gPostIdData == AddFlag) {
+
+            gRequest.postRemoteData(gApiKey, _url, _data).done(function (result) {
                 if (result.code == 0) {
                     $.messager.alert({
                         title: 'Info',
                         msg: result.msg,
                         fn: function () {
-                            gPostIdData.id = result.data;
-                            var pLocation = "UI/BasicData/BasicEntityDetail.html?id=" + gPostIdData.id + "&parentId=" + gPostIdData.parentId;
+                            gPostIdData = result.data;
+                            var pLocation = "UI/Device/DeviceDetail.html?id=" + gPostIdData;
                             AddTabIn("EntityDetail", parent.$('#tabs'), pLocation);
                         }
                     });
@@ -252,8 +274,8 @@
                 }
             });
         } else {
-            var postData = $.extend(false, _data, {customerId: gPostIdData.parentId, id: gPostIdData.id});
-            gRequest.putRemoteData(gApiKey, _url, postData).done(function (result) {
+            var postData = $.extend(false, _data, {device_id: gPostIdData});
+            gRequest.postRemoteData(gApiKey, _url,postData).done(function (result) {
                 if (result.code == 0) {
                     $.messager.alert("Info", result.msg);
                 } else {

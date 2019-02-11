@@ -7,10 +7,10 @@ $(document).ready(function () {
 });
 
 var ROWNUBER = 4;
-var SEARCH_INTERNAL_NAME = Math.pow(2, 0); //内部商品名称
-var SEARCH_GOODS_ORIGINAL_NAME = Math.pow(2, 1); //原始产品名称
-var SEARCH_CUSTOMER_TYPE_ID = 4; //用户组
-var SEARCH_USERNAME = Math.pow(2, 3); //用户名
+var SEARCH_DEVICE = Math.pow(2, 0); //内部商品名称
+var SEARCH_SENSOR_TYPE = Math.pow(2, 1); //原始产品名称
+var SEARCH_SENSOR_MARK = 4; //用户组
+var SEARCH_SENSOR_NAME = Math.pow(2, 3); //用户名
 var SEARCH_CUSTOMER_TYPEIDS = Math.pow(2, 4);
 var SEARCH_CUSTOMER_NAME = Math.pow(2, 5); //配送单位
 
@@ -102,23 +102,23 @@ function buildSearchOptions(searchType) {
     var dataGroup = {
         "data0": [
             {
-            "name": "内部商品名称",
-            "type": "goodsName",
+            "name": "设备",
+            "type": "device_name",
             "className": "easyui-combobox",
             "id": "search_internal_name"
         }, {
-            "name": "原始产品名称",
-            "type": "originalName",
+            "name": "类型",
+            "type": "sensor_type",
             "className": "easyui-textbox",
             "id": "search_goods_original_name"
         }, {
-            "name": "用户组",
-            "type": "customerTypeId",
+            "name": "标识",
+            "type": "sensor_id",
             "className": "easyui-combobox",
             "id": "search_customer_type_id"
         }, {
-            "name": "用戶名",
-            "type": "username",
+            "name": "名称",
+            "type": "sensor_name",
             "className": "easyui-textbox",
             "id": "search_username"
         }, {

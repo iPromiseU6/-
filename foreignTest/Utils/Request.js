@@ -188,8 +188,11 @@ var RequestUrl = {
     API: {
         LOGIN: "/user/login",
         DEVICE:"/device",
-        SENSOR:"/sensor"
-
+        SENSOR:"/sensor",
+        SENSORNEW:"/getCurrentInfoList",
+        SENSORDATA:"/sensorAndData",
+        MONITOR:"/monitor",
+        DS:"/deviceAndsensor"
 
 },
     constructURL: function (apiKey, restMethod, paramObj) {

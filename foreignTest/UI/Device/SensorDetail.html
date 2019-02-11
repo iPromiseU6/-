@@ -19,34 +19,45 @@
         <tr style="height: 60px;width: 100%">
             <td style="width: 15%;"><span class="required">*</span>标识:</td>
             <td style="width: 35%;text-align: left;">
-                <input type="text" style="width: 85%" class="easyui-combobox" data-options="required:true"
-                       id="input_type"/>
+                <input type="text" style="width: 85%" class="easyui-textbox" data-options="required:true"
+                       id="input_identification"/>
             </td>
             <td style="width: 15%"><span class="required">*</span>单位:</td>
             <td style="text-align: left">
-                <input type="text" style="width: 80%" class="easyui-textbox" id="input_number" data-options="required:true"/>
+                <input type="text" style="width: 80%" class="easyui-textbox" id="input_unit" data-options="required:true"/>
             </td>
         </tr>
         <tr>
-            <td >设备:</td>
+            <td >名称:</td>
             <td style="text-align: left">
-                <input type="text" style="width: 85%" class="easyui-datebox" id="input_issueDate"
+                <input type="text" style="width: 85%" class="easyui-textbox" id="input_sensor_name"
                        data-options=''/>
             </td>
-            <td>名称:</td>
+            <td>类型:</td>
             <td style="text-align: left">
-                <input type="text" style="width: 80%" class="easyui-datebox" id="input_expiryDate" data-options=""/>
+                <input type="text" style="width: 80%" class="easyui-textbox" id="input_sensor_type" data-options=""/>
             </td>
         </tr>
         <tr>
-            <td>正常值范围:</td>
+            <td>最小值:</td>
             <td style="text-align: left">
-                <input type="text" style="width: 85%" class="easyui-textbox" id="input_issuedBy"
+                <input type="text" style="width: 85%" class="easyui-textbox" id="input_value_min"
                        data-options=''/>
             </td>
-            <td><span class="required">*</span>超过范围警报:</td>
+            <td>最大值:</td>
             <td style="text-align: left">
-                <input type="text" style="width: 80%" class="easyui-combobox" id="input_issueCountry" data-options="required:true"/>
+                <input type="text" style="width: 80%" class="easyui-textbox" id="input_value_max" data-options="required:true"/>
+            </td>
+        </tr>
+        <tr>
+            <td>超过范围警报:</td>
+            <td style="text-align: left">
+                <input type="text" style="width: 85%" class="easyui-textbox" id="input_is_warn"
+                       data-options=''/>
+            </td>
+            <td>排序:</td>
+            <td style="text-align: left">
+                <input type="text" style="width: 80%" class="easyui-textbox" id="input_sort" data-options="required:true"/>
             </td>
         </tr>
     </table>
@@ -68,18 +79,18 @@
 </body>
 <script type="text/javascript">
     var gData = JSON.parse(localStorage.getItem("identData"))
-    var gPersonId = localStorage.getItem("personId")
+    var gDeviceId = localStorage.getItem("device_id")
     var config = {dialogWidth: 530, dialogHeight: 400};
     var gEnNumRegular = /^[A-Za-z0-9\-\s]+$/;
     var gEnRegular = /^[A-Z\-]+$/;
     var gNumRegular = /^[0-9\-]+$/;
     var gRequest = new RequestHandle();
     var gCurrid = getID();
-    var gApiKey = "CUSTOMERS";
+    var gApiKey = "SENSOR";
     var gComboboxConfig = {//配置combobox
         panelWidth:217,
         panelHeight:150,
-        onHidePanel: checkCombobox,
+        //onHidePanel: checkCombobox,
 
     }
 
@@ -112,47 +123,31 @@
         $('#ff').form('reset');
     }
     function save() {
-        if(!$("#input_type").textbox('isValid')){
-            $.messager.alert("Info", "Format error, not saved！");
-            return
-        };
-        if(!$("#input_number").textbox('isValid')){
-            $.messager.alert("Info", "Format error, not saved！");
-            return
-        };
-        if(!$("#input_issueCountry").textbox('isValid')){
-            $.messager.alert("Info", "Format error, not saved！");
-            return
-        };
         var _url;
         var _method;
         if (gCurrid == AddFlag) {
-            _url = "ident/add";
+            _url = "add";
             _method = "post";
         } else {
-            _url = "ident/edit";
-            _method = "put";
+            _url = "edit";
+            _method = "post";
         }
         saveData(_url);
     }
 
     function saveData(_url) {
         var _data = submitFormData();
-        _data.expiryDate=new Date(_data.expiryDate)
-        _data.issueDate=new Date(_data.issueDate)
-        _data.number = delSpace(_data.number)
         /*for(var i in _data){
             if(_data[i]==""){
                 delete _data[i]
             }
         }*/
         if (gCurrid == AddFlag) {
-            var postData = $.extend(false,_data,{personId:gPersonId,id:1});
-            postData = JSON.stringify(postData)
+            var postData = $.extend(false,_data,{device_id:gDeviceId});
             gRequest.postRemoteData(gApiKey,_url,postData).done(function (result) {
                 if (result.code == 0) {
                     var parentLocation;
-                    parentLocation = searchParent("BasicIdentification.html");
+                    parentLocation = searchParent("DeviceDetail.html");
                     $.messager.alert({
                         title: 'Info',
                         msg: result.msg,

@@ -45,13 +45,13 @@
     var gPersonId = JSON.parse(localStorage.getItem("personId"))
     var gEditOpenUrl = "UI/Device/SensorDetail.html?id="
     var gAddOpenUrl = "UI/Device/SensorDetail.html?id=-1"
-    var config = {dialogWidth: 800, dialogHeight: 300};
+    var config = {dialogWidth: 800, dialogHeight: 330};
     var AddDialog
     //声明
     var gBasicList = new BasicListPage();
     var gRequest = new RequestHandle();
     var gPostId = getID()
-    var gApiKey = "SENSOR"
+    var gApiKey = "SENSORNEW"
     ////主流程
     var gSearchOptions = SEARCH_CUSTOMER_NO_W;
     gSearchOptions += SEARCH_CUSTOMER_NAME_W;
@@ -99,7 +99,7 @@
                 width : '15%',
                 align : 'center',
             }, {
-                field : '1212',
+                field : 'value',
                 title : '最新数值',
                 width : '15%',
                 align : 'center'
@@ -129,7 +129,7 @@
                 localStorage.setItem("personId",row.personId)
             }
             var _DialogWidth=800;
-            var _DialogHeight=300;
+            var _DialogHeight=330;
             var pLocation = "UI/BasicData/BasicAddressDetail.html?id="+ row.id;
             $("#ifrmEdit").attr("src", pLocation);
             constructDialog($('#dlg'), 'Detail', _DialogWidth, _DialogHeight);
