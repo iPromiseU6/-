@@ -110,11 +110,12 @@ li {
 	height: 28px;
 	position: relative;
 }
-.menus_first li p:hover{
+.menus_first li a:hover{
 	color: #10a5f0;
 	background:  #ecf6fd;
+	text-decoration: none;
 }
-.menus_first li p{
+.menus_first li a{
 	float: none;
 	width: 130px;
 	float: left;

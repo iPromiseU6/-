@@ -6,77 +6,30 @@ var _menus = {
             "icon": "icon-logistic",
             "menus": [{
                 "menuid": "011",
-                "menuname": "我的物联",
-                "url": "UI/WebOrder/List.html",
-                "menus": [{
-                    "menuid": "0111",
-                    "menuname": "我的设备",
-                    "url": "UI/Device/DeviceList.html"
-                }, {
-                    "menuid": "0112",
-                    "menuname": "传感器与控制器",
-                    "url": "UI/OriginalOrder/List.html"
-                },{
-                    "menuid": "0112",
-                    "menuname": "实时监控",
-                    "url": "UI/OriginalOrder/List.html"
-                },{
-                    "menuid": "0112",
-                    "menuname": "地图模式",
-                    "url": "UI/OriginalOrder/List.html"
-                },{
-                    "menuid": "0112",
-                    "menuname": "集中监控",
-                    "url": "UI/OriginalOrder/List.html"
-                },]
+                "menuname": "我的设备",
+                "url": "UI/Device/DeviceList.html",
+                "menus": []
             }, {
                 "menuid": "012",
-                "menuname": "内部流程",
+                "menuname": "传感器与控制器",
+                "url": "UI/OriginalOrder/List.html",
                 "icon": "icon-logistic",
-                "menus": [{
-                    "menuid": "0122",
-                    "menuname": "采购单",
-                    "url": "UI/PurchaseOrder/List.html"
-                }, {
-                    "menuid": "0121",
-                    "menuname": "计划入库单",
-                    "url": "UI/PlanStorehouseIn/List.html"
-                }, {
-                    'menuid': "0133",
-                    "menuname": "成本审核",
-                    "url": "UI/CostAudit/List.html"
-                }, {
-                    "menuid": "0123",
-                    "menuname": "入库单",
-                    "url": "UI/StorehouseIn/List.html"
-                },
-                ]
+                "menus": []
             }, {
                 "menuid": "013",
-                "menuname": "销售流程",
-                "menus": [
-                    {
-                        'menuid': "0132",
-                        "menuname": "出库单",
-                        "url": "UI/StorehouseOut/List.html"
-                    }, {
-                        'menuid': "0134",
-                        "menuname": "销售结算单",
-                        "url": "UI/SalesSettlementOrder/List.html"
-                    },]
+                "menuname": "实时监控",
+                "url": "UI/OriginalOrder/List.html",
+                "menus": []
             }, {
                 "menuid": "014",
-                "menuname": "库房管理",
-                "menus": [{
-                    "menuid": "0141",
-                    "menuname": "库房损耗",
-                    "url": "UI/StoreLoss/List.html"
-                },
-                    {
-                        "menuid": "0142",
-                        "menuname": "中央库房损耗",
-                        "url": "UI/CenterStorehouse/List.html"
-                    },]
+                "menuname": "地图模式",
+                "url": "UI/OriginalOrder/List.html",
+                "menus": []
+            }, {
+                "menuid": "014",
+                "menuname": "集中监控",
+                "url": "UI/OriginalOrder/List.html",
+                "menus": []
             },]
         }, {
             "menuid": "4",
@@ -355,9 +308,9 @@ function CreateMenu(_data) {
             //一级菜单
             content += "<ul class='menus_first'>";
             item.menus.forEach((item, index) => {
-                content += "<li><p>";
+                content += "<li><a href='#' name='" + item.menuname + "' rel='" + item.url + "' onclick='addnav(this.rel,this.name)'>";
                 content += item.menuname;
-                content += "</p>";
+                content += "</a>";
                 if (item.menus) {
                     content += "<ul class='menus_second'>";
                     item.menus.forEach((item, index) => {
