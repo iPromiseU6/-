@@ -38,15 +38,15 @@
 <script type="text/javascript" src="../../Utils/Request.js"></script>
 <script type="text/javascript" src="../../Utils/Enum.js"></script>
 <script>
-    var gEditOpenUrl = "UI/Device/SensorDetail.html?id="
-    var gAddOpenUrl = "UI/Device/SensorDetail.html?id=-1"
+    var gEditOpenUrl = "UI/Device/SensorDetail.html?id=";
+    var gAddOpenUrl = "UI/Device/SensorDetail.html?id=-1";
     var config = {dialogWidth: 800, dialogHeight: 330};
-    var AddDialog
+    var AddDialog;
     //声明
     var gBasicList = new BasicListPage();
     var gRequest = new RequestHandle();
-    var gPostId = getID()
-    var gApiKey = "SENSORNEW"
+    var gPostId = getID();
+    var gApiKey = "SENSORNEW";
     ////主流程
     var content = DATAGRID_TOOLBAR_EDITOR;
     content+=DATAGRID_TOOLBAR_DELETE;
@@ -113,19 +113,10 @@
             },]
         ],
         onDblClickRow : function (index, row) {
-            localStorage.setItem("addressData",JSON.stringify(row))
-            if(row.entityId+""){
-                localStorage.setItem("entityId",row.entityId)
-            }
-            if(row.personId+""){
-                localStorage.setItem("personId",row.personId)
-            }
-            var _DialogWidth=800;
-            var _DialogHeight=330;
-            var pLocation = "UI/BasicData/BasicAddressDetail.html?id="+ row.id;
-            $("#ifrmEdit").attr("src", pLocation);
-            constructDialog($('#dlg'), 'Detail', _DialogWidth, _DialogHeight);
-            AddDialog.dialog('open');
+            var _id=row.device_id;
+            localStorage.setItem("timeData_deviceId",JSON.stringify(_id));
+            var pLocation = "UI/Data/TimeDataChart.html?id="+_id;
+            AddTabIn("实时数据图表", parent.$('#tabs'), pLocation);
         },
     }
     $("#dg").datagrid(gConfig);
