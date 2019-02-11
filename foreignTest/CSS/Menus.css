@@ -110,13 +110,12 @@ li {
 	height: 28px;
 	position: relative;
 }
-.menus_first li a:hover{
+.menus_first .menusFirst_btn > a:hover{
 	color: #10a5f0;
 	background:  #ecf6fd;
 	text-decoration: none;
 }
-.menus_first li a{
-	float: none;
+.menus_first .menusFirst_btn>a{
 	width: 130px;
 	float: left;
 	height: 28px;
