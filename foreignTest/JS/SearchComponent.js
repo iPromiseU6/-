@@ -8,14 +8,13 @@ $(document).ready(function () {
 
 var ROWNUBER = 4;
 var SEARCH_DEVICE = Math.pow(2, 0); //内部商品名称
-var SEARCH_SENSOR_TYPE = Math.pow(2, 1); //原始产品名称
-var SEARCH_SENSOR_MARK = 4; //用户组
-var SEARCH_SENSOR_NAME = Math.pow(2, 3); //用户名
-var SEARCH_CUSTOMER_TYPEIDS = Math.pow(2, 4);
-var SEARCH_CUSTOMER_NAME = Math.pow(2, 5); //配送单位
+var SEARCH_IDENTIFICATION = Math.pow(2, 1); //供应商类型
+var SEARCH_SENSOR_TYPE = Math.pow(2, 2); //原始产品名称
+var SEARCH_SENSOR_MARK = Math.pow(2, 3); //用户组
+var SEARCH_SENSOR_NAME = Math.pow(2, 4); //用户名
+var SEARCH_TIME_BEGIN = Math.pow(2, 5);
+var SEARCH_TIME_END = Math.pow(2, 6); //配送单位
 
-
-var SEARCH_PROVIDERTYPE = Math.pow(2, 6); //供应商类型
 var SEARCH_PROVIDER_NAME = Math.pow(2, 7); //供应商名称
 var SEARCH_ORDER_NO = Math.pow(2, 8);
 
@@ -106,37 +105,38 @@ function buildSearchOptions(searchType) {
             "type": "device_name",
             "className": "easyui-combobox",
             "id": "search_internal_name"
-        }, {
-            "name": "类型",
+        },{
+                "name": "标识",
+                "type": "identification",
+                "className": "easyui-textbox",
+                "id": "search_identification"
+            },
+            {
+            "name": "传感器类型",
             "type": "sensor_type",
             "className": "easyui-textbox",
             "id": "search_goods_original_name"
         }, {
-            "name": "标识",
+            "name": "设备标识",
             "type": "identification",
             "className": "easyui-combobox",
             "id": "search_customer_type_id"
         }, {
-            "name": "名称",
+            "name": "传感器名称",
             "type": "sensor_name",
             "className": "easyui-textbox",
             "id": "search_username"
         }, {
-            "name": "用户组",
-            "type": "customerTypeIds",
-            "className": "easyui-combobox",
-            "id": "search_customer_typeids"
+            "name": "开始时间",
+            "type": "begin_time",
+            "className": "easyui-datetimebox",
+            "id": "search_time_begin"
         }, {
-            "name": "配送单位",
-            "type": "customerName",
-            "className": "easyui-combobox",
-            "id": "search_customer_name"
-        }, {
-            "name": "供货商类型",
-            "type": "providerTypeId",
-            "className": "easyui-combobox",
-            "id": "search_providertype"
-        }, {
+            "name": "结束时间",
+            "type": "end_time",
+            "className": "easyui-datetimebox",
+            "id": "search_time_end"
+        },  {
             "name": "供应商名称",
             "type": "providerName",
             "className": "easyui-combobox",

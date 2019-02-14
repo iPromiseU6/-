@@ -613,7 +613,7 @@ function AddTabIn(pTitle, Obj, src) {
     if (Obj.tabs('exists', pTitle)) {
         Obj.tabs('close', pTitle);
     }
-    pSrc = "<iframe id='ifmcontent' scrolling='auto' frameborder='0'  src='" + src + "' style='width:100%;height:100%;'></iframe>";
+    pSrc = "<iframe id='ifmcontent' scrolling='auto' frameborder='0'  src='" + src + "' style='width:100%;height:99%;'></iframe>";
     Obj.tabs("add", { //获取到父窗体信息
         title: pTitle,
         content: pSrc,

@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html>
+<html style="height: 100%">
 
 <head>
     <meta charset="UTF-8">
@@ -9,9 +9,9 @@
 </head>
 <style>
 </style>
-<body style="padding: 0px;">
-<div id="div_layout" class="easyui-layout">
-    <div data-options="region:'center'">
+<body style="padding: 0px;height: 100%">
+<div id="div_layout" class="easyui-layout" style="height: 100%">
+    <div data-options="region:'center'" >
         <div class="easyui-panel" title="DataList">
             <table id="dg">
             </table>
@@ -37,6 +37,7 @@
     //     AddTabIn("设备详情", parent.$('#tabs'), pLocation);
     // })
     ///声明部分
+    $(".panel-body").css({"height":"609px"})
     var gRequest = new RequestHandle();
     var gBasicList = new BasicListPage();
     var gApiKey="DEVICE";
@@ -51,7 +52,7 @@
     var gDatagridUrl = RequestUrl.constructURL(gApiKey, "list");
     var gConfig = {
         method:"post",
-        height: 580,
+        height: 586,
         columns : [
             [{
                 field: 'ck',
@@ -85,12 +86,18 @@
                 field : 'is_control',
                 title : '是否可控',
                 width : '15%',
-                align : 'center'
+                align : 'center',
+                formatter:function (value) {
+                    return getValueByKey(JUDEG,value)
+                }
             },{
                 field : 'is_public',
                 title : '是否公开',
                 width : '15%',
-                align : 'center'
+                align : 'center',
+                formatter:function (value) {
+                    return getValueByKey(JUDEG,value)
+                }
             }]
         ],
         onDblClickRow : function (index, row) {

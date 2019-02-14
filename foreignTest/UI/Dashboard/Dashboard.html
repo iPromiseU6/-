@@ -11,7 +11,7 @@
 <body>
 <div id="Dashboard">
     <form onclick="ToExchangeRate()" id="Dashboard_form" class="easyui-tooltip">
-        <h1>Current Exchange Rate</h1>
+        <h1 id="title"></h1>
         <a href="#" class="easyui-linkbutton" data-options="iconCls:'icon-to_do'" onclick="updateRate()">Update Rate</a>
         <table id="Table"></table>
     </form>
@@ -25,15 +25,16 @@
 <script type="text/javascript" src="../../Utils/Enum.js"></script>
 <script type="text/javascript">
     var gRequestHandle = new RequestHandle();
-    var gApiKey = "RATE";
+    var gApiKey = "SENSORNEW";
     var ModelArr = ["currencyCodeFrom", "currencyCodeTo", "buyingBankRate1", "buyingRate1", "sellingBankRate1", "sellingRate1", "exchange1", "updateTime1"];
 
     $(document).ready(function () {
         CreatTable();
         var sendData={};
-        gRequestHandle.postRemoteData(gApiKey, "allbrif",JSON.stringify(sendData)).complete(function (result) {
+        gRequestHandle.postRemoteData(gApiKey, "list").complete(function (result) {
             var _result = result.responseJSON;
             var _data = _result.data;
+            $("#title").innerText = _data[0].device_name
             var TablePoint = document.getElementById("Table");
             _data.forEach(function (item, index) {
                 CreatRow(item, _data, TablePoint);

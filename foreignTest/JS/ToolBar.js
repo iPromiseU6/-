@@ -29,8 +29,8 @@ function addDataGridToolBar(type, newData) {
         "functionname" : "删除"
     }, {
         "icon":"icon-redo",
-        "func":"arrive()",
-        "functionname":"arrive",
+        "func":"historyData()",
+        "functionname":"历史数据",
     }, {
         "icon":"icon-to_do",
         "func":"pay()",
