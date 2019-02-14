@@ -1,16 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="f3cda73c-f81b-4f76-a054-c9cc58fafded" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/foreignTest/JS/echarts.min.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/foreignTest/JS/moment.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/foreignTest/UI/Data/DataHistogram.html" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/foreignTest/UI/Device/DeviceShow.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/foreignTest/JS/SearchComponent.js" beforeDir="false" afterPath="$PROJECT_DIR$/foreignTest/JS/SearchComponent.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/foreignTest/JS/ToolBar.js" beforeDir="false" afterPath="$PROJECT_DIR$/foreignTest/JS/ToolBar.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/foreignTest/UI/Dashboard/Dashboard.html" beforeDir="false" afterPath="$PROJECT_DIR$/foreignTest/UI/Dashboard/Dashboard.html" afterDir="false" />
-    </list>
+    <list default="true" id="f3cda73c-f81b-4f76-a054-c9cc58fafded" name="Default Changelist" comment="" />
     <ignored path="$PROJECT_DIR$/.tmp/" />
     <ignored path="$PROJECT_DIR$/temp/" />
     <ignored path="$PROJECT_DIR$/tmp/" />
@@ -108,18 +99,6 @@
         </entry>
       </file>
       <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/foreignTest/UI/BasicData/BasicAccountDetail.html">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="213">
-              <caret line="298" column="4" selection-start-line="298" selection-start-column="4" selection-end-line="300" selection-end-column="5" />
-              <folding>
-                <element signature="n#style#0;n#a#1;n#div#0;n#form#0;n#div#1;n#body#0;n#html#0;n#!!top" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/foreignTest/UI/Device/DeviceDetail.html">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="468">
@@ -185,16 +164,7 @@
           </provider>
         </entry>
       </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/foreignTest/UI/BasicData/BasicAccount.html">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="288">
-              <caret line="82" column="17" lean-forward="true" selection-start-line="80" selection-start-column="16" selection-end-line="82" selection-end-column="17" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
+      <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/foreignTest/index.html">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="353">
@@ -319,34 +289,7 @@
               <item name="myGitWebProject" type="b2602c69:ProjectViewProjectNode" />
               <item name="myGitWebProject" type="462c0819:PsiDirectoryNode" />
               <item name="foreignTest" type="462c0819:PsiDirectoryNode" />
-              <item name="JS" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="myGitWebProject" type="b2602c69:ProjectViewProjectNode" />
-              <item name="myGitWebProject" type="462c0819:PsiDirectoryNode" />
-              <item name="foreignTest" type="462c0819:PsiDirectoryNode" />
               <item name="UI" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="myGitWebProject" type="b2602c69:ProjectViewProjectNode" />
-              <item name="myGitWebProject" type="462c0819:PsiDirectoryNode" />
-              <item name="foreignTest" type="462c0819:PsiDirectoryNode" />
-              <item name="UI" type="462c0819:PsiDirectoryNode" />
-              <item name="BasicData" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="myGitWebProject" type="b2602c69:ProjectViewProjectNode" />
-              <item name="myGitWebProject" type="462c0819:PsiDirectoryNode" />
-              <item name="foreignTest" type="462c0819:PsiDirectoryNode" />
-              <item name="UI" type="462c0819:PsiDirectoryNode" />
-              <item name="Data" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="myGitWebProject" type="b2602c69:ProjectViewProjectNode" />
-              <item name="myGitWebProject" type="462c0819:PsiDirectoryNode" />
-              <item name="foreignTest" type="462c0819:PsiDirectoryNode" />
-              <item name="UI" type="462c0819:PsiDirectoryNode" />
-              <item name="Device" type="462c0819:PsiDirectoryNode" />
             </path>
             <path>
               <item name="myGitWebProject" type="b2602c69:ProjectViewProjectNode" />
@@ -411,12 +354,12 @@
       <workItem from="1549945679450" duration="11733000" />
       <workItem from="1550025940191" duration="10124000" />
       <workItem from="1550057109151" duration="5526000" />
-      <workItem from="1550118480647" duration="5977000" />
+      <workItem from="1550118480647" duration="6282000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="100737000" />
+    <option name="totallyTimeSpent" value="101042000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="1912" y="-8" width="1936" height="1056" extended-state="6" />
@@ -742,20 +685,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/foreignTest/index.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="353">
-          <caret line="70" column="30" lean-forward="true" selection-start-line="70" selection-start-column="30" selection-end-line="70" selection-end-column="30" />
-          <folding>
-            <element signature="n#style#0;n#body#0;n#html#0;n#!!top" expanded="true" />
-            <element signature="n#style#0;n#td#2;n#tr#0;n#table#0;n#body#0;n#html#0;n#!!top" expanded="true" />
-            <element signature="n#style#0;n#div#0;n#td#3;n#tr#0;n#table#0;n#body#0;n#html#0;n#!!top" expanded="true" />
-            <element signature="n#style#0;n#div#0;n#td#4;n#tr#0;n#table#0;n#body#0;n#html#0;n#!!top" expanded="true" />
-            <element signature="n#style#0;n#div#1;n#body#0;n#html#0;n#!!top" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/foreignTest/content.html">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="486">
@@ -847,6 +776,20 @@
             <element signature="n#style#0;n#input#0;n#td#1;n#tr#2;n#table#0;n#form#0;n#div#0;n#body#0;n#html#0;n#!!top" expanded="true" />
             <element signature="n#style#0;n#a#0;n#div#0;n#div#0;n#body#0;n#html#0;n#!!top" expanded="true" />
             <element signature="n#style#0;n#a#1;n#div#0;n#div#0;n#body#0;n#html#0;n#!!top" expanded="true" />
+            <element signature="n#style#0;n#div#1;n#body#0;n#html#0;n#!!top" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/foreignTest/index.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="353">
+          <caret line="70" column="30" lean-forward="true" selection-start-line="70" selection-start-column="30" selection-end-line="70" selection-end-column="30" />
+          <folding>
+            <element signature="n#style#0;n#body#0;n#html#0;n#!!top" expanded="true" />
+            <element signature="n#style#0;n#td#2;n#tr#0;n#table#0;n#body#0;n#html#0;n#!!top" expanded="true" />
+            <element signature="n#style#0;n#div#0;n#td#3;n#tr#0;n#table#0;n#body#0;n#html#0;n#!!top" expanded="true" />
+            <element signature="n#style#0;n#div#0;n#td#4;n#tr#0;n#table#0;n#body#0;n#html#0;n#!!top" expanded="true" />
             <element signature="n#style#0;n#div#1;n#body#0;n#html#0;n#!!top" expanded="true" />
           </folding>
         </state>
