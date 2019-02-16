@@ -44,12 +44,11 @@
 
 <script>
     var myChart = echarts.init($("#box")[0]);
-    var xData=[];
-    var yData=[];
     //声明
     var gBasicList = new BasicListPage();
     var gRequest = new RequestHandle();
     var gApiKey = "SENSORDATA";
+    var gOption;
     ////主流程
     var gSearchOptions = SEARCH_IDENTIFICATION;//标识
     gSearchOptions += SEARCH_Data_BEGIN;//最小数值
@@ -59,84 +58,7 @@
     gBasicList.createSearch(gSearchOptions);//创建搜索界面
 
     //函数部分
-    var option = {
-        title: {
-            text: '今日成果数',
-            x: 'center', //标题居中
-            top: 20,
-            textStyle: {
-                color: '#fff'
-            }
-        },
-        //hover显示的文字
-        tooltip: {
-            trigger: 'item',
-            formatter: "{a} <br/>{b} : {c} ({d}%)"
-        },
-        color: ['rgb(225,96,80)', 'rgb(241,145,96)', 'rgb(161,112,241)', 'rgb(241,209,96)', 'rgb(129,209,80)', 'rgb(96,161,241)'], //颜色
-        series: [{
-            name: '总计数',
-            type: 'pie', //图表类型
-            radius: '55%',
-            center: ['50%', '50%'],
-            data: [{
-                value: 735,
-                name: '北京市'
-            },
-                {
-                    value: 400,
-                    name: '广州市'
-                },
-                {
-                    value: 374,
-                    name: '上海市'
-                },
-                {
-                    value: 135,
-                    name: '重庆市'
-                },
-                {
-                    value: 400,
-                    name: '深圳市'
-                },
-                {
-                    value: 300,
-                    name: '其他'
-                }
-            ].sort(function(a, b) {
-                return a.value - b.value;
-            }),
-            itemStyle: {
-                normal: {
-                    label: {
-                        show: true, //是否显示文字
-                        textStyle: {
-                            fontSize: "10em"
-                        },
-                        formatter: function(p) { //指示线对应文字
-                            return p.name + "\n" + p.percent + "%";
-                        }
-                    },
-                    labelLine: {
-                        show: true, //是否显示指示线
-                        length: 0.001
-                    },
-                    labelLine: { //指示线状态
-                        show: true,
-                        smooth: 0.2,
-                        length: 10,
-                        length2: 20
-                    }
-                }
-            },
-            roseType: 'radius', //长短不一
-            animationType: 'scale',
-            animationEasing: 'elasticOut',
-            animationDelay: function(idx) {
-                return Math.random() * 200;
-            }
-        }]
-    }
+
 
     function doSearch() {
         var _searchCondition = processSearchConditionObject();
@@ -149,18 +71,85 @@
         }else if(!_searchCondition.perEnd){
             $.messager.alert("failed", "请输入最大数值");
             return ;
-        }else if(_searchCondition.perStart>=_searchCondition.perEnd){
+        }else if(Number(_searchCondition.perStart)>=Number(_searchCondition.perEnd)){
             $.messager.alert("failed", "最小数值应小于最大数值");
             return ;
         }
+        var _valueMin=Number(_searchCondition.perStart);
+        var _valueMax=Number(_searchCondition.perEnd);
         var sendData = $.extend(false,_searchCondition);
-        gRequest.postRemoteData(gApiKey,"list",sendData).done(function (result) {
+        var _data={
+            'sensor.identification':sendData.identification
+        };
+        gRequest.postRemoteData(gApiKey,"list",_data).done(function (result) {
             if(result.code===0){
+                var _pieData=[{
+                    value: 0,
+                    name: '正常数据'
+                },{
+                    value: 0,
+                    name: '<'+_valueMin+'度',
+                },{
+                    value: 0,
+                    name: '>'+_valueMax+'度',
+                },];
                 result.data.forEach(function (value,index){
-                    xData.push(date(value.create_time));
-                    yData.push(value.value)
-                })
-                myChart.setOption(option);
+                    if(value.value>_valueMax){
+                        _pieData[2].value+=1;
+                    }else if(value.value<_valueMin){
+                        _pieData[1].value+=1;
+                    }else{
+                        _pieData[0].value+=1;
+                    }
+                });
+                gOption ={
+                    //hover显示的文字
+                    tooltip: {
+                        trigger: 'item',
+                            formatter: "{a} <br/>{b} : {c} ({d}%)"
+                    },
+                    color: ['rgb(225,96,80)', 'rgb(241,145,96)', 'rgb(161,112,241)', 'rgb(241,209,96)', 'rgb(129,209,80)', 'rgb(96,161,241)'], //颜色
+                        series: [{
+                        name: '总计数:'+result.data.length,
+                        type: 'pie', //图表类型
+                        radius: '55%',
+                        center: ['50%', '50%'],
+                        data: _pieData.sort(function(a, b) {
+                            return a.value - b.value;
+                        }),
+                        itemStyle: {
+                            normal: {
+                                label: {
+                                    show: true, //是否显示文字
+                                    textStyle: {
+                                        fontSize: "10em"
+                                    },
+                                    formatter: function(p) { //指示线对应文字
+                                        return p.name + "\n" + p.percent + "%";
+                                    }
+                                },
+                                labelLine: {
+                                    show: true, //是否显示指示线
+                                    length: 0.001
+                                },
+                                labelLine: { //指示线状态
+                                    show: true,
+                                    smooth: 0.2,
+                                    length: 10,
+                                    length2: 20
+                                }
+                            }
+                        },
+                        roseType: 'radius', //长短不一
+                        animationType: 'scale',
+                        animationEasing: 'elasticOut',
+                        animationDelay: function(idx) {
+                            return Math.random() * 200;
+                        }
+                    }]
+                }
+                console.log(_pieData);
+                myChart.setOption(gOption);
                 $("#dg").datagrid('loadData',result.data)
             }
             else{
