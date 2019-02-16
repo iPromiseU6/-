@@ -50,12 +50,6 @@
 
 <script>
     var myChart = echarts.init($("#box")[0]);
-    var xData=[]
-    var yData=[]
-    var gEditOpenUrl = "UI/Device/SensorDetail.html?id="
-    var gAddOpenUrl = "UI/Device/SensorDetail.html?id=-1"
-    var config = {dialogWidth: 800, dialogHeight: 330};
-    var AddDialog
     //声明
     var gBasicList = new BasicListPage();
     var gRequest = new RequestHandle();
@@ -107,153 +101,156 @@
     gBasicList.hideColumn(['monitor_id']);//隐藏id
 
     //函数部分
-    var option = {
-        tooltip: {
-            trigger: 'axis'
-        },
-        grid: {
-            left: 30,
-            right: 50,
-            top: 50,
-            bottom: 30,
-            containLabel: true
-        },
-        xAxis: {
-            type: 'category',
-            // boundaryGap: false,
-            data: xData,
-            triggerEvent: true,
-            splitLine: {
-                show: false
-            },
-            axisLine: {
-                show: true,
-                lineStyle: {
-                    width: 2,
-                    color: '#68b7f1'
-                }
-            },
-            axisTick: {
-                show: false
-            },
-            axisLabel: {
-                color: '#68b7f1',
-                fontSize: 10,
-            }
-        },
-        yAxis: {
-            name: '历史数据',
-            nameTextStyle: {
-                color: '#68b7f1',
-                fontSize: 16,
-            },
-            type: 'value',
-            splitLine: {
-                show: true,
-                lineStyle: {
-                    color: '#68b7f1'
-                }
-            },
-            axisLine: {
-                show: true,
-                lineStyle: {
-                    width: 2,
-                    color: '#68b7f1'
-                }
-            },
-            axisTick: {
-                show: true
-            },
-            axisLabel: {
-                color: '#68b7f1',
-                fontSize: 16,
-                textShadowColor: '68b7f1',
-            }
-        },
-        series: [{
-            data: yData,
-            type: 'line',
-            symbol: 'circle',
-            symbolSize: 12,
-            color: '#FEC201',
-            lineStyle: {
-                color: "#68b7f1"
-            },
-            label: {
-                show: true,
-                position: 'top',
-                textStyle: {
-                    color: '#FEC201',
-                    fontSize: 18,
-                    fontWeight: 'bold'
-                }
-            },
-            areaStyle: {
-                color: 'rgba(1,98,133,0.6)'
-            }
-        }, {
-            type: 'bar',
-            animation: false,
-            barWidth: 3,
-            hoverAnimation: false,
-            data: yData,
-            tooltip: {
-                show: false
-            },
-            itemStyle: {
-                normal: {
-                    color: {
-                        type: 'linear',
-                        x: 0,
-                        y: 0,
-                        x2: 0,
-                        y2: 1,
-                        colorStops: [{
-                            offset: 0,
-                            color: '#68b7f1' // 0% 处的颜色
-                        }, {
-                            offset: 1,
-                            color: '#fff' // 100% 处的颜色
-                        }],
-                        globalCoord: false // 缺省为 false
-                    },
-                    label: {
-                        show: false
-                    }
-                }
-            }
-        }]
-    }
-    $(document).ready(function () {
-        getData()//获取datagrid数据
-    });
-
-    function getData() {//获取name数据 载入模糊查询框
-        gRequest.postRemoteData(gApiKey,"list",{identification:gPostId}).done(function (result) {
-            if (result.code == 0) {
-                result.data.forEach(function (value,index){
-                    xData.push(date(value.create_time))
-                    yData.push(value.value)
-                })
-                myChart.setOption(option);
-                $("#dg").datagrid("loadData",result.data)
-            } else {
-                $.messager.alert("提示","标识为必填项");
-            }
-        });
-    }
     function doSearch() {
         var _searchCondition = processSearchConditionObject();
         if(!_searchCondition.identification){
             $.messager.alert("failed", "请输入标识");
+            return ;
         }
         var sendData = $.extend(false,_searchCondition)
         gRequest.postRemoteData(gApiKey,"list",sendData).done(function (result) {
             if(result.code===0){
+                var xData=[];
+                var yData=[];
                 result.data.forEach(function (value,index){
                     xData.push(date(value.create_time))
                     yData.push(value.value)
                 })
+                var option = {
+                    tooltip: {
+                        trigger: 'axis'
+                    },
+                    grid: {
+                        left: 30,
+                        right: 50,
+                        top: 50,
+                        bottom: 30,
+                        containLabel: true
+                    },
+                    xAxis: {
+                        type: 'category',
+                        // boundaryGap: false,
+                        data: xData,
+                        triggerEvent: true,
+                        splitLine: {
+                            show: false
+                        },
+                        axisLine: {
+                            show: true,
+                            lineStyle: {
+                                width: 2,
+                                color: '#68b7f1'
+                            }
+                        },
+                        axisTick: {
+                            show: false
+                        },
+                        axisLabel: {
+                            color: '#68b7f1',
+                            fontSize: 10,
+                        }
+                    },
+                    yAxis: {
+                        name: '历史数据',
+                        nameTextStyle: {
+                            color: '#68b7f1',
+                            fontSize: 16,
+                        },
+                        type: 'value',
+                        splitLine: {
+                            show: true,
+                            lineStyle: {
+                                color: '#68b7f1'
+                            }
+                        },
+                        axisLine: {
+                            show: true,
+                            lineStyle: {
+                                width: 2,
+                                color: '#68b7f1'
+                            }
+                        },
+                        axisTick: {
+                            show: true
+                        },
+                        axisLabel: {
+                            color: '#68b7f1',
+                            fontSize: 16,
+                            textShadowColor: '68b7f1',
+                        }
+                    },
+                    toolbox: {
+                        feature: {
+                            dataView: {
+                                show: true,
+                                readOnly: false
+                            },
+                            magicType: {
+                                show: true,
+                                type: ['line', 'bar']
+                            },
+                            restore: {
+                                show: true
+                            },
+                            saveAsImage: {
+                                show: true
+                            }
+                        }
+                    },
+                    series: [{
+                        data: yData,
+                        type: 'line',
+                        symbol: 'circle',
+                        symbolSize: 12,
+                        color: '#FEC201',
+                        lineStyle: {
+                            color: "#68b7f1"
+                        },
+                        label: {
+                            show: true,
+                            position: 'top',
+                            textStyle: {
+                                color: '#FEC201',
+                                fontSize: 18,
+                                fontWeight: 'bold'
+                            }
+                        },
+                        areaStyle: {
+                            color: 'rgba(1,98,133,0.6)'
+                        }
+                    }, {
+                        type: 'bar',
+                        animation: false,
+                        barWidth: 3,
+                        hoverAnimation: false,
+                        data: yData,
+                        tooltip: {
+                            show: false
+                        },
+                        itemStyle: {
+                            normal: {
+                                color: {
+                                    type: 'linear',
+                                    x: 0,
+                                    y: 0,
+                                    x2: 0,
+                                    y2: 1,
+                                    colorStops: [{
+                                        offset: 0,
+                                        color: '#68b7f1' // 0% 处的颜色
+                                    }, {
+                                        offset: 1,
+                                        color: '#fff' // 100% 处的颜色
+                                    }],
+                                    globalCoord: false // 缺省为 false
+                                },
+                                label: {
+                                    show: false
+                                }
+                            }
+                        }
+                    }]
+                }
                 myChart.setOption(option);
                 $("#dg").datagrid('loadData',result.data)
             }

@@ -48,12 +48,12 @@ var _menus = {
                     "url": "UI/Data/HistoryData.html"
                 }, {
                     "menuid": "0413",
-                    "menuname": "配送单位",
-                    "url": "UI/BasicData/OrderUnitList.html"
+                    "menuname": "数据分布统计",
+                    "url": "UI/Data/DataDistribution.html"
                 }, {
                     "menuid": "0414",
-                    "menuname": "内部商品名",
-                    "url": "UI/BasicData/GoodsList.html"
+                    "menuname": "数据报警分析",
+                    "url": "UI/Data/DataMonitor.html"
                 }, {
                     "menuid": "0418",
                     "menuname": "商品名转换",

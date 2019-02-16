@@ -125,12 +125,6 @@
                 align : 'center'
             },]
         ],
-        onDblClickRow : function (index, row) {
-            var _id=row.device_id;
-            localStorage.setItem("timeData_deviceId",JSON.stringify(_id));
-            var pLocation = "UI/Data/TimeDataChart.html?id="+_id;
-            AddTabIn("实时数据图表", parent.$('#tabs'), pLocation);
-        },
     }
     $("#dg").datagrid(gConfig);
     gBasicList.hideColumn(['sensor_id']);//隐藏id

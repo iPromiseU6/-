@@ -1,0 +1,221 @@
+<!--创建人：简佳成-->
+<!--创建时间：2018.12.4-->
+<!--描述：地址类型展示页面框架-->
+
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" type="text/css" href="../../Themes/material/easyui.css">
+    <link rel="stylesheet" type="text/css" href="../../Themes/icon.css">
+    <link rel="stylesheet" type="text/css" href="../../CSS/common.css">
+</head>
+<style>
+</style>
+<body style="padding: 0px;">
+<div id="div_layout" class="easyui-layout">
+    <div id="div_search" data-options="region:'north'">
+    </div>
+    <div  data-options="region:'center',title:'Datalist'">
+        <div id="box" style="width: 90%;height: 440px;"></div>
+    </div>
+</div>
+<div id="toolbar"></div>
+<div id="dlg" class="hiddenDialog">
+    <iframe id="ifrmEdit" height="100%" width="100%" frameborder="0" scrolling="no"></iframe>
+</div>
+</body>
+<script type="text/javascript" src="../../JS/jquery.min.js"></script>
+<!--必须使用这个js而不是min.js ,因为做了封装修改-->
+<script type="text/javascript" src="../../JS/jquery.easyui.js"></script>
+<script type="text/javascript" src="../../JS/easyui-lang-zh_CN.js"></script>
+<script type="text/javascript" src="../../JS/common.js"></script>
+<script type="text/javascript" src="../../Utils/ip.js"></script>
+<script type="text/javascript" src="../../Utils/ShareComponent.js"></script>
+<script type="text/javascript" src="../../JS/ToolBar.js"></script>
+<script type="text/javascript" src="../../JS/SearchComponent.js"></script>
+<script type="text/javascript" src="../../Utils/BasicList.js"></script>
+<script type="text/javascript" src="../../Utils/Request.js"></script>
+<script type="text/javascript" src="../../Utils/Enum.js"></script>
+<script type="text/javascript" src="../../JS/echarts.min.js"></script>
+<script type="text/javascript" src="../../JS/moment.js"></script>
+
+
+<script>
+    var myChart = echarts.init($("#box")[0]);
+    var xData=[];
+    var yData=[];
+    //声明
+    var gBasicList = new BasicListPage();
+    var gRequest = new RequestHandle();
+    var gApiKey = "SENSORDATA";
+    ////主流程
+    var gSearchOptions = SEARCH_IDENTIFICATION;//标识
+    gSearchOptions += SEARCH_Data_BEGIN;//最小数值
+    gSearchOptions += SEARCH_Data_END;//最大数值
+    gSearchOptions += SEARCH_TIME_BEGIN;//开始时间
+    gSearchOptions += SEARCH_TIME_END;//结束时间
+    gBasicList.createSearch(gSearchOptions);//创建搜索界面
+
+    //函数部分
+    var option = {
+        title: {
+            text: '今日成果数',
+            x: 'center', //标题居中
+            top: 20,
+            textStyle: {
+                color: '#fff'
+            }
+        },
+        //hover显示的文字
+        tooltip: {
+            trigger: 'item',
+            formatter: "{a} <br/>{b} : {c} ({d}%)"
+        },
+        color: ['rgb(225,96,80)', 'rgb(241,145,96)', 'rgb(161,112,241)', 'rgb(241,209,96)', 'rgb(129,209,80)', 'rgb(96,161,241)'], //颜色
+        series: [{
+            name: '总计数',
+            type: 'pie', //图表类型
+            radius: '55%',
+            center: ['50%', '50%'],
+            data: [{
+                value: 735,
+                name: '北京市'
+            },
+                {
+                    value: 400,
+                    name: '广州市'
+                },
+                {
+                    value: 374,
+                    name: '上海市'
+                },
+                {
+                    value: 135,
+                    name: '重庆市'
+                },
+                {
+                    value: 400,
+                    name: '深圳市'
+                },
+                {
+                    value: 300,
+                    name: '其他'
+                }
+            ].sort(function(a, b) {
+                return a.value - b.value;
+            }),
+            itemStyle: {
+                normal: {
+                    label: {
+                        show: true, //是否显示文字
+                        textStyle: {
+                            fontSize: "10em"
+                        },
+                        formatter: function(p) { //指示线对应文字
+                            return p.name + "\n" + p.percent + "%";
+                        }
+                    },
+                    labelLine: {
+                        show: true, //是否显示指示线
+                        length: 0.001
+                    },
+                    labelLine: { //指示线状态
+                        show: true,
+                        smooth: 0.2,
+                        length: 10,
+                        length2: 20
+                    }
+                }
+            },
+            roseType: 'radius', //长短不一
+            animationType: 'scale',
+            animationEasing: 'elasticOut',
+            animationDelay: function(idx) {
+                return Math.random() * 200;
+            }
+        }]
+    }
+
+    function doSearch() {
+        var _searchCondition = processSearchConditionObject();
+        if(!_searchCondition.identification){
+            $.messager.alert("failed", "请输入标识");
+            return ;
+        }else if(!_searchCondition.perStart){
+            $.messager.alert("failed", "请输入最小数值");
+            return ;
+        }else if(!_searchCondition.perEnd){
+            $.messager.alert("failed", "请输入最大数值");
+            return ;
+        }else if(_searchCondition.perStart>=_searchCondition.perEnd){
+            $.messager.alert("failed", "最小数值应小于最大数值");
+            return ;
+        }
+        var sendData = $.extend(false,_searchCondition);
+        gRequest.postRemoteData(gApiKey,"list",sendData).done(function (result) {
+            if(result.code===0){
+                result.data.forEach(function (value,index){
+                    xData.push(date(value.create_time));
+                    yData.push(value.value)
+                })
+                myChart.setOption(option);
+                $("#dg").datagrid('loadData',result.data)
+            }
+            else{
+                $.messager.alert("failed", result.msg);
+            }
+        })
+    }
+
+    $('#search_time_begin').datetimebox({
+        closeText:'关闭',
+        formatter:function(date){
+            var y = date.getFullYear();
+            var m = date.getMonth()+1;
+            var d = date.getDate();
+            var h = date.getHours();
+            var M = date.getMinutes();
+            var s = date.getSeconds();
+            function formatNumber(value){
+                return (value < 10 ? '0' : '') + value;
+            }
+            return formatNumber(y)+'-'+formatNumber(m)+'-'+formatNumber(d)+' '+ formatNumber(h)+':'+formatNumber(M)+':'+formatNumber(s);
+        },
+        parser:function(s){
+            var t = Date.parse(s);
+            if (!isNaN(t)){
+                return new Date(t);
+            } else {
+                return new Date();
+            }
+        }
+    });
+    $('#search_time_end').datetimebox({
+        closeText:'关闭',
+        formatter:function(date){
+            var y = date.getFullYear();
+            var m = date.getMonth()+1;
+            var d = date.getDate();
+            var h = date.getHours();
+            var M = date.getMinutes();
+            var s = date.getSeconds();
+            function formatNumber(value){
+                return (value < 10 ? '0' : '') + value;
+            }
+            return formatNumber(y)+'-'+formatNumber(m)+'-'+formatNumber(d)+' '+ formatNumber(h)+':'+formatNumber(M)+':'+formatNumber(s);
+        },
+        parser:function(s){
+            var t = Date.parse(s);
+            if (!isNaN(t)){
+                return new Date(t);
+            } else {
+                return new Date();
+            }
+        }
+    });
+
+</script>
+
+</html>

@@ -13,7 +13,7 @@ var SEARCH_SENSOR_TYPE = Math.pow(2, 2); //原始产品名称
 var SEARCH_SENSOR_MARK = Math.pow(2, 3); //用户组
 var SEARCH_SENSOR_NAME = Math.pow(2, 4); //用户名
 var SEARCH_TIME_BEGIN = Math.pow(2, 5);
-var SEARCH_TIME_END = Math.pow(2, 6); //配送单位
+var SEARCH_TIME_END = Math.pow(2, 6);
 
 var SEARCH_PROVIDER_NAME = Math.pow(2, 7); //供应商名称
 var SEARCH_ORDER_NO = Math.pow(2, 8);
@@ -31,8 +31,8 @@ var SEARCH_DISTRIBUTION_END_DATE = Math.pow(2, 15); //配送结束时间
 
 var SEARCH_PURGECHASE_DATE_BEGIN = Math.pow(2, 16);//采购开始时间
 var SEARCH_PURGECHASE_DATE_END = Math.pow(2, 17);//采购结束时间
-var SEARCH_PERSTART = Math.pow(2, 18);
-var SEARCH_PEREND = Math.pow(2, 19);
+var SEARCH_Data_BEGIN = Math.pow(2, 18);//配送开始时间
+var SEARCH_Data_END = Math.pow(2, 19);//配送结束时间
 var SEARCH_STORENAME = Math.pow(2, 20); //库房名称
 var SEARCH_LOSS_TIME_END = Math.pow(2, 21); //损耗时间结束
 var SEARCH_PURGECHASE_TYPE = Math.pow(2, 22);//采购单类型
@@ -198,14 +198,14 @@ function buildSearchOptions(searchType) {
                 "className": "easyui-datebox",
                 "id": "search_purchase_date"
             }, {
-                "name": "配送开始时间",
+                "name": "最小数值",
                 "type": "perStart",
-                "className": "easyui-datebox",
+                "className": "easyui-numberbox",
                 "id": "search_perStart"
             }, {
-                "name": "配送结束时间",
+                "name": "最大数值",
                 "type": "perEnd",
-                "className": "easyui-datebox",
+                "className": "easyui-numberbox",
                 "id": "search_perEnd"
             }, {
                 "name": "库房名称",
