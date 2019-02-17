@@ -55,14 +55,17 @@
     gSearchOptions += SEARCH_Data_END;//最大数值,默认统计间隔为总共的1/10
     gSearchOptions += SEARCH_TIME_BEGIN;//开始时间
     gSearchOptions += SEARCH_TIME_END;//结束时间
+    gSearchOptions += SEARCH_SENSOR_TYPE;//传感器类型
     gBasicList.createSearch(gSearchOptions);//创建搜索界面
-
     //函数部分
 
     function doSearch() {
         var _searchCondition = processSearchConditionObject();
         if(!_searchCondition.identification){
             $.messager.alert("failed", "请输入标识");
+            return ;
+        }else if(!_searchCondition.sensor_type){
+            $.messager.alert("failed", "请选填传感器类型");
             return ;
         }else if(!_searchCondition.perStart){
             $.messager.alert("failed", "请输入最小数值");
@@ -75,6 +78,7 @@
             return ;
         }
         var sendData = $.extend(false,_searchCondition);
+        console.log(sendData)
         var _interval=(Number(sendData.perEnd)-Number(sendData.perStart))/10;
         var xData=[];
         for(var i=Number(sendData.perStart);i<Number(sendData.perEnd);i=i+_interval){
@@ -83,7 +87,10 @@
             xData.push(_valueMin+'-'+_valueMax);
         }
         var _data={
-            'sensor.identification':sendData.identification
+            'sensor.identification':sendData.identification,
+            sensor_type:sendData.sensor_type,
+            begin_time:sendData.begin_time||'1900-02-17 09:52:44',
+            end_time:sendData.end_time||'2220-02-17 09:52:44'
         };
         gRequest.postRemoteData(gApiKey,"list",_data).done(function (result) {
             if(result.code===0){

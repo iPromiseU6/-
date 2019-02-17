@@ -36,6 +36,16 @@ var ComboboxComponent = {
             };
             this.handleConfig(elementName, config, _defaultConfig);
         },
+        SEARCH_SENSOR_TYPE:function(elementName, config,_defaultConfig){
+           var _defaultConfig = {
+              panelWidth: 270,
+              panelHeight: 100,
+              valueField: 'text',
+              textField: 'text',
+              data:DATA_TYPE
+           };
+          this.handleConfig(elementName, config, _defaultConfig);
+        },
         JUDGE_TYPES: function (elementName, config,_defaultConfig) {
             var _defaultConfig = {
             panelWidth: 270,

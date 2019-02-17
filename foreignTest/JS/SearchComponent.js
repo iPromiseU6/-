@@ -114,8 +114,8 @@ function buildSearchOptions(searchType) {
             {
             "name": "传感器类型",
             "type": "sensor_type",
-            "className": "easyui-textbox",
-            "id": "search_goods_original_name"
+            "className": "easyui-combobox",
+            "id": "search_sensor_type"
         }, {
             "name": "设备标识",
             "type": "identification",
@@ -605,6 +605,9 @@ function initSearchData() {
     if ($("search_customer_typeids") != undefined) {
         createComponentFactory("CUSTOMER_TYPES", '#search_customer_typeids');
     }
+    if ($("search_sensor_type") != undefined) {
+        createComponentFactory("SEARCH_SENSOR_TYPE", '#search_sensor_type');
+    }//传感器类型
 
     if ($("search_storehouse_in_state") != undefined) {
         createComponentFactory("STOREHOUSE_IN_STATE", '#search_storehouse_in_state');
