@@ -89,7 +89,7 @@
                 width : '14%',
                 align : 'center'
             }, {
-                field : 'sensor_type',
+                field : 'device_type',
                 title : '类型',
                 width : '10%',
                 align : 'center',
@@ -125,6 +125,9 @@
                 align : 'center'
             },]
         ],
+        onDblClickRow : function (index, row) {
+            console.log(row)
+        },
     }
     $("#dg").datagrid(gConfig);
     gBasicList.hideColumn(['sensor_id']);//隐藏id
