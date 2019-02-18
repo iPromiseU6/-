@@ -78,13 +78,12 @@
             return ;
         }
         var sendData = $.extend(false,_searchCondition);
-        console.log(sendData)
         var _interval=(Number(sendData.perEnd)-Number(sendData.perStart))/10;
         var xData=[];
         for(var i=Number(sendData.perStart);i<Number(sendData.perEnd);i=i+_interval){
             var _valueMin=i;
             var _valueMax=i+_interval;
-            xData.push(_valueMin+'-'+_valueMax);
+            xData.push(_valueMin.toFixed(2)+'-'+_valueMax.toFixed(2));
         }
         var _data={
             'sensor.identification':sendData.identification,
