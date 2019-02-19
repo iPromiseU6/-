@@ -11,24 +11,9 @@ var _menus = {
                 "menus": []
             }, {
                 "menuid": "012",
-                "menuname": "传感器与控制器",
+                "menuname": "传感器列表",
                 "url": "UI/Sensor/SensorList.html",
                 "icon": "icon-logistic",
-                "menus": []
-            }, {
-                "menuid": "013",
-                "menuname": "实时监控",
-                "url": "UI/OriginalOrder/List.html",
-                "menus": []
-            }, {
-                "menuid": "014",
-                "menuname": "地图模式",
-                "url": "UI/OriginalOrder/List.html",
-                "menus": []
-            }, {
-                "menuid": "014",
-                "menuname": "集中监控",
-                "url": "UI/OriginalOrder/List.html",
                 "menus": []
             },]
         }, {
@@ -54,30 +39,6 @@ var _menus = {
                     "menuid": "0414",
                     "menuname": "数据报警分析",
                     "url": "UI/Data/DataMonitor.html"
-                }, {
-                    "menuid": "0418",
-                    "menuname": "商品名转换",
-                    "url": "UI/BasicData/GoodsConvertList.html"
-                }, {
-                    "menuid": "0420",
-                    "menuname": "用户组",
-                    "url": "UI/BasicData/CustomerTypeList.html"
-                }, {
-                    "menuid": "0419",
-                    "menuname": "库房名称",
-                    "url": "UI/BasicData/StoreHouseList.html"
-                }, {
-                    "menuid": "0420",
-                    "menuname": "内部商品类型",
-                    "url": "UI/BasicData/GoodsTypeList.html"
-                }, {
-                    "menuid": "0421",
-                    "menuname": "库房损耗类型",
-                    "url": "UI/BasicData/StoreHouseLossTypeList.html"
-                },{
-                    "menuid": "0422",
-                    "menuname": "批量审批日志",
-                    "url": "UI/BasicData/AuditLogList.html"
                 },]
 
             }]
@@ -85,55 +46,7 @@ var _menus = {
             "menuid": "5",
             "menuname": "基础设置",
             "icon": "icon-usermanagement",
-            "menus": [{
-                "menuid": "051",
-                "menuname": "用户权限",
-                "menus": [{
-                    "menuid": "0512",
-                    "menuname": "角色管理",
-                    "url": "UI/RoleManager/RoleManagerList.html"
-                }, {
-                    "menuid": "0513",
-                    "menuname": "用户管理",
-                    "url": "UI/UserManager/UserList.html"
-                }, {
-                    "menuid": "0513",
-                    "menuname": "微信用户管理",
-                    "url": "UI/WechatUser/List.html"
-                }, {
-                    "menuid": "0415",
-                    "menuname": "部门信息",
-                    "url": "UI/Department/DepartmentList.html"
-                }, {
-                    "menuid": "0521",
-                    "menuname": "菜单配置",
-                    "url": "UI/Menu/MenuList.html"
-                }, {
-                    "menuid": "0415",
-                    "menuname": "系统设置",
-                    "url": "UI/Common/Set/Set.html"
-                },{
-                    "menuid": "0423",
-                    "menuname": "基础数据管理",
-                    "url": "UI/BasicData/SystemSetList.html"
-                }]
-            }, {
-                "menuid": "052",
-                "menuname": "数据同步",
-                "menus": [{
-                    "menuid": "0521",
-                    "menuname": "同步基础数据",
-                    "url": "UI/DataSynch/GetDataSync.html"
-                }, {
-                    "menuid": "0521",
-                    "menuname": "同步采购数据",
-                    "url": "UI/DataSynch/PushPurchaseOrderToServer.html"
-                }, {
-                    "menuid": "0521",
-                    "menuname": "同步结算数据",
-                    "url": "UI/DataSynch/PushSettlementOrderToServer.html"
-                },]
-            }]
+            "menus": []
         },
     ]
 };
