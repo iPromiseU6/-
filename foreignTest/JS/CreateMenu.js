@@ -11,10 +11,11 @@ var _menus = {
                 "menus": []
             }, {
                 "menuid": "012",
-                "menuname": "传感器与控制器",
+                "menuname": "传感器列表",
                 "url": "UI/Sensor/SensorList.html",
                 "icon": "icon-logistic",
                 "menus": []
+<<<<<<< HEAD
             }]
         }, {
             "menuid": "4",
@@ -41,6 +42,40 @@ var _menus = {
                 "url": "UI/Data/DataMonitor.html",
                 "menus": []
             },]
+=======
+            },]
+        }, {
+            "menuid": "4",
+            "menuname": "数据展示",
+            "icon": "icon-information",
+            "menus": [{
+                "menuid": "041",
+                "menuname": "物流基础信息",
+                "menus": [{
+                    "menuid": "0411",
+                    "menuname": "实时数据",
+                    "url": "UI/Data/TimeData.html"
+                }, {
+                    "menuid": "0412",
+                    "menuname": "历史数据",
+                    "url": "UI/Data/HistoryData.html"
+                }, {
+                    "menuid": "0413",
+                    "menuname": "数据分布统计",
+                    "url": "UI/Data/DataDistribution.html"
+                }, {
+                    "menuid": "0414",
+                    "menuname": "数据报警分析",
+                    "url": "UI/Data/DataMonitor.html"
+                },]
+
+            }]
+        }, {
+            "menuid": "5",
+            "menuname": "基础设置",
+            "icon": "icon-usermanagement",
+            "menus": []
+>>>>>>> 1f65862b5ac95db28404d59101b6b30903e75f36
         },
     ]
 };

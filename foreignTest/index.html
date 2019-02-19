@@ -88,28 +88,6 @@
             }
         }
 
-        function getAllBasicData() {
-            var _RequesArr = [];
-            gAllBasicTypeData.forEach(function (value, index) {
-                _RequesArr[index] = _gRequest.postRemoteData("BASECODE", "allbrif", JSON.stringify(value));
-            });
-            $.when(
-                _RequesArr[0], _RequesArr[1], _RequesArr[2], _RequesArr[3], _RequesArr[4],
-                _RequesArr[5], _RequesArr[6], _RequesArr[7], _RequesArr[8], _RequesArr[9],
-                _RequesArr[10], _RequesArr[11]
-            ).done(function (r0, r1, r2, r3, r4, r5, r6, r7, r8, r9, r10, r11) {
-                for (var i = 0; i < arguments.length; i++) {
-                    localStorage.setItem(arguments[i][0].data[0].type, JSON.stringify(arguments[i][0].data));
-                }
-            });
-            _gRequest.putRemoteData("ACCOUNT_COMPANY", "allbrif", {}).done(function (_result) {
-                localStorage.setItem('companyAccount', JSON.stringify(_result.data.map(function (current) {
-                    current.value = current.type;
-                    current.text = current.name;
-                    return current;
-                })));
-            });
-        }
 
         function checkToken() {
             var token = sessionStorage.getItem("token");
@@ -117,32 +95,10 @@
             if (!token) {
                 window.location = './UI/Login/Login.html';////token不一致则跳出到登陆界面
             } else {
-                // createCurrentMenu(current.permissions);//token一致则生成用户菜单
                 CreateMenu(_menus); //本地生成;
             }
         }
 
-        function createCurrentMenu(permissions) {
-            var _menu = {};
-            _menu.basic = constructMenuTreeData2(permissions, 0);
-            CreateMenu(_menu);
-            getTime();
-            setInterval(getTime, 1000);
-            var requestTemp = new RequestHandle();
-            requestTemp.getRemoteData("NOTICES", "unreads",).done(function (result) {
-                if (result.data !== 0) {
-                    $("#a_notice").addClass("icon-bellUnRead");
-                }
-            });
-        }
-
-        function getTime() {
-            var _date = new Date();
-            var month = _date.getMonth() + 1 >= 10 ? _date.getMonth() + 1 : "0" + (_date.getMonth() + 1);
-            var day = _date.getDate() >= 10 ? _date.getDate() : "0" + _date.getDate();
-            $('#p_time').html(_date.toLocaleTimeString("zn", {hour12: false}).slice(0, 5)
-                + " " + month + '/' + day + '/' + _date.getFullYear());
-        }
 
         function createPwdDialog() {
             var height = document.documentElement.clientHeight - 65;
@@ -165,69 +121,8 @@
             window.open("UpdateLog.html");
         }
 
-        function help() {
-            var pLocation = "UI/Help/HelpList.html";
-            AddTabIn("帮助文档", $("#ifrmList")[0].contentWindow.$('#tabs'), pLocation);
-        }
 
-        function getCurrentUser() {
-            _gRequest.getRemoteData("USER", "current").complete(function (result) {
-                var _result = result.responseJSON;
-                if (_result.code === 0) {
-                    var _data = JSON.stringify(_result.data);
-                    // alert(JSON.stringify(_result.data.token));//current返回的token
-                    sessionStorage.setItem("userData", _data);
-                    checkToken();//检查Token是否一致
-                } else {
-                    window.location = 'UI/Login/Login.html';
-                }
-            });
-        }
 
-        function getAllGoodsData() {
-            _gRequest.getRemoteData("GOODS", "all").complete(function (result) {
-                var _result = result.responseJSON;
-                if (_result.code === 0) {
-                    localStorage.setItem('GoodsData', JSON.stringify(_result.data));
-                } else {
-                    $.messager.alert("失败", _result.msg);
-                }
-            });
-        }
-
-        function constructMenuTreeData2(data, parentId) {
-            var tree = [];
-            for (var i = 0; i < data.length; i++) {
-                if (data[i].parentId == parentId) {
-                    var obj = data[i];
-                    var temp = constructMenuTreeData2(data, data[i].id);
-                    if (temp.length > 0) {
-                        obj.menus = temp;
-                        if (obj.parentId == 0) {
-                            tree.push({
-                                menuid: obj.id,
-                                menuname: obj.name,
-                                icon: obj.icon,
-                                menus: obj.menus,
-                            });
-                        } else {
-                            tree.push({
-                                menuid: obj.id,
-                                menuname: obj.name,
-                                menus: obj.menus,
-                            });
-                        }
-                    } else {
-                        tree.push({
-                            menuid: obj.id,
-                            menuname: obj.name,
-                            url: obj.route,
-                        });
-                    }
-                }
-            }
-            return tree;
-        }
 
         checkToken();//获取当前用户信息
     }

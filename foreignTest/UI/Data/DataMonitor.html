@@ -59,7 +59,17 @@
     gBasicList.createSearch(gSearchOptions);//创建搜索界面
 
     //函数部分
-
+    function doReset() {
+        $(".easyui-textbox").each(function (index) {
+            $(this).textbox('clear');
+        });
+        $(".easyui-datetimebox").each(function (index) {
+            $(this).datetimebox('clear');
+        });
+        $(".easyui-combobox").each(function (index) {
+            $(this).combobox('clear');
+        });
+    }
 
     function doSearch() {
         var _searchCondition = processSearchConditionObject();

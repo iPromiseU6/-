@@ -63,6 +63,12 @@
 
     ////创建表格
     var gDatagridUrl = RequestUrl.constructURL(gApiKey, "addr/list");
+     $(document).ready(function () {
+         if(gPostId){
+             doSearch({identification:gPostId})
+         }
+
+     });
     var gConfig = {
         toolbar: '#toolbar',
         fitColumns: 'false',
@@ -101,8 +107,21 @@
     gBasicList.hideColumn(['monitor_id']);//隐藏id
 
     //函数部分
-    function doSearch() {
-        var _searchCondition = processSearchConditionObject();
+    function doReset() {
+        $(".easyui-textbox").each(function (index) {
+            $(this).textbox('clear');
+        });
+        $(".easyui-datetimebox").each(function (index) {
+            $(this).datetimebox('clear');
+        });
+    }
+    function doSearch(r) {
+        if(r){
+            var _searchCondition=r
+        }else{
+            var _searchCondition = processSearchConditionObject();
+        }
+        console.log(_searchCondition)
         if(!_searchCondition.identification){
             $.messager.alert("failed", "请输入标识");
             return ;
