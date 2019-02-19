@@ -22,6 +22,7 @@
         </div>
     </div>
 </div>
+<div id="toolbar"></div>
 <div id="dlg" class="hiddenDialog">
     <iframe id="ifrmEdit" height="100%" width="100%" frameborder="0" scrolling="no"></iframe>
 </div>
@@ -48,11 +49,8 @@
     var gPostId = getID();
     var gApiKey = "SENSORNEW";
     ////主流程
-    var content = DATAGRID_TOOLBAR_EDITOR;
-    content+=DATAGRID_TOOLBAR_DELETE;
-    content+=DATAGRID_TOOLBAR_ADD;
+    var content = DATAGRID_TOOLBAR_ARRIVE;
     gBasicList.createToolbar(content);//创建toolbar
-    ////创建表格
     var gDatagridUrl = RequestUrl.constructURL(gApiKey, "addr/list");
     var gConfig = {
         rowStyler:function(index,row){
@@ -74,6 +72,9 @@
         showFooter: 'true',
         columns: [
             [{
+                field: 'ck',
+                checkbox: true,
+            },{
                 field : 'sensor_id',
                 title : 'sensor_id',
                 width : '0%',
@@ -137,7 +138,16 @@
     $(document).ready(function () {
         getData()//获取datagrid数据
     });
-
+    function historyData() {
+        var _row = $('#dg').datagrid('getSelected');
+        if (!_row) {
+            $.messager.alert('提示', "请选择一条需要修改的信息！");
+            return;
+        }
+        var _id = _row.identification;
+        var pLocation = "UI/Data/HistoryData.html?id="+_id;
+        AddTabIn("历史数据", parent.$('#tabs'), pLocation);
+    }
     function getData() {//获取name数据 载入模糊查询框
         gRequest.postRemoteData(gApiKey,"list",{device_id:gPostId}).done(function (result) {
             if (result.code == 0) {
