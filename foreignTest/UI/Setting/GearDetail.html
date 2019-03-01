@@ -1,0 +1,168 @@
+<!--创建人：简佳成-->
+<!--创建时间：2018.12.1-->
+<!--描述：基础数据类型详情页-->
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8"/>
+    <link rel="stylesheet" type="text/css" href="../../Themes/material/easyui.css">
+    <link rel="stylesheet" type="text/css" href="../../Themes/icon.css">
+    <link rel="stylesheet" type="text/css" href="../../CSS/demo.css">
+    <link rel="stylesheet" type="text/css" href="../../CSS/common.css">
+</head>
+
+<body style="padding: 0px;">
+<div id="toolbar" class="receipts_toolbar_style"></div>
+<form id="ff">
+    <table id="basicData" class="displaytable" style="text-align:right;width: 100%;table-layout:fixed">
+        <tr style="height: 60px;width: 100%">
+            <td style="width: 15%;"><span class="required">*</span>名称:</td>
+            <td style="width: 35%;text-align: left;">
+                <input type="text" style="width: 85%" class="easyui-textbox" data-options="required:true"
+                       id="input_plants_name"/>
+            </td>
+            <td style="width: 15%"><span class="required">*</span>光照强度:</td>
+            <td style="text-align: left">
+                <input type="text" style="width: 80%" class="easyui-textbox" id="input_R1" data-options="required:true"/>
+            </td>
+        </tr>
+        <tr>
+            <td >空气温湿度:</td>
+            <td style="text-align: left">
+                <input type="text" style="width: 85%" class="easyui-textbox" id="input_E1"
+                       data-options='required:true'/>
+            </td>
+            <td>土壤湿度:</td>
+            <td style="text-align: left">
+                <input type="text" style="width: 80%" class="easyui-textbox" id="input_E2" data-options="required:true"/>
+            </td>
+        </tr>
+        <tr>
+            <td>二氧化碳浓度:</td>
+            <td style="text-align: left">
+                <input type="text" style="width: 85%" class="easyui-textbox" id="input_E3"
+                       data-options='required:true'/>
+            </td>
+        </tr>
+    </table>
+    <div class="submit_button">
+        <a class="easyui-linkbutton" iconCls="icon-save" onclick="save()" style="width: 100px;">保存</a>
+        <a class="easyui-linkbutton" iconCls="icon-reload" onclick="cls()"
+           style="width: 100px;margin-left: 10px;">重置</a>
+    </div>
+</form>
+<script type="text/javascript" src="../../JS/jquery.min.js"></script>
+<script type="text/javascript" src="../../JS/jquery.easyui.js"></script>
+<script type="text/javascript" src="../../Utils/ip.js"></script>
+<script type="text/javascript" src="../../JS/common.js"></script>
+<script type="text/javascript" src="../../Utils/Request.js"></script>
+<script type="text/javascript" src="../../Utils/ShareComponent.js"></script>
+<script type="text/javascript" src="../../JS/ToolBar.js"></script>
+<script type="text/javascript" src="../../Utils/BasicList.js"></script>
+<script type="text/javascript" src="../../Utils/Enum.js"></script>
+</body>
+<script type="text/javascript">
+    var gDeviceId = localStorage.getItem("device_id")
+    var config = {dialogWidth: 530, dialogHeight: 400};
+    var gNumRegular = /^R1:[0-9]{2,4},[0-9]{2,4},[0-9]{2,4};E1:[0-9]{2,4},[0-9]{2,4},[0-9]{2,4},[0-9]{2,4},[0-9]{2,4};E2:[0-9]{2,4},[0-9]{2,4};E3:[0-9]{2,4},[0-9]{2,4}$/;
+    var gRequest = new RequestHandle();
+    var gCurrid = localStorage.getItem("name");
+    var gData = {};
+    console.log(gCurrid)
+    var gApiKey = "VPT";
+
+    $(document).ready(function () {
+        var _id = localStorage.getItem("device_id");
+        if (gCurrid != AddFlag) {
+
+            gRequest.postRemoteData(gApiKey, "list", {plants_name:gCurrid}).done(function (data) {
+                gData = data.data[0];
+                var dataForm  = getData(data.data[0].value)
+                dataForm.plants_name = data.data[0].plants_name
+                getFormData(dataForm);
+                console.log(gData)
+            });
+
+        } else {
+            gCurrid = AddFlag;
+        }
+
+    });
+    function getData(data) {
+        var data = data.split(";")
+        var newData = {}
+        data.forEach(function (value,index) {
+            var arr = value.split(":")
+            newData[arr[0]] = arr[1]
+        })
+        return newData
+    }
+
+    function cls() {
+        $('#ff').form('reset');
+    }
+    function save() {
+        var _url;
+        var _method;
+        if (gCurrid == AddFlag) {
+            _url = "add";
+            _method = "post";
+        } else {
+            _url = "edit";
+            _method = "post";
+        }
+        saveData(_url);
+    }
+
+    function saveData(_url) {
+        var _data = submitFormData();
+        var newValue = "R1:"+_data.R1+";E1:"+_data.E1+";E2:"+_data.E2+";E3:"+_data.E3
+        console.log(newValue)
+        console.log(gNumRegular.test(newValue))
+        if(!gNumRegular.test(newValue)){
+            $.messager.alert({
+                title: '警告',
+                msg:"请输入正确的数据格式！"
+            })
+            return
+        }
+        gData.value = newValue;
+        gData.plants_name = _data.plants_name;
+        if (gCurrid == AddFlag) {
+            delete gData.vpt_id
+            gRequest.postRemoteData(gApiKey,_url,gData).done(function (result) {
+                if (result.code == 0) {
+                    var parentLocation;
+                    parentLocation = searchParent("GearSetting.html");
+                    $.messager.alert({
+                        title: 'Info',
+                        msg: result.msg,
+                        fn: function(){
+                            parentLocation.closeDlg();
+                        }
+                    });
+                } else {
+                    $.messager.alert("Info", result.msg);
+                }
+            });
+        } else {
+            gRequest.postRemoteData(gApiKey,_url,gData).done(function (result) {
+                if (result.code == 0) {
+                    var parentLocation;
+                    parentLocation = searchParent("GearSetting.html");
+                    $.messager.alert({
+                        title: 'Info',
+                        msg: result.msg,
+                        fn: function(){
+                            parentLocation.closeDlg();
+                        }
+                    });
+                } else {
+                    $.messager.alert("Info", result.msg);
+                }
+            });
+        }
+    }
+</script>
+</html>

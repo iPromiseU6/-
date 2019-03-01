@@ -500,6 +500,7 @@ function msgShow(title, msgString, msgType) {
 function getID() {
 
     urlinfo = window.location.href; //获取当前页面的url
+    console.log(urlinfo)
     len = urlinfo.length; //获取url的长度
     offset = urlinfo.indexOf("?"); //设置参数字符串开始的位置
     if (offset == -1) {

@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html style="height: 100%">
+
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" type="text/css" href="../../Themes/material/easyui.css">
+    <link rel="stylesheet" type="text/css" href="../../Themes/icon.css">
+    <link rel="stylesheet" type="text/css" href="../../CSS/common.css">
+</head>
+<style>
+</style>
+<body style="padding: 0px;height: 100%">
+<div id="div_layout" class="easyui-layout" style="height: 100%">
+    <div id="div_search" data-options="region:'north'">
+    </div>
+    <div data-options="region:'center'" >
+        <div class="easyui-panel" title="DataList">
+            <table id="dg">
+            </table>
+        </div>
+    </div>
+</div>
+<div id="toolbar"></div>
+<div id="dlg" class="hiddenDialog">
+    <iframe id="ifrmEdit" height="100%" width="100%" frameborder="0" scrolling="no"></iframe>
+</div>
+</body>
+<script type="text/javascript" src="../../JS/jquery.min.js"></script>
+<!--必须使用这个js而不是min.js ,因为做了封装修改-->
+<script type="text/javascript" src="../../JS/jquery.easyui.js"></script>
+<script type="text/javascript" src="../../JS/common.js"></script>
+<script type="text/javascript" src="../../Utils/ip.js"></script>
+<script type="text/javascript" src="../../Utils/ShareComponent.js"></script>
+<script type="text/javascript" src="../../JS/ToolBar.js"></script>
+<script type="text/javascript" src="../../JS/SearchComponent.js"></script>
+<script type="text/javascript" src="../../Utils/BasicList.js"></script>
+<script type="text/javascript" src="../../Utils/Request.js"></script>
+<script type="text/javascript" src="../../Utils/Enum.js"></script>
+<script>
+    // $(document).ready(function () {
+    //     var pLocation = "UI/Device/DeviceDetail.html?";
+    //     AddTabIn("设备详情", parent.$('#tabs'), pLocation);
+    // })
+    ///声明部分
+    var AddDialog
+    $(".panel-body").css({"height":"609px"})
+    var gRequest = new RequestHandle();
+    var gBasicList = new BasicListPage();
+    var gApiKey="VPT";
+    var getData
+    var config = {dialogWidth: 800, dialogHeight: 330};
+    var gSearchOptions = SEARCH_TYPE_NAME;
+    gBasicList.createSearch(gSearchOptions);//创建搜索界面
+
+    ////主流程
+    var gToolBar = DATAGRID_TOOLBAR_ADD;
+    gToolBar += DATAGRID_TOOLBAR_EDITOR;
+    gToolBar += DATAGRID_TOOLBAR_DELETE;
+    gBasicList.createToolbar(gToolBar);//创建toolbar
+    ////创建表格
+    var gDatagridUrl = RequestUrl.constructURL(gApiKey, "list");
+    var gConfig = {
+        method:"post",
+        height: 586,
+        columns : [
+            [{
+                field: 'ck',
+                checkbox: true,
+            },{
+                field : 'vpt_id',
+                title : 'vpt_id',
+                width : '0%',
+                align : 'center'
+            }, {
+                field : 'plants_name',
+                title : '品种名称',
+                width : '10%',
+                align : 'center'
+            }, {
+                field : 'R1',
+                title : '光照强度',
+                width : '15%',
+                align : 'center',
+            }, {
+                field : 'E1',
+                title : '空气温湿度',
+                width : '15%',
+                align : 'center',
+            }, {
+                field : 'E2',
+                title : '土壤湿度',
+                width : '15%',
+                align : 'center'
+            }, {
+                field : 'E3',
+                title : '二氧化碳浓度',
+                width : '15%',
+                align : 'center'
+            }]
+        ],
+        onDblClickRow : function (index, row) {
+            var _row = row;
+            var _id = _row.plants_name;
+            var pLocation = "UI/Setting/GearDetail.html?id="+_id;
+            localStorage.setItem("name",_id)
+            $("#ifrmEdit").attr("src", pLocation);
+            if (config) {
+                this.dialogWidth = config.dialogWidth;
+                this.dialogHeight = config.dialogHeight;
+            }
+            constructDialog($('#dlg'), 'Edit', this.dialogWidth, this.dialogHeight);
+            AddDialog.dialog('open');
+        },
+    }
+    gBasicList.createDataGrid(gConfig);
+    gBasicList.hideColumn(['vpt_id']);//隐藏id
+    //函数部分
+    $(document).ready(function () {
+        getAjaxData()
+    })
+    function getData(data) {
+        var data = data.split(";")
+        var newData = {}
+        data.forEach(function (value,index) {
+            var arr = value.split(":")
+            newData[arr[0]] = arr[1]
+        })
+        return newData
+    }
+    function doSearch() {
+        var _searchCondition = processSearchConditionObject();
+        gRequest.postRemoteData(gApiKey,"list",_searchCondition).done(function (result) {
+            var data = result.data
+            data.map(function (value,index) {
+                var newData = getData(value.value)
+                var newObj = $.extend(value,newData,false)
+                console.log(newObj)
+                return  newObj
+            })
+            $('#dg').datagrid('loadData',data);
+        })
+        console.log(_searchCondition)
+    }
+    function getAjaxData() {
+        gRequest.postWithOutData(gApiKey,"list").done(function (result) {
+            var data = result.data
+            var gComboboxConfig = {//配置combobox
+                panelWidth: 240,
+                panelHeight: 100,
+                valueField: 'plants_name',
+                textField: 'plants_name',
+                data:data,
+                onHidePanel: checkCombobox,
+            };
+            $("#search_type_name").combobox(gComboboxConfig)
+            data.map(function (value,index) {
+                var newData = getData(value.value)
+                var newObj = $.extend(value,newData,false)
+                console.log(newObj)
+                return  newObj
+            })
+            $('#dg').datagrid('loadData',data);
+        })
+    }
+
+    function closeDlg() {
+        getAjaxData()
+        AddDialog.dialog('close')
+    }
+    function destroy(){
+        var _row = $('#dg').datagrid('getSelected');
+        if (!_row) {
+            $.messager.alert('提示', "请选择一条需要修改的信息！");
+            return;
+        }
+        var _param = {vpt_id:_row.vpt_id}
+        $.messager.confirm("提示", "确定删除该条数据？", function (r) {
+            if (r) {
+                console.log(_param)
+                gRequest.postRemoteData(gApiKey,"del",_param).done(function (result) {
+                    if(result.code === 0){
+                        $.messager.alert("提示",result.msg)
+                        getAjaxData()
+                    }else{
+                        $.messager.alert("提示",result.msg)
+                    }
+                })
+            }
+        });
+
+    }
+    function editData(){
+        var _row = $('#dg').datagrid('getSelected');
+        if (!_row) {
+            $.messager.alert('提示', "请选择一条需要修改的信息！");
+            return;
+        }
+        var _id = _row.plants_name;
+        var pLocation = "UI/Setting/GearDetail.html?id="+_id;
+        localStorage.setItem("name",_id)
+        $("#ifrmEdit").attr("src", pLocation);
+        if (config) {
+            this.dialogWidth = config.dialogWidth;
+            this.dialogHeight = config.dialogHeight;
+        }
+        constructDialog($('#dlg'), 'Edit', this.dialogWidth, this.dialogHeight);
+        AddDialog.dialog('open');
+    }
+    function newData(){
+        var pLocation = "UI/Setting/GearDetail.html?id=-1";
+        localStorage.setItem("name","-1")
+        $("#ifrmEdit").attr("src", pLocation);
+        if (config) {
+            this.dialogWidth = config.dialogWidth;
+            this.dialogHeight = config.dialogHeight;
+        }
+        constructDialog($('#dlg'), 'Edit', this.dialogWidth, this.dialogHeight);
+        AddDialog.dialog('open');
+    }
+
+</script>
+
+</html>

@@ -14,8 +14,9 @@ var SEARCH_SENSOR_MARK = Math.pow(2, 3); //用户组
 var SEARCH_SENSOR_NAME = Math.pow(2, 4); //用户名
 var SEARCH_TIME_BEGIN = Math.pow(2, 5);
 var SEARCH_TIME_END = Math.pow(2, 6);
+var SEARCH_TYPE_NAME = Math.pow(2, 7); //供应商名称
 
-var SEARCH_PROVIDER_NAME = Math.pow(2, 7); //供应商名称
+
 var SEARCH_ORDER_NO = Math.pow(2, 8);
 
 
@@ -137,10 +138,10 @@ function buildSearchOptions(searchType) {
             "className": "easyui-datetimebox",
             "id": "search_time_end"
         },  {
-            "name": "供应商名称",
-            "type": "providerName",
+            "name": "品种",
+            "type": "plants_name",
             "className": "easyui-combobox",
-            "id": "search_provider_name"
+            "id": "search_type_name"
         }, {
             "name": "订单编号",
             "type": "orderNo",

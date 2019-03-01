@@ -192,7 +192,8 @@ var RequestUrl = {
         SENSORNEW:"/getCurrentInfoList",
         SENSORDATA:"/sensorAndData",
         MONITOR:"/monitor",
-        DS:"/deviceAndsensor"
+        DS:"/deviceAndsensor",
+        VPT:"/vpt",
 
 },
     constructURL: function (apiKey, restMethod, paramObj) {
