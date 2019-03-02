@@ -40,6 +40,11 @@ var _menus = {
                     "menuname": "数据报警分析",
                     "url": "UI/Data/DataMonitor.html",
                     "menus": []
+                },{
+                    "menuid": "0415",
+                    "menuname": "异常信息收集",
+                    "url": "UI/Data/WarningData.html",
+                    "menus": []
                 },]
 
         }, {
