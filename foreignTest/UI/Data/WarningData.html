@@ -14,6 +14,8 @@
 <style>
 </style>
 <body style="padding: 0px;">
+<div id="div_search" data-options="region:'north'">
+</div>
 <div id="div_layout" class="easyui-layout">
     <div data-options="region:'center'">
         <div class="easyui-panel" title="Datalist">
@@ -39,19 +41,16 @@
 <script type="text/javascript" src="../../Utils/Request.js"></script>
 <script type="text/javascript" src="../../Utils/Enum.js"></script>
 <script>
-    var gEditOpenUrl = "UI/Device/SensorDetail.html?id=";
-    var gAddOpenUrl = "UI/Device/SensorDetail.html?id=-1";
-    var config = {dialogWidth: 800, dialogHeight: 330};
     var AddDialog;
     //声明
     var gBasicList = new BasicListPage();
     var gRequest = new RequestHandle();
-    var gPostId = getID();
-    var gApiKey = "SENSORNEW";
+    var gApiKey = "SENSORDATA";
+
     ////主流程
-    var content = DATAGRID_TOOLBAR_ARRIVE;
-    gBasicList.createToolbar(content);//创建toolbar
-    var gDatagridUrl = RequestUrl.constructURL(gApiKey, "addr/list");
+    var gSearchOptions = SEARCH_IDENTIFICATION;//标识
+    gSearchOptions += SEARCH_SENSOR_TYPE;//传感器类型
+    gBasicList.createSearch(gSearchOptions);//创建搜索界面
     var gConfig = {
         toolbar: '#toolbar',
         fitColumns: 'false',
@@ -97,7 +96,7 @@
                 width : '11%',
                 align : 'center',
                 formatter:function (val,row) {
-                    if (row.value_max<row.value){
+                    if (row.is_warn<row.value){
                         return '<span style="color:red;font-weight:bold;">'+val+'</span>';
                     }else{
                         return val;
@@ -119,7 +118,7 @@
                 width : '8%',
                 align : 'center',
                 formatter:function (val,row) {
-                    if (row.value_max<row.value){
+                    if (row.is_warn<row.value){
                         return '<span style="color:#ff0721;font-weight:bold;">'+val+'</span>';
                     }else{
                         return val;
@@ -140,41 +139,30 @@
     gBasicList.hideColumn(['sensor_id']);//隐藏id
 
     //函数部分
-
-    $(document).ready(function () {
-        getData()//获取datagrid数据
-    });
-    function historyData() {
-        var _row = $('#dg').datagrid('getSelected');
-        if (!_row) {
-            $.messager.alert('提示', "请选择一条需要修改的信息！");
-            return;
+    function doSearch() {
+        var _searchCondition = processSearchConditionObject();
+        var sendData = $.extend(false,_searchCondition);
+        if(sendData.sensor_type){
+            var _data={
+                'sensor.identification':sendData.identification,
+                sensor_type:sendData.sensor_type,
+            };
+        }else{
+            var _data={
+                'sensor.identification':sendData.identification,
+            };
         }
-        var _id = _row.identification;
-        var pLocation = "UI/Data/HistoryData.html?id="+_id;
-        AddTabIn("历史数据", parent.$('#tabs'), pLocation);
-    }
-    function getData() {//获取name数据 载入模糊查询框
-        gRequest.postRemoteData(gApiKey,"list",{device_id:gPostId}).done(function (result) {
-            if (result.code == 0) {
+
+        gRequest.postRemoteData(gApiKey,"list",_data).done(function (result) {
+            if(result.code===0){
+                console.log(result)
                 _data=[];//筛选异常数据
                 result.data.forEach((item,index)=>{
-                    if(item.value_max<item.value){
+                    if(item.is_warn<item.value){
                         _data.push(item)
                     }
                 });
-                $("#dg").datagrid("loadData",_data)
-            } else {
-                $.messager.alert("fail", result.msg);
-            }
-        });
-    }
-    function doSearch() {
-        var _searchCondition = processSearchConditionObject();
-        var sendData = $.extend(false,_searchCondition)
-        gRequest.postRemoteData(gApiKey,"list",sendData).done(function (result) {
-            if(result.code===0){
-                $("#dg").datagrid('loadData',result.data)
+                $("#dg").datagrid('loadData',_data)
             }
             else{
                 $.messager.alert("failed", result.msg);
@@ -182,54 +170,19 @@
         })
     }
 
-    function editData() {
-        var _row = $("#dg").datagrid("getSelected");
-        if (!_row) {
-            $.messager.alert('Info', "Please select the data you need to modify");
-            return;
-        }
-        localStorage.setItem("addressData",JSON.stringify(_row))
-        if(_row.entityId+""){
-            localStorage.setItem("entityId",_row.entityId)
-        }
-        if(_row.personId+""){
-            localStorage.setItem("personId",_row.personId)
-        }
-        gBasicList.editHandle(gEditOpenUrl, config);
-    }
-
-    function newData() {
-        gBasicList.newHandle(gAddOpenUrl, config);
-    }
     function closeDlg() {
         getData()
         AddDialog.dialog('close')
     }
-    function destroy(){
-        var _row = $('#dg').datagrid('getSelected');
-        if (!_row) {
-            $.messager.alert('Info', "Please select the data you need to modify！");
-            return;
-        }
-        var _param = {id:_row.id,personId:gPersonId}
-        var _typeData = {type: payload.type}
-        var _sendData = $.extend(false,_param,_typeData)
-        _sendData = JSON.stringify(_sendData)
-        $.messager.confirm("Info", "confirm to Delete Data", function (r) {
-            if (r) {
-                gRequest.delRemoteData(gApiKey,"addr/del",_sendData).done(function (result) {
-                    if(result.code === 0){
-                        $.messager.alert("Info",result.msg)
-                        getData()
-                    }else{
-                        $.messager.alert("Info",result.msg)
-                    }
-                })
-            }
+    function doReset() {
+        $(".easyui-textbox").each(function (index) {
+            $(this).textbox('clear');
         });
-
-
+        $(".easyui-datetimebox").each(function (index) {
+            $(this).datetimebox('clear');
+        });
     }
+
 </script>
 
 </html>
