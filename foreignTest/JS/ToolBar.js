@@ -2,8 +2,8 @@ var DATAGRID_TOOLBAR_ADD = Math.pow(2, 0);
 var DATAGRID_TOOLBAR_EDITOR = Math.pow(2, 1);
 var DATAGRID_TOOLBAR_DELETE = Math.pow(2, 2);
 var DATAGRID_TOOLBAR_ARRIVE = Math.pow(2, 3);
-var DATAGRID_TOOLBAR_PAY = Math.pow(2, 4);
-var DATAGRID_TOOLBAR_UPDATEDATA = Math.pow(2, 5);
+var DATAGRID_TOOLBAR_VPT = Math.pow(2, 4);
+var DATAGRID_TOOLBAR_DEVICE = Math.pow(2, 5);
 var DATAGRID_TOOLBAR_REPORTED = Math.pow(2, 6);
 var DATAGRID_TOOLBAR_UNVERIFY = Math.pow(2, 7);
 var DATAGRID_TOOLBAR_PURCHASEPRICE = Math.pow(2, 8);
@@ -32,13 +32,13 @@ function addDataGridToolBar(type, newData) {
         "func":"historyData()",
         "functionname":"历史数据",
     }, {
-        "icon":"icon-to_do",
-        "func":"pay()",
-        "functionname":"pay",
+        "icon":"icon-vpt",
+        "func":"setVpt()",
+        "functionname":"设备档位设置",
     }, {
-        "icon" : "icon-redo",
-        "func" : "updateBasicData()",
-        "functionname" : "ChangeState"
+        "icon" : "icon-device",
+        "func" : "deviceBind()",
+        "functionname" : "绑定设备"
     }, {
         "icon":"icon-redo",
         "func":"reported()",

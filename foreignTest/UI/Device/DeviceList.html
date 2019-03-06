@@ -47,6 +47,7 @@
     var gToolBar = DATAGRID_TOOLBAR_ADD;
     gToolBar += DATAGRID_TOOLBAR_EDITOR;
     gToolBar += DATAGRID_TOOLBAR_DELETE;
+    gToolBar += DATAGRID_TOOLBAR_VPT;
     gBasicList.createToolbar(gToolBar);//创建toolbar
     ////创建表格
     var gDatagridUrl = RequestUrl.constructURL(gApiKey, "list");
@@ -98,6 +99,11 @@
                 formatter:function (value) {
                     return getValueByKey(JUDEG,value)
                 }
+            },{
+                field : 'vpt_id',
+                title : '档位id',
+                width : '9%',
+                align : 'center',
             }]
         ],
         onDblClickRow : function (index, row) {
@@ -156,6 +162,17 @@
     function newData(){
         var pLocation = "UI/Device/DeviceDetail.html?id=-1";
         AddTabIn("设备详情", parent.$('#tabs'), pLocation);
+    }
+    function setVpt() {
+        var _row = $('#dg').datagrid('getSelected');
+        localStorage.setItem("device",JSON.stringify(_row))
+        if (!_row) {
+            $.messager.alert('提示', "请选择一条需要修改的信息！");
+            return;
+        }
+        var _id = _row.device_id;
+        var pLocation = "UI/Setting/DeviceGearSetting.html?id="+_id;
+        AddTabIn("设备档位设置", parent.$('#tabs'), pLocation);
     }
 
 </script>

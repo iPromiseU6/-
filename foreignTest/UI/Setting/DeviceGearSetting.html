@@ -53,9 +53,7 @@
     gBasicList.createSearch(gSearchOptions);//创建搜索界面
 
     ////主流程
-    var gToolBar = DATAGRID_TOOLBAR_ADD;
-    gToolBar += DATAGRID_TOOLBAR_EDITOR;
-    gToolBar += DATAGRID_TOOLBAR_DELETE;
+    var gToolBar = DATAGRID_TOOLBAR_DEVICE;
     gBasicList.createToolbar(gToolBar);//创建toolbar
     ////创建表格
     var gDatagridUrl = RequestUrl.constructURL(gApiKey, "list");
@@ -68,8 +66,8 @@
                 checkbox: true,
             },{
                 field : 'vpt_id',
-                title : '档位id',
-                width : '10%',
+                title : 'vpt_id',
+                width : '0%',
                 align : 'center'
             }, {
                 field : 'plants_name',
@@ -98,21 +96,9 @@
                 align : 'center'
             }]
         ],
-        onDblClickRow : function (index, row) {
-            var _row = row;
-            var _id = _row.plants_name;
-            var pLocation = "UI/Setting/GearDetail.html?id="+_id;
-            localStorage.setItem("name",_id)
-            $("#ifrmEdit").attr("src", pLocation);
-            if (config) {
-                this.dialogWidth = config.dialogWidth;
-                this.dialogHeight = config.dialogHeight;
-            }
-            constructDialog($('#dlg'), 'Edit', this.dialogWidth, this.dialogHeight);
-            AddDialog.dialog('open');
-        },
     }
     gBasicList.createDataGrid(gConfig);
+    gBasicList.hideColumn(['vpt_id']);//隐藏id
     //函数部分
     $(document).ready(function () {
         getAjaxData()
@@ -162,60 +148,33 @@
         })
     }
 
-    function closeDlg() {
-        getAjaxData()
-        AddDialog.dialog('close')
-    }
-    function destroy(){
+
+    function deviceBind(){
         var _row = $('#dg').datagrid('getSelected');
         if (!_row) {
             $.messager.alert('提示', "请选择一条需要修改的信息！");
             return;
         }
-        var _param = {vpt_id:_row.vpt_id}
-        $.messager.confirm("提示", "确定删除该条数据？", function (r) {
-            if (r) {
-                console.log(_param)
-                gRequest.postRemoteData(gApiKey,"del",_param).done(function (result) {
-                    if(result.code === 0){
-                        $.messager.alert("提示",result.msg)
-                        getAjaxData()
-                    }else{
-                        $.messager.alert("提示",result.msg)
+        var  _id= _row.vpt_id;
+        var device = JSON.parse(localStorage.getItem("device"))
+        device.vpt_id = _id
+        console.log(device)
+        gRequest.postRemoteData('DEVICE', 'edit', device).done(function (result) {
+            if (result.code == 0) {
+                $.messager.alert({
+                    title: 'Info',
+                    msg: result.msg,
+                    fn: function () {
+                        var pLocation = "UI/Device/DeviceList.html";
+                        AddTabIn("我的设备", parent.$('#tabs'), pLocation);
                     }
-                })
+                });
+            } else {
+                $.messager.alert("Info", result.msg);
             }
         });
+    }
 
-    }
-    function editData(){
-        var _row = $('#dg').datagrid('getSelected');
-        if (!_row) {
-            $.messager.alert('提示', "请选择一条需要修改的信息！");
-            return;
-        }
-        var _id = _row.plants_name;
-        var pLocation = "UI/Setting/GearDetail.html?id="+_id;
-        localStorage.setItem("name",_id)
-        $("#ifrmEdit").attr("src", pLocation);
-        if (config) {
-            this.dialogWidth = config.dialogWidth;
-            this.dialogHeight = config.dialogHeight;
-        }
-        constructDialog($('#dlg'), 'Edit', this.dialogWidth, this.dialogHeight);
-        AddDialog.dialog('open');
-    }
-    function newData(){
-        var pLocation = "UI/Setting/GearDetail.html?id=-1";
-        localStorage.setItem("name","-1")
-        $("#ifrmEdit").attr("src", pLocation);
-        if (config) {
-            this.dialogWidth = config.dialogWidth;
-            this.dialogHeight = config.dialogHeight;
-        }
-        constructDialog($('#dlg'), 'Edit', this.dialogWidth, this.dialogHeight);
-        AddDialog.dialog('open');
-    }
 
 </script>
 
