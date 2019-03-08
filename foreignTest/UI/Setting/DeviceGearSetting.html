@@ -119,12 +119,10 @@
             data.map(function (value,index) {
                 var newData = getData(value.value)
                 var newObj = $.extend(value,newData,false)
-                console.log(newObj)
                 return  newObj
             })
             $('#dg').datagrid('loadData',data);
         })
-        console.log(_searchCondition)
     }
     function getAjaxData() {
         gRequest.postWithOutData(gApiKey,"list").done(function (result) {
@@ -141,7 +139,6 @@
             data.map(function (value,index) {
                 var newData = getData(value.value)
                 var newObj = $.extend(value,newData,false)
-                console.log(newObj)
                 return  newObj
             })
             $('#dg').datagrid('loadData',data);
@@ -158,7 +155,6 @@
         var  _id= _row.vpt_id;
         var device = JSON.parse(localStorage.getItem("device"))
         device.vpt_id = _id
-        console.log(device)
         gRequest.postRemoteData('DEVICE', 'edit', device).done(function (result) {
             if (result.code == 0) {
                 $.messager.alert({

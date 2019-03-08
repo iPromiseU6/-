@@ -17,32 +17,37 @@
 <form id="ff">
     <table id="basicData" class="displaytable" style="text-align:right;width: 100%;table-layout:fixed">
         <tr style="height: 60px;width: 100%">
-            <td style="width: 15%;"><span class="required">*</span>名称:</td>
+            <td style="width: 15%;">名称:</td>
             <td style="width: 35%;text-align: left;">
                 <input type="text" style="width: 85%" class="easyui-textbox" data-options="required:true"
                        id="input_plants_name"/>
             </td>
-            <td style="width: 15%"><span class="required">*</span>光照强度:</td>
+            <td style="width: 15%">光照强度:</td>
             <td style="text-align: left">
-                <input type="text" style="width: 80%" class="easyui-textbox" id="input_R1" data-options="required:true"/>
+                <input type="text" style="width: 80%" class="easyui-textbox one" id="input_R1" data-options="required:true"/>
             </td>
         </tr>
         <tr>
-            <td >空气温湿度:</td>
+            <td >空气温度:</td>
             <td style="text-align: left">
-                <input type="text" style="width: 85%" class="easyui-textbox" id="input_E1"
+                <input type="text" style="width: 85%" class="easyui-textbox one" id="input_E1"
                        data-options='required:true'/>
             </td>
-            <td>土壤湿度:</td>
+            <td >空气湿度:</td>
             <td style="text-align: left">
-                <input type="text" style="width: 80%" class="easyui-textbox" id="input_E2" data-options="required:true"/>
+                <input type="text" style="width: 80%" class="easyui-textbox two" id="input_E4"
+                       data-options='required:true'/>
             </td>
         </tr>
         <tr>
             <td>二氧化碳浓度:</td>
             <td style="text-align: left">
-                <input type="text" style="width: 85%" class="easyui-textbox" id="input_E3"
+                <input type="text" style="width: 85%" class="easyui-textbox two" id="input_E3"
                        data-options='required:true'/>
+            </td>
+            <td>土壤湿度:</td>
+            <td style="text-align: left">
+                <input type="text" style="width: 80%" class="easyui-textbox two" id="input_E2" data-options="required:true"/>
             </td>
         </tr>
     </table>
@@ -69,8 +74,18 @@
     var gRequest = new RequestHandle();
     var gCurrid = localStorage.getItem("name");
     var gData = {};
-    console.log(gCurrid)
     var gApiKey = "VPT";
+
+    $("#ff .one").each(function (index) {
+        $(this).textbox({
+            prompt:"xx,xx,xx     三档,二挡,一挡"
+        })
+    })
+    $("#ff .two").each(function (index) {
+        $(this).textbox({
+            prompt:"xx,xx     二档,一档"
+        })
+    })
 
     $(document).ready(function () {
         var _id = localStorage.getItem("device_id");
@@ -79,9 +94,13 @@
             gRequest.postRemoteData(gApiKey, "list", {plants_name:gCurrid}).done(function (data) {
                 gData = data.data[0];
                 var dataForm  = getData(data.data[0].value)
+                var  arr =  dataForm.E1.split(',')
+                var arrOne = arr.slice(0,3)
+                var arrTwo = arr.slice(3)
+                dataForm.E1 = arrOne.join(',')
+                dataForm.E4 = arrTwo.join(',')
                 dataForm.plants_name = data.data[0].plants_name
                 getFormData(dataForm);
-                console.log(gData)
             });
 
         } else {
@@ -117,9 +136,7 @@
 
     function saveData(_url) {
         var _data = submitFormData();
-        var newValue = "R1:"+_data.R1+";E1:"+_data.E1+";E2:"+_data.E2+";E3:"+_data.E3
-        console.log(newValue)
-        console.log(gNumRegular.test(newValue))
+        var newValue = "R1:"+_data.R1+";E1:"+_data.E1+','+_data.E4+";E2:"+_data.E2+";E3:"+_data.E3
         if(!gNumRegular.test(newValue)){
             $.messager.alert({
                 title: '警告',

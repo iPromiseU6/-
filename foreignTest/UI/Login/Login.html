@@ -111,9 +111,6 @@
             res.complete(function (result) {
                 var _result = result.responseJSON;
                 var token = result.getResponseHeader('Content-Length')
-                console.log(token)
-
-                console.log(result)
                 if (_result.code === 0) {
                     sessionStorage.setItem("token", _result.data.token);
                     window.location = '../../index.html';

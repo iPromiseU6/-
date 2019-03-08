@@ -150,7 +150,6 @@
 
         gRequest.postRemoteData(gApiKey,"list",_data).done(function (result) {
             if(result.code===0){
-                console.log(result)
                 _data=[];//筛选异常数据
                 result.data.forEach((item,index)=>{
                     if(item.is_warn<item.value){

@@ -309,7 +309,6 @@
         var _param = {sensor_id:_row.sensor_id,device_id:_row.device_id}
         $.messager.confirm("提示", "确定删除该条数据？", function (r) {
             if (r) {
-                console.log(_param)
                 gRequest.postRemoteData("SENSOR","del",_param).done(function (result) {
                     if(result.code === 0){
                         $.messager.alert("提示",result.msg)

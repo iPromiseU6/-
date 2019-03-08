@@ -69,7 +69,7 @@
             },{
                 field : 'vpt_id',
                 title : '档位id',
-                width : '10%',
+                width : '8%',
                 align : 'center'
             }, {
                 field : 'plants_name',
@@ -83,7 +83,12 @@
                 align : 'center',
             }, {
                 field : 'E1',
-                title : '空气温湿度',
+                title : '空气温度',
+                width : '15%',
+                align : 'center',
+            },  {
+                field : 'E4',
+                title : '空气湿度',
                 width : '15%',
                 align : 'center',
             }, {
@@ -133,12 +138,10 @@
             data.map(function (value,index) {
                 var newData = getData(value.value)
                 var newObj = $.extend(value,newData,false)
-                console.log(newObj)
                 return  newObj
             })
             $('#dg').datagrid('loadData',data);
         })
-        console.log(_searchCondition)
     }
     function getAjaxData() {
         gRequest.postWithOutData(gApiKey,"list").done(function (result) {
@@ -154,8 +157,12 @@
             $("#search_type_name").combobox(gComboboxConfig)
             data.map(function (value,index) {
                 var newData = getData(value.value)
+                var  arr =  newData.E1.split(',')
+                var arrOne = arr.slice(0,3)
+                var arrTwo = arr.slice(3)
+                newData.E1 = arrOne.join(',')
+                newData.E4 = arrTwo.join(',')
                 var newObj = $.extend(value,newData,false)
-                console.log(newObj)
                 return  newObj
             })
             $('#dg').datagrid('loadData',data);
@@ -175,7 +182,6 @@
         var _param = {vpt_id:_row.vpt_id}
         $.messager.confirm("提示", "确定删除该条数据？", function (r) {
             if (r) {
-                console.log(_param)
                 gRequest.postRemoteData(gApiKey,"del",_param).done(function (result) {
                     if(result.code === 0){
                         $.messager.alert("提示",result.msg)

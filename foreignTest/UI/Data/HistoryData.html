@@ -121,7 +121,6 @@
         }else{
             var _searchCondition = processSearchConditionObject();
         }
-        console.log(_searchCondition)
         if(!_searchCondition.identification){
             $.messager.alert("failed", "请输入标识");
             return ;
@@ -352,7 +351,6 @@
     });
     function date(date) {
         date = moment(date).format('YYYY-MM-DD h:mm:ss')
-        console.log(date)
         return date
     }
 
