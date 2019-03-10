@@ -123,7 +123,20 @@
                 field : 'create_time',
                 title : '最后更新',
                 width : '15%',
-                align : 'center'
+                align : 'center',
+                formatter:function(date){
+                    date = new Date(date)
+                    var y = date.getFullYear();
+                    var m = date.getMonth()+1;
+                    var d = date.getDate();
+                    var h = date.getHours();
+                    var M = date.getMinutes();
+                    var s = date.getSeconds();
+                    function formatNumber(value){
+                        return (value < 10 ? '0' : '') + value;
+                    }
+                    return formatNumber(y)+'-'+formatNumber(m)+'-'+formatNumber(d)+' '+ formatNumber(h)+':'+formatNumber(M)+':'+formatNumber(s);
+                },
             },]
         ],
         onDblClickRow : function (index, row) {
@@ -152,7 +165,7 @@
             if(result.code===0){
                 _data=[];//筛选异常数据
                 result.data.forEach((item,index)=>{
-                    if(item.is_warn<item.value){
+                    if(item.is_warn<item.value||item.value<item.value_min){
                         _data.push(item)
                     }
                 });

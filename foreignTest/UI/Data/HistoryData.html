@@ -23,8 +23,8 @@
             </table>
         </div>
     </div>
-    <div  data-options="region:'east',title:'数据展示'" style="width:600px;">
-        <div id="box" style="width: 590px;height: 440px;"></div>
+    <div  data-options="region:'east',title:'数据展示'" style="width:1300px;">
+        <div id="box" style="width: 1290px;height: 440px;"></div>
     </div>
 </div>
 <div id="toolbar"></div>
@@ -88,18 +88,31 @@
             }, {
                 field : 'identification',
                 title : '标识',
-                width : '10%',
+                width : '20%',
                 align : 'center'
             }, {
                 field : 'value',
                 title : '最新数值',
-                width : '24%',
+                width : '30%',
                 align : 'center'
             },{
                 field : 'create_time',
                 title : '时间',
-                width : '30%',
-                align : 'center'
+                width : '40%',
+                align : 'center',
+                formatter:function(date){
+                    date = new Date(date)
+                    var y = date.getFullYear();
+                    var m = date.getMonth()+1;
+                    var d = date.getDate();
+                    var h = date.getHours();
+                    var M = date.getMinutes();
+                    var s = date.getSeconds();
+                    function formatNumber(value){
+                        return (value < 10 ? '0' : '') + value;
+                    }
+                    return formatNumber(y)+'-'+formatNumber(m)+'-'+formatNumber(d)+' '+ formatNumber(h)+':'+formatNumber(M)+':'+formatNumber(s);
+                },
             },]
         ],
     }
